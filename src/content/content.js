@@ -1,14 +1,46 @@
 console.log('Content script loaded');
 
-// Listen for messages from the popup
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "parseProblem") {
     parseLeetCodeProblem();
   }
 });
 
-// Function to parse LeetCode problem
-function parseLeetCodeProblem() {
-  console.log('Parsing LeetCode problem...');
+function extractData() {
+  const problemData = {
+    problemDescription: '',
+    inputCode: ''
+  };
+  
+  const metaDescription = document.querySelector('meta[name="description"]');
+  if (metaDescription) {
+    problemData.problemDescription = metaDescription.getAttribute('content');
+    console.log('Problem description extracted');
+  } else {
+    console.log('Meta description tag not found');
+  }
+  
+  const editorDiv = document.querySelector('.view-lines');
+  if (editorDiv) {
+    let codeContent = '';
+    
+    const lineDivs = editorDiv.querySelectorAll('.view-line');
+    lineDivs.forEach(lineDiv => {
+      codeContent += lineDiv.textContent + '\n';
+    });
+    
+    problemData.inputCode = codeContent.trim();
+    console.log('Input code extracted');
+  } else {
+    console.log('Code editor div not found');
+  }
+
+  console.log('Problem data:', problemData);
+  
+  return problemData;
 }
+
+function parseLeetCodeProblem() {
+  const data = extractData();
+};
 

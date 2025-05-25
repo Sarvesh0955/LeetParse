@@ -1,6 +1,5 @@
 console.log('Background script loaded');
 
-// Check if Gemini API key exists
 const checkApiKey = () => {
   return new Promise((resolve) => {
     chrome.storage.sync.get(['geminiApiKey'], (result) => {
@@ -9,7 +8,6 @@ const checkApiKey = () => {
   });
 };
 
-// Open options page if API key is not set
 const openOptionsPageIfNeeded = async () => {
   const hasApiKey = await checkApiKey();
   
@@ -21,7 +19,6 @@ const openOptionsPageIfNeeded = async () => {
   }
 };
 
-// Run on extension installation or update
 chrome.runtime.onInstalled.addListener((details) => {
   console.log('Extension installed or updated:', details.reason);
   

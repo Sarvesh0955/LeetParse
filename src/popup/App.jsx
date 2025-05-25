@@ -6,7 +6,6 @@ function App() {
   const [currentUrl, setCurrentUrl] = useState('');
 
   useEffect(() => {
-    // Check if current tab is a LeetCode problem page
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const url = tabs[0]?.url || '';
       setCurrentUrl(url);
@@ -15,7 +14,6 @@ function App() {
   }, []);
 
   const handleParseProblem = () => {
-    // Send message to content script to parse the problem
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       chrome.tabs.sendMessage(tabs[0].id, { action: "parseProblem" });
     });

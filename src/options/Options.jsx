@@ -5,7 +5,6 @@ function Options() {
   const [apiKey, setApiKey] = useState('');
   const [status, setStatus] = useState('');
 
-  // Load saved API key on component mount
   useEffect(() => {
     chrome.storage.sync.get(['geminiApiKey'], (result) => {
       if (result.geminiApiKey) {
@@ -14,7 +13,6 @@ function Options() {
     });
   }, []);
 
-  // Save API key to Chrome storage
   const handleSave = () => {
     chrome.storage.sync.set({ geminiApiKey: apiKey }, () => {
       setStatus('API key saved successfully!');
