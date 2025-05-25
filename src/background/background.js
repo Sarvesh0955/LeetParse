@@ -26,3 +26,23 @@ chrome.runtime.onInstalled.addListener((details) => {
     openOptionsPageIfNeeded();
   }
 });
+
+import { sendToGemini } from '../utils/geminiService.js';
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "sendToGemini" && message.data) {
+    console.log('Received data to send to Gemini.');
+
+    sendToGemini(message.data)
+      .then(response => {
+        console.log('Received response from Gemini:', response);
+        sendResponse(response);
+      })
+      .catch(error => {
+        console.error('Error with Gemini API:', error);
+        sendResponse({ error: error.message });
+      });
+    
+    return true;
+  }
+});

@@ -42,5 +42,16 @@ function extractData() {
 
 function parseLeetCodeProblem() {
   const data = extractData();
+  
+  chrome.runtime.sendMessage({
+    action: "sendToGemini", 
+    data: data
+  }, (response) => {
+    if (response && response.error) {
+      console.error('Error from Gemini API:', response.error);
+    } else {
+      console.log('Response from Gemini API:', response);
+    }
+  });
 };
 
