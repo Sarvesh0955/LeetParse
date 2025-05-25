@@ -49,8 +49,17 @@ function parseLeetCodeProblem() {
   }, (response) => {
     if (response && response.error) {
       console.error('Error from Gemini API:', response.error);
+      chrome.runtime.sendMessage({
+        action: "geminiResponse",
+        error: response.error
+      });
     } else {
       console.log('Response from Gemini API:', response);
+      chrome.runtime.sendMessage({
+        action: "geminiResponse",
+        cfInput: response.cfInput,
+        boilerplateCode: response.boilerplateCode
+      });
     }
   });
 };

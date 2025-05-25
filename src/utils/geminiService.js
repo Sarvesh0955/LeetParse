@@ -18,6 +18,10 @@ json
 {
   "cfInput": "<all sample tests merged into one CF-style multi-test input>",
   "boilerplateCode": "<complete code skeleton that:
+      • Always begin with:  
+       '#include <bits/stdc++.h>'  
+       'using namespace std;'  
+       'ios_base::sync_with_stdio(false); cin.tie(0); cout.tie(0);'
       • reads that cfInput from stdin,
       • parses T, then each case,
       • invokes Solution(),
@@ -77,7 +81,37 @@ async function sendToGemini(problemData) {
     }
 
     const responseData = await response.json();
-    return responseData;
+    
+    if (responseData.candidates && responseData.candidates.length > 0) {
+      const text = responseData.candidates[0].content.parts[0].text;
+      
+      let jsonContent;
+      try {
+        const jsonMatch = text.match(/```(?:json)?\s*(\{[\s\S]*\})\s*```/);
+        if (jsonMatch && jsonMatch[1]) {
+          jsonContent = JSON.parse(jsonMatch[1]);
+        } else {
+          jsonContent = JSON.parse(text);
+        }
+        
+        return {
+          cfInput: jsonContent.cfInput,
+          boilerplateCode: jsonContent.boilerplateCode,
+          rawResponse: responseData
+        };
+      } catch (parseError) {
+        console.error('Error parsing response JSON:', parseError);
+        return { 
+          error: 'Failed to parse response from Gemini',
+          rawResponse: responseData
+        };
+      }
+    }
+    
+    return { 
+      error: 'Unexpected response format from Gemini',
+      rawResponse: responseData
+    };
   } catch (error) {
     console.error('Error sending data to Gemini:', error);
     return { error: error.message };
