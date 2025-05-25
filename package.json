@@ -1,0 +1,21 @@
+{
+  "name": "leetcode-parser",
+  "version": "1.0.0",
+  "description": "Chrome extension to parse leetcode problems",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "chrome-types": "^0.1.352",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.246",
+    "@vitejs/plugin-react": "^4.1.1",
+    "vite": "^5.0.0"
+  }
+}
