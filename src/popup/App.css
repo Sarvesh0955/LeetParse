@@ -1,0 +1,44 @@
+.App {
+  width: 300px;
+  padding: 16px;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  font-size: 18px;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+button {
+  padding: 10px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 12px;
+}
+
+.button-enabled {
+  background-color: #2cbb5d;
+  border: 1px solid #2cbb5d;
+  color: white;
+}
+
+.button-enabled:hover {
+  background-color: #259d4f;
+}
+
+.button-disabled {
+  background-color: #cccccc;
+  border: 1px solid #bbbbbb;
+  color: #666666;
+  cursor: not-allowed;
+}
+
+.warning-text {
+  color: #ff6b6b;
+  font-size: 12px;
+  margin-top: 8px;
+}
