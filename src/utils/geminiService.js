@@ -1,40 +1,92 @@
-const FIXED_PROMPT = `You are a “LeetCode→Codeforces/CodeChef I/O converter” whose sole job is to take a LeetCode problem (description + class‐solution stub) and turn it into:
+const FIXED_PROMPT = `
+You are a “LeetCode → Codeforces I/O Converter”.
 
-1. A single combined test-file in Codeforces/CodeChef style,
-2. A boilerplate main() (or equivalent) that reads that test-file and calls the user’s Solution class.
-
-You must STRICTLY NOT generate any solution logic for the problem itself—only the formatted test-cases and the I/O wrapper.
-
-When I invoke you, I will send exactly one JSON object, for example:
+Your only job is to take a LeetCode test case and given solution class and output exactly one JSON object with two fields:
 
 {
-    "problemDescription": "<full LeetCode problem statement, examples, constraints>",
-    "inputCode": "class Solution { ... }"
+  "cfInput":   "<CF-style multi-test input>",
+  "boilerplateCode": "<C++ CF-style I/O wrapper>"
 }
 
-Your job is to return exactly one JSON object with two fields:
+1. General Rules
+   • Do NOT generate any solution logic or algorithm.
+   • Do NOT include comments in the boilerplate code.
+   • Do NOT hard-code any values—your code must parse any valid input.
 
-json
+2. cfInput Field
+   A single string that represents all sample tests merged into one Codeforces-style input:
+   1. T — number of sample test cases (first line).
+   2. For each test case (in original order):
+      – Flatten every parameter into whitespace-separated tokens or lines, one parameter per line.
+      – Remove JSON-style brackets ([ ]) and commas (,).
+      – Strings: output without quotes.
+      – Booleans: output as 1 or 0.
+      – Arrays: inline their elements as space-separated tokens.
+      – 2D arrays or nested lists: each subarray on its own line.
+
+   Examples:
+     LeetCode sample:  
+       x = [1,2]  
+       s = "hi"  
+       flag = true  
+       mat = [[1,2],[1,3],[3,4],[3,5]]  
+     ⇒ CF-style:  
+     1      ← T = 1 sample  
+     2      ← size of x  
+     1 2    ← elements of x  
+     hi     ← string s  
+     true   ← boolean flag  
+     4 2    ← number of rows in mat and number of element in each row
+     1 2    ← first row  
+     1 3    ← second row  
+     3 4    ← third row  
+     3 5    ← fourth row  
+
+3. boilerplateCode Field
+   A single C++ code skeleton that:
+
+   #include <bits/stdc++.h>
+   using namespace std;
+
+   class Solution {
+    public:
+      //provided input function
+   };
+
+   int main() {
+       ios::sync_with_stdio(false);
+       cin.tie(nullptr);
+
+       int T;
+       cin >> T;
+       while (T--) {
+           // 1) read each parameter exactly as laid out in cfInput
+           // 2) invoke Solution solution;
+           // 3) call solution.someMethod(...);
+           // 4) print the result to cout << result << '\n';
+       }
+       return 0;
+   }
+
+   Requirements:
+   • Include #include <bits/stdc++.h> and standard ios setup.
+   • Read T, then loop over all test cases.
+   • Parse each parameter in the same order and format as in cfInput.
+   • Instantiate the user’s Solution class and call its method.
+   • Print each test’s output on its own line.
+
+4. Final Output
+   Return exactly one JSON object. No extra text. Example:
+
+   {
+     "cfInput": "3\n2\n1 2\nhi\ntrue\n...\n",
+     "boilerplateCode": "#include <bits/stdc++.h>\nusing namespace std;\n...\n"
+   }
+
+Here is your input:
+
 {
-  "cfInput": "<all sample tests merged into one CF-style multi-test input>",
-  "boilerplateCode": "<complete code skeleton that:
-      • Always begin with:  
-       '#include <bits/stdc++.h>'  
-       'using namespace std;'  
-       'ios_base::sync_with_stdio(false); cin.tie(0); cout.tie(0);'
-      • reads that cfInput from stdin,
-      • parses T, then each case,
-      • invokes Solution(),
-      • and prints per-case output>
-}
-
----------------------------------------------------------------------------------
-
-*Here is input**:
-
-json
-{
-  "problemDescription": "{{problemDescription}}",
+  "testCases": "{{testCases}}",
   "inputCode": "{{inputCode}}"
 }
 `;
@@ -49,7 +101,7 @@ async function sendToGemini(problemData) {
     }
 
     const filledPrompt = FIXED_PROMPT
-      .replace('{{problemDescription}}', problemData.problemDescription)
+      .replace('{{testCases}}', problemData.testCases)
       .replace('{{inputCode}}', problemData.inputCode);
 
     const requestData = {
