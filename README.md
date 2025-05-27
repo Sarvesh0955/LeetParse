@@ -1,6 +1,6 @@
-# LeetCode Parser - Chrome Extension
+# LeetParse - Chrome Extension
 
-![LeetCode Parser Logo](public/icons/icon2_128.png)
+![LeetCode Parser Logo](public/icons/icon2.png)
 
 A powerful Chrome extension built with Vite and React that helps competitive programmers parse LeetCode problems and generate ready-to-use C++ boilerplate code with test cases.
 
