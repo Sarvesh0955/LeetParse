@@ -251,7 +251,7 @@ function extractFunctionName(inputCode) {
 function extractReturnType(inputCode) {
   if (!inputCode) return '';
 
-  const returnTypeMatch = inputCode.match(/(\w+(?:<[\w,\s<>]+>)?)\s+\w+\s*\(/);
+  const returnTypeMatch = inputCode.match(/(\w+(?:<[\w,\s<>]+>)?(?:\s*\*)?)\s+\w+\s*\(/);
   if (returnTypeMatch && returnTypeMatch[1]) {
     return returnTypeMatch[1].trim();
   }

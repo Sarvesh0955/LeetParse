@@ -32,10 +32,13 @@ function extractData() {
     });
     
     problemData.inputCode = codeContent;
-    // Find the closing bracket of the function and remove everything after it
-    const functionEndPos = codeContent.indexOf('};');
+    const classPos = problemData.inputCode.indexOf('class');
+    if (classPos !== -1) {
+      problemData.inputCode = problemData.inputCode.substring(classPos);
+    }
+    const functionEndPos = problemData.inputCode.indexOf('};');
     if (functionEndPos !== -1) {
-      problemData.inputCode = codeContent.substring(0, functionEndPos + 2);
+      problemData.inputCode = problemData.inputCode.substring(0, functionEndPos + 2);
     }
   } else {
     console.log('Code editor div not found');
