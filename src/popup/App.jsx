@@ -8,6 +8,7 @@ function App() {
   const [boilerplateCode, setBoilerplateCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [connectionAttempted, setConnectionAttempted] = useState(false);
 
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -16,7 +17,9 @@ function App() {
       setIsLeetCodeProblem(url.match(/^https:\/\/leetcode\.com\/problems\//) !== null);
     });
 
-    chrome.runtime.onMessage.addListener((message) => {
+    const port = chrome.runtime.connect({ name: 'popup' });
+    
+    const messageListener = (message) => {
       if (message.action === "codeGenerated") {
         setLoading(false);
         
@@ -28,7 +31,16 @@ function App() {
           setError('');
         }
       }
-    });
+    };
+    
+    chrome.runtime.onMessage.addListener(messageListener);
+    
+    return () => {
+      chrome.runtime.onMessage.removeListener(messageListener);
+      if (port) {
+        port.disconnect();
+      }
+    };
   }, []);
 
   const handleParseProblem = () => {
@@ -36,9 +48,33 @@ function App() {
     setError('');
     setCfInput('');
     setBoilerplateCode('');
+    setConnectionAttempted(true);
     
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.tabs.sendMessage(tabs[0].id, { action: "parseProblem" });
+      if (!tabs[0] || !tabs[0].id) {
+        setLoading(false);
+        setError('Cannot access the current tab');
+        return;
+      }
+      
+      const timeoutId = setTimeout(() => {
+        if (loading && connectionAttempted) {
+          setLoading(false);
+          setError('Content script not responding. Make sure you are on a LeetCode problem page and try refreshing.');
+        }
+      }, 5000);
+      
+      chrome.tabs.sendMessage(tabs[0].id, { action: "parseProblem" }, (response) => {
+        clearTimeout(timeoutId);
+        
+        if (chrome.runtime.lastError) {
+          console.error("Error sending message:", chrome.runtime.lastError);
+          setLoading(false);
+          setError('Content script not accessible. Make sure you are on a LeetCode problem page.');
+        } else {
+          console.log("Message acknowledged by content script:", response);
+        }
+      });
     });
   };
 
