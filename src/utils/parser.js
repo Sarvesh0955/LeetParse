@@ -1,37 +1,18 @@
-console.log('Parser module loaded');
-
 import { extractData } from "./extractor";
 
 /**
- * Extracts parameter data types from the Solution class function
+ * Extracts parameter data types and names from the Solution class function
  * @param {string} inputCode The code containing the function definition
- * @returns {string} Space-separated parameter data types or the original input code if not a Solution class
+ * @returns {Array<Array<string>>} Array of parameter strings with data types and names
  */
 function extractParameterTypes(inputCode) {
-  if (!inputCode) return '';
+  if (!inputCode) return [];
   
-  const cppFunctionMatch = inputCode.match(/class\s+Solution\s*{[^{]*?(?:public|private|protected)?:?\s*(?:\w+(?:<.*?>)?)\s+(\w+)\s*\(([^)]*)\)/s);
-  
-  const functionMatch = cppFunctionMatch ;
+  const functionMatch = inputCode.match(/class\s+Solution\s*{[^{]*?(?:public|private|protected)?:?\s*(?:\w+(?:<.*?>)?)\s+(\w+)\s*\(([^)]*)\)/s);
   
   if (functionMatch && functionMatch[2]) {
     const parametersStr = functionMatch[2].trim();
-    if (!parametersStr) return '';
-    
-    const processParameter = (param) => {
-      param = param.trim();
-      
-      const varNameMatch = param.match(/(\w+)(?:\s*=.*)?$/);
-      if (!varNameMatch) return param; 
-      
-      const varName = varNameMatch[1];
-      
-      let type = param.replace(new RegExp(`${varName}(?:\\s*=.*)?$`), '').trim();
-      
-      type = type.replace(/\s*[&*]\s*$/, '').trim();
-      
-      return type;
-    };
+    if (!parametersStr) return [];
     
     let parameters = [];
     let currentParam = '';
@@ -47,7 +28,7 @@ function extractParameterTypes(inputCode) {
         templateDepth--;
         currentParam += char;
       } else if (char === ',' && templateDepth === 0) {
-        parameters.push(processParameter(currentParam));
+        parameters.push(currentParam.trim());
         currentParam = '';
       } else {
         currentParam += char;
@@ -55,13 +36,22 @@ function extractParameterTypes(inputCode) {
     }
     
     if (currentParam.trim()) {
-      parameters.push(processParameter(currentParam));
+      parameters.push(currentParam.trim());
     }
     
-    return parameters.filter(type => type).join(' ');
+    // Clean up parameters and create 2D array
+    return parameters
+      .filter(param => param.trim())
+      .map(param => {
+        const cleanParam = param.replace(/&|\n|\r/g, '').trim();
+        // Extract parameter name as second word in the parameter
+        const paramNameMatch = cleanParam.match(/\S+\s+(\S+)/);
+        const paramName = paramNameMatch ? paramNameMatch[1] : '';
+        return [cleanParam, paramName];
+      });
   }
   
-  return '';
+  return [];
 }
 
 /**
@@ -227,11 +217,12 @@ function parseData() {
   }
   else{
     result.problemClass = 'Solution';
-    result.parameters = extractParameterTypes(data.inputCode).trim();
+    result.parameters = extractParameterTypes(data.inputCode);
     result.testCases = parseTestCase(data).trim();
+    console.log('Parsed parameters:', result.parameters);
   }
 
-  return JSON.stringify(result, null, 2);
+  return result;
 }
 
 export { parseData };

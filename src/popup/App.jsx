@@ -17,14 +17,14 @@ function App() {
     });
 
     chrome.runtime.onMessage.addListener((message) => {
-      if (message.action === "geminiResponse") {
+      if (message.action === "codeGenerated") {
         setLoading(false);
         
         if (message.error) {
           setError(message.error);
         } else {
-          setCfInput(message.cfInput || '');
           setBoilerplateCode(message.boilerplateCode || '');
+          setCfInput(message.testCase || '');
           setError('');
         }
       }
