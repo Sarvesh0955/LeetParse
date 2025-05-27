@@ -64,17 +64,17 @@ function processNestedArray(arr) {
   
   if (!Array.isArray(arr[0])) {
     if (arr.length > 0 && typeof arr[0] === 'string') {
-      for (const str of arr) {
-        result += str + '\n';
+      for (const item of arr) {
+        result += (item === null ? "null" : item) + '\n';
       }
     } else {
-      result += arr.join(' ') + '\n';
+      result += arr.map(item => item === null ? "null" : item).join(' ') + '\n';
     }
   } else {
     for (const subArr of arr) {
       if (Array.isArray(subArr)) {
         result += processNestedArray(subArr);
-      }
+      } 
     }
   }
   
@@ -203,7 +203,7 @@ function extractFunctionName(inputCode) {
 function extractReturnType(inputCode) {
   if (!inputCode) return '';
 
-  const returnTypeMatch = inputCode.match(/(\w+(?:<[\w,\s<>]+>)?(?:\s*\*)?)\s+\w+\s*\(/);
+  const returnTypeMatch = inputCode.match(/(\w+(?:<[\w\s,<>*]+>)?(?:\s*\*)?)\s+\w+\s*\(/);
   if (returnTypeMatch && returnTypeMatch[1]) {
     return returnTypeMatch[1].trim();
   }

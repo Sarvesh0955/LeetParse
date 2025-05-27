@@ -9,6 +9,15 @@ struct ListNode {
     ListNode(int x, ListNode *next) : val(x), next(next) {}
 };
 
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
 namespace {
     void input(bool& x) { cin >> x; }
     void input(char& x) { cin >> x; }
@@ -26,7 +35,14 @@ namespace {
         vector<int> values(n);for (int i = 0; i < n; i++) { cin >> values[i]; }
         head = new ListNode(values[0]); ListNode* current = head;
         for (int i = 1; i < n; i++) { current->next = new ListNode(values[i]); current = current->next;}}
-    
+    void input(TreeNode*& root) {
+        int n; cin >> n; if (n == 0) { root = nullptr; return;}
+        vector<string> values(n); for (int i = 0; i < n; i++) { cin >> values[i]; }
+        if (values[0] == "null") { root = nullptr; return;}
+        root = new TreeNode(stoi(values[0])); queue<TreeNode*> q; q.push(root);
+        int i = 1; while (!q.empty() && i < n) { TreeNode* node = q.front(); q.pop();
+        if(i < n){if(values[i] != "null") { node->left = new TreeNode(stoi(values[i])); q.push(node->left); } i++;}
+        if(i < n){if (values[i] != "null") {node->right = new TreeNode(stoi(values[i]));q.push(node->right);}i++;}}}
     template <typename T>
     void input(vector<T>& x);
     template <typename F, typename S>
@@ -51,6 +67,13 @@ namespace {
     void output(long double x) { cout << x; }
     void output(string x) { cout << x; }
     void output(ListNode* head) { while (head) { cout << head->val; if (head->next) cout << " -> "; head = head->next; }}
+    void output(TreeNode* root) {
+        if (!root) { cout << "[]"; return; }cout << "["; queue<TreeNode*> q; q.push(root); bool first = true;
+        while (!q.empty()) { int levelSize = q.size(); bool hasNextLevel = false;
+        for (int i = 0; i < levelSize; i++) { TreeNode* node = q.front(); q.pop(); if (!first) cout << ", "; first = false;
+        if (node) { cout << node->val; q.push(node->left); q.push(node->right);if (node->left || node->right) hasNextLevel = true;
+        } else { cout << "null";}}if (!hasNextLevel) break;}cout << "]";}
+    
     template <typename T>
     void output(vector<T> x);
     template <typename F, typename S>
@@ -60,7 +83,6 @@ namespace {
     template <typename F, typename S>
     void output(pair<F, S> x) { output(x.first); output(x.second); }
 }
-
 
 {{Solution Class}}
 
