@@ -162,7 +162,7 @@ function specialClassInputCode(data) {
             inputStatements += `        for (int op = 0; op < operations - 1; op++) {\n`;
             inputStatements += `            input(operation);\n`;
             inputStatements += `            input(params);\n`;
-            inputStatements += `            if (operation == "${data.problemClass}") {\n                continue;\n            }\n`;
+            inputStatements += `            if (operation == "${data.problemClass}") {\n                cout << "null ";\n                continue;\n            }\n`;
             
             for (let i = 1; i < data.parameters.length; i++) {
                 if (Array.isArray(data.parameters[i]) && data.parameters[i].length === 3) {
@@ -195,6 +195,7 @@ function specialClassInputCode(data) {
                         }
                         else {  
                             inputStatements += `${args});\n`;
+                            inputStatements += `                cout << "null ";\n`;
                         }
                     } else {
                         if (methodHasReturn) {
@@ -203,6 +204,7 @@ function specialClassInputCode(data) {
                         }
                         else {
                             inputStatements += ');\n';
+                            inputStatements += `                cout << "null ";\n`;
                         }
                     }
                     inputStatements += `            }\n`;
