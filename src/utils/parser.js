@@ -53,17 +53,16 @@ function extractParameterTypes(inputCode) {
 }
 
 /**
- * Processes an array from the test case
- * @param {Array} arr The array to process
- * @returns {string} Formatted array output
+ * Processes a nested array recursively, outputting size before each level
+ * @param {Array} arr The nested array to process
+ * @returns {string} Formatted nested array output
  */
-function processArray(arr) {
+function processNestedArray(arr) {
   let result = '';
   
-  const dimensions = getDimensions(arr);
-  result += dimensions.join(' ') + '\n';
+  result += arr.length + '\n';
   
-  if (dimensions.length === 1) {
+  if (!Array.isArray(arr[0])) {
     if (arr.length > 0 && typeof arr[0] === 'string') {
       for (const str of arr) {
         result += str + '\n';
@@ -72,56 +71,9 @@ function processArray(arr) {
       result += arr.join(' ') + '\n';
     }
   } else {
-    const flattenedElements = flattenArray(arr, dimensions.length);
-    for (const elem of flattenedElements) {
-      if (elem.length > 0 && typeof elem[0] === 'string') {
-        for (const str of elem) {
-          result += str + '\n';
-        }
-      } else {
-        result += elem.join(' ') + '\n';
-      }
-    }
-  }
-  
-  return result;
-}
-
-/**
- * Gets the dimensions of a multidimensional array
- * @param {Array} arr The array to analyze
- * @returns {Array} Array of dimensions
- */
-function getDimensions(arr) {
-  const dimensions = [];
-  let current = arr;
-  
-  while (Array.isArray(current)) {
-    dimensions.push(current.length);
-    if (current.length === 0) break;
-    current = current[0];
-  }
-  
-  return dimensions;
-}
-
-/**
- * Flattens a multidimensional array to the specified depth
- * @param {Array} arr The array to flatten
- * @param {number} depth The depth to flatten to
- * @returns {Array} The flattened array
- */
-function flattenArray(arr, depth) {
-  if (depth <= 1) return arr;
-  
-  const result = [];
-  for (const item of arr) {
-    if (Array.isArray(item)) {
-      if (depth === 2) {
-        result.push(item);
-      } else {
-        const flattened = flattenArray(item, depth - 1);
-        flattened.forEach(f => result.push(f));
+    for (const subArr of arr) {
+      if (Array.isArray(subArr)) {
+        result += processNestedArray(subArr);
       }
     }
   }
@@ -185,7 +137,7 @@ function parseTestCase(data) {
       output += processedString + '\n';
     }
     else if (trimmedLine.startsWith('[')) {
-      output += processArray(JSON.parse(trimmedLine));
+      output += processNestedArray(JSON.parse(trimmedLine));
     }
   }
   return output.trim();
@@ -290,7 +242,7 @@ function parseTestCasesSpecialClass(data) {
     for (let j = 0; j < functionNames.length; j++) {
       output += functionNames[j] + '\n';
 
-      output += processArray(functionParams[j]);
+      output += processNestedArray(functionParams[j]);
     }
   }
   return output.trim();

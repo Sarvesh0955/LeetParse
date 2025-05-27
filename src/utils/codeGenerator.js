@@ -30,15 +30,10 @@ namespace {
     
     template <typename T>
     void input(vector<T>& x);
-    template <typename T>
-    void input(vector<vector<T>>& mat);
     template <typename F, typename S>
     void input(pair<F, S>& x);
     template <typename T>
     void input(vector<T>& x) { int n; cin >> n; x.resize(n); for(int i = 0; i < n; i++){ input(x[i]); }}
-    template <typename T>
-    void input(vector<vector<T>>& mat){ int n, m; cin >> n >> m; mat.resize(n); 
-        for(int i = 0; i < n; i++) { mat[i].resize(m); for(int j = 0; j < m; j++){ input(mat[i][j]); }}}
     template <typename F, typename S>
     void input(pair<F, S>& x) { input(x.first); input(x.second); }
 }
