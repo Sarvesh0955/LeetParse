@@ -230,7 +230,7 @@ function generateCode(data) {
 
     let inputStatements = '';
 
-    if(data.problemClass === 'Solution') {
+    if(data.parameters.length <= 1) {
         inputStatements = solutionClassInputCode(data);
     }
     else{

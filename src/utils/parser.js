@@ -269,7 +269,7 @@ function parseData() {
     arr.push([extractFunctionName(func), extractParameterTypes(func), extractReturnType(func)]);
   }
   result.parameters = arr;
-  if (!(data.inputCode.includes('Solution'))) {
+  if (arr.length > 1) {
     const classMatch = data.inputCode.match(/class\s+(\w+)/);
     result.problemClass = classMatch ? classMatch[1] : 'Unknown';
     result.testCases = parseTestCasesSpecialClass(data).trim();
