@@ -22,7 +22,7 @@ namespace {
     template <typename F, typename S>
     void input(pair<F, S>& x);
     template <typename T>
-    void input(vector<T>& x) { int n; cin >> n; x.resize(n); for(int i = 0; i < n; i++){ input(x[i]); }}
+    void input(vector<T>& x) { int n; cin >> n; x.resize(n); for(int i = 0; i < n; i++){ input(x[i]); cout<<" "; }}
     template <typename T>
     void input(vector<vector<T>>& mat){ int n, m; cin >> n >> m; mat.resize(n); for(int i = 0; i < n; i++)
         { mat[i].resize(m); for(int j = 0; j < m; j++){ input(mat[i][j]);} }}
@@ -70,8 +70,8 @@ function solutionClassInputCode(data) {
     
     let inputStatements = '';
     let solution = '';
-    if (data.parameters && Array.isArray(data.parameters)) {
-        data.parameters.forEach(param => {
+    if (data.parameters[0][1] && Array.isArray(data.parameters[0][1])) {
+        data.parameters[0][1].forEach(param => {
             if (Array.isArray(param) && param.length === 2) {
                 const [paramType, paramName] = param;
                 inputStatements += `        ${paramType};\n`;
@@ -80,16 +80,18 @@ function solutionClassInputCode(data) {
             }
         });
     }
-    let functionName = '';
-    if (data.inputCode) {
-        const functionMatch = data.inputCode.match(/class\s+Solution\s*{.*?(?:public:)?\s*(\w+)\s*\(/s);
-        if (functionMatch && functionMatch[1]) {
-            functionName = functionMatch[1];
-            solution = `Solution obj;\n        output(obj.${functionName}(`;
-        }
+    let functionName = data.parameters[0][0];
+    const returnType = data.parameters[0][2];
+    const hasReturnType = returnType && returnType !== 'void';
+    if (hasReturnType) {
+        inputStatements += `        Solution obj;\n        output(obj.${functionName}(`;
+        solution = solution.slice(0, -1) + '));\n        cout << endl;';
+    } else {
+        inputStatements += `        Solution obj;\n        obj.${functionName}(`;
+        solution = solution.slice(0, -1) + ');';
     }
-    solution = solution.slice(0, -1) + '));\n        cout << endl;';
-    inputStatements += `        ${solution}`;
+    
+    inputStatements += `${solution}`;
     return inputStatements;
 }
 

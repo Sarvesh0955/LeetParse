@@ -250,14 +250,12 @@ function extractFunctionName(inputCode) {
  */
 function extractReturnType(inputCode) {
   if (!inputCode) return '';
-  
-  // Look for the pattern: return_type function_name(
+
   const returnTypeMatch = inputCode.match(/(\w+(?:<[\w,\s<>]+>)?)\s+\w+\s*\(/);
-  
   if (returnTypeMatch && returnTypeMatch[1]) {
     return returnTypeMatch[1].trim();
   }
-  
+
   return '';
 }
 
@@ -313,22 +311,20 @@ function parseData() {
   };
 
   result.inputCode = data.inputCode;
-  
+  const arr = [];
+  const functions = splitClassIntoFunctions(data.inputCode);
+  for (const func of functions) {
+    arr.push([extractFunctionName(func), extractParameterTypes(func), extractReturnType(func)]);
+  }
+  result.parameters = arr;
   if (!(data.inputCode.includes('Solution'))) {
     const classMatch = data.inputCode.match(/class\s+(\w+)/);
     result.problemClass = classMatch ? classMatch[1] : 'Unknown';
     result.testCases = parseTestCasesSpecialClass(data).trim();
-    const functions = splitClassIntoFunctions(data.inputCode);
-    const arr = [];
-    for (const func of functions) {
-      arr.push([extractFunctionName(func), extractParameterTypes(func), extractReturnType(func)]);
-    }
-    result.parameters = arr;
   }
   else{
     result.problemClass = 'Solution';
     result.testCases = parseTestCase(data).trim();
-    result.parameters = extractParameterTypes(data.inputCode);
   }
 
   return result;
