@@ -191,7 +191,7 @@ function specialClassInputCode(data) {
                         let args = methodParams.map(param => param[1]).join(', ');
                         if (methodHasReturn) {
                             inputStatements += `${args}));\n`;
-                            inputStatements += `                cout << endl;\n`;
+                            inputStatements += `                cout << " ";\n`;
                         }
                         else {  
                             inputStatements += `${args});\n`;
@@ -199,7 +199,7 @@ function specialClassInputCode(data) {
                     } else {
                         if (methodHasReturn) {
                             inputStatements += '));\n';
-                            inputStatements += `                cout << endl;\n`;
+                            inputStatements += `                cout << " ";\n`;
                         }
                         else {
                             inputStatements += ');\n';
@@ -209,6 +209,7 @@ function specialClassInputCode(data) {
                 }
             }
             inputStatements += `        }\n`;
+            inputStatements += `        cout << endl;\n`;
         }
     }
     return inputStatements;
