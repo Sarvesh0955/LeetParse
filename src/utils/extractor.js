@@ -1,5 +1,3 @@
-console.log('Extractor module loaded');
-
 /**
  * Extracts test cases and input code data from the LeetCode problem page
  * @returns {Object} The extracted problem data
@@ -20,7 +18,6 @@ function extractData() {
     });
     
     problemData.testCases = testCaseContent.trim();
-    console.log('Test cases extracted:', problemData.testCases);
   } else {
     console.log('Test case div not found');
   }
@@ -34,13 +31,15 @@ function extractData() {
       codeContent += lineDiv.textContent + '\n';
     });
     
-    problemData.inputCode = codeContent.trim();
-    console.log('Input code extracted', problemData.inputCode);
+    problemData.inputCode = codeContent;
+    // Find the closing bracket of the function and remove everything after it
+    const functionEndPos = codeContent.indexOf('};');
+    if (functionEndPos !== -1) {
+      problemData.inputCode = codeContent.substring(0, functionEndPos + 2);
+    }
   } else {
     console.log('Code editor div not found');
   }
-
-  console.log('Problem data:', problemData);
   
   return problemData;
 }

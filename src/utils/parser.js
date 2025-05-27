@@ -8,10 +8,10 @@ import { extractData } from "./extractor";
 function extractParameterTypes(inputCode) {
   if (!inputCode) return [];
   
-  const functionMatch = inputCode.match(/class\s+Solution\s*{[^{]*?(?:public|private|protected)?:?\s*(?:\w+(?:<.*?>)?)\s+(\w+)\s*\(([^)]*)\)/s);
+  const functionMatch = inputCode.match(/\w+\s*\(([^)]*)\)/);
   
-  if (functionMatch && functionMatch[2]) {
-    const parametersStr = functionMatch[2].trim();
+  if (functionMatch && functionMatch[1]) {
+    const parametersStr = functionMatch[1].trim();
     if (!parametersStr) return [];
     
     let parameters = [];
@@ -39,12 +39,10 @@ function extractParameterTypes(inputCode) {
       parameters.push(currentParam.trim());
     }
     
-    // Clean up parameters and create 2D array
     return parameters
       .filter(param => param.trim())
       .map(param => {
         const cleanParam = param.replace(/&|\n|\r/g, '').trim();
-        // Extract parameter name as second word in the parameter
         const paramNameMatch = cleanParam.match(/\S+\s+(\S+)/);
         const paramName = paramNameMatch ? paramNameMatch[1] : '';
         return [cleanParam, paramName];
@@ -179,7 +177,6 @@ function parseTestCase(data) {
     if (/^\d/.test(trimmedLine)) {
       output += trimmedLine + '\n';
     }
-
     else if (trimmedLine.startsWith('"')) {
       let processedString = trimmedLine;
       if (trimmedLine.startsWith('"') && trimmedLine.endsWith('"')) {
@@ -191,7 +188,113 @@ function parseTestCase(data) {
       output += processArray(JSON.parse(trimmedLine));
     }
   }
-  console.log('Parsed test case output:', output);
+  return output.trim();
+}
+
+
+/**
+ * Splits a class code into individual functions
+ * @param {string} inputCode The code containing the class definition
+ * @returns {Array<string>} Array of strings each containing one function
+ */
+function splitClassIntoFunctions(inputCode) {
+  if (!inputCode) return [];
+  
+  const classBodyMatch = inputCode.match(/class\s+\w+\s*{([\s\S]*)}/);
+  if (!classBodyMatch) return [];
+   
+  let classBody = classBodyMatch[1];
+  let functions = [];
+  let currentFunction = '';
+  let braceCount = 0;
+  let inFunction = false;
+
+  for (let i = 0; i < classBody.length; i++) {
+    const char = classBody[i];
+    currentFunction += char;
+    
+    if (char === '{') {
+      braceCount++;
+      inFunction = true;
+    } else if (char === '}') {
+      braceCount--;
+      
+      if (braceCount === 0 && inFunction) {
+        if (currentFunction.includes('(') && currentFunction.includes(')')) {
+          functions.push(currentFunction.trim());
+        }
+        currentFunction = '';
+        inFunction = false;
+      }
+    }
+  }
+  
+  return functions.filter(func => func.trim() !== '');
+}
+
+function extractFunctionName(inputCode) {
+  if (!inputCode) return '';
+  
+  const functionNameMatch = inputCode.match(/(\w+)\s*\(/);
+  if (functionNameMatch && functionNameMatch[1]) {
+    return functionNameMatch[1];
+  }
+  
+  return '';
+}
+
+/**
+ * Extracts the return type of a function from the code
+ * @param {string} inputCode The code containing the function definition
+ * @returns {string} The return type of the function
+ */
+function extractReturnType(inputCode) {
+  if (!inputCode) return '';
+  
+  // Look for the pattern: return_type function_name(
+  const returnTypeMatch = inputCode.match(/(\w+(?:<[\w,\s<>]+>)?)\s+\w+\s*\(/);
+  
+  if (returnTypeMatch && returnTypeMatch[1]) {
+    return returnTypeMatch[1].trim();
+  }
+  
+  return '';
+}
+
+
+function parseTestCasesSpecialClass(data) {
+  if (!data || !data.testCases) {
+    console.log('No test cases to parse');
+    return '';
+  }
+
+  const lines = data.testCases.split('\n');
+  let output = '';
+  
+  const nonEmptyLines = lines.filter(line => line.trim() !== '').length;
+  let testCaseCount = nonEmptyLines > 0 ? Math.ceil(nonEmptyLines / 2) : 1;
+  
+  output += testCaseCount + '\n';
+  const lengthTestCase = lines.length;  
+  for (let i = 0; i < lengthTestCase; i+=2) {
+    const trimmedLine1 = lines[i].trim();
+    if (!trimmedLine1) continue; 
+    const trimmedLine2 = lines[i+1].trim();
+    if (!trimmedLine2) continue; 
+
+    const functionNames = JSON.parse(trimmedLine1);
+    const functionParams = JSON.parse(trimmedLine2);
+    if (functionNames.length !== functionParams.length) {
+      console.log(`Function names and parameters count mismatch: ${functionNames.length} function names and ${functionParams.length} parameters`);
+      continue;
+    }
+    output += functionNames.length + '\n';
+    for (let j = 0; j < functionNames.length; j++) {
+      output += functionNames[j] + '\n';
+
+      output += processArray(functionParams[j]);
+    }
+  }
   return output.trim();
 }
 
@@ -206,20 +309,26 @@ function parseData() {
     problemClass: '',
     testCases: '',
     inputCode: '',
-    parameters: ''
+    parameters: '',
   };
 
-  result.inputCode = data.inputCode.trim();
-
+  result.inputCode = data.inputCode;
+  
   if (!(data.inputCode.includes('Solution'))) {
-    result.problemClass = 'Special';
-    result.testCases = data.testCases.trim();
+    const classMatch = data.inputCode.match(/class\s+(\w+)/);
+    result.problemClass = classMatch ? classMatch[1] : 'Unknown';
+    result.testCases = parseTestCasesSpecialClass(data).trim();
+    const functions = splitClassIntoFunctions(data.inputCode);
+    const arr = [];
+    for (const func of functions) {
+      arr.push([extractFunctionName(func), extractParameterTypes(func), extractReturnType(func)]);
+    }
+    result.parameters = arr;
   }
   else{
     result.problemClass = 'Solution';
-    result.parameters = extractParameterTypes(data.inputCode);
     result.testCases = parseTestCase(data).trim();
-    console.log('Parsed parameters:', result.parameters);
+    result.parameters = extractParameterTypes(data.inputCode);
   }
 
   return result;

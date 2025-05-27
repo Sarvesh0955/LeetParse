@@ -65,23 +65,11 @@ int main() {
 }
 `;
 
-/**
- * Generates the input code for the main function based on the provided parameters.
- * @param {Object} data - The data object containing inputCode and parameters.
- * @returns {string} The formatted complete code with solution class and input statements.
- */
-function generateCode(data) {
+function solutionClassInputCode(data) {
+    if (!data.inputCode) return '';
+    
     let inputStatements = '';
     let solution = '';
-    
-    let functionName = '';
-    if (data.inputCode) {
-        const functionMatch = data.inputCode.match(/class\s+Solution\s*{.*?(?:public:)?\s*(\w+)\s*\(/s);
-        if (functionMatch && functionMatch[1]) {
-            functionName = functionMatch[1];
-            solution = `Solution obj;\n        output(obj.${functionName}(`;
-        }
-    }
     if (data.parameters && Array.isArray(data.parameters)) {
         data.parameters.forEach(param => {
             if (Array.isArray(param) && param.length === 2) {
@@ -92,8 +80,127 @@ function generateCode(data) {
             }
         });
     }
+    let functionName = '';
+    if (data.inputCode) {
+        const functionMatch = data.inputCode.match(/class\s+Solution\s*{.*?(?:public:)?\s*(\w+)\s*\(/s);
+        if (functionMatch && functionMatch[1]) {
+            functionName = functionMatch[1];
+            solution = `Solution obj;\n        output(obj.${functionName}(`;
+        }
+    }
     solution = solution.slice(0, -1) + '));\n        cout << endl;';
     inputStatements += `        ${solution}`;
+    return inputStatements;
+}
+
+function specialClassInputCode(data) {
+    if (!data) return '';
+    
+    let inputStatements = '';
+    if (data.parameters && Array.isArray(data.parameters)) {
+        if (data.parameters[0] && data.parameters[0].length === 3) {
+            inputStatements += `        int operations;\n`;
+            inputStatements += `        input(operations);\n`;
+            inputStatements += `        string operation;\n`;
+            inputStatements += `        input(operation);\n`;
+            inputStatements += `        int params;\n`;
+            inputStatements += `        input(params);\n`;
+
+            const [className, constructorParams] = data.parameters[0];
+            if (constructorParams && Array.isArray(constructorParams)) {
+                constructorParams.forEach(param => {
+                    if (Array.isArray(param) && param.length === 2) {
+                        const [paramType, paramName] = param;
+                        inputStatements += `        ${paramType};\n`;
+                        inputStatements += `        input(${paramName});\n`;
+                    }
+                });
+            }
+            
+            inputStatements += `        ${className}* obj = new ${className}(`;
+            if (constructorParams && Array.isArray(constructorParams)) {
+                let constructorArgs = constructorParams.map(param => param[1]).join(', ');
+                inputStatements += `${constructorArgs});\n`;
+            } else {
+                inputStatements += ');\n';
+            }
+            
+            inputStatements += `        for (int op = 0; op < operations - 1; op++) {\n`;
+            inputStatements += `            input(operation);\n`;
+            inputStatements += `            input(params);\n`;
+            inputStatements += `            if (operation == "${data.problemClass}") {\n                continue;\n            }\n`;
+            
+            for (let i = 1; i < data.parameters.length; i++) {
+                if (Array.isArray(data.parameters[i]) && data.parameters[i].length === 3) {
+                    const [methodName, methodParams, returnType] = data.parameters[i];
+                    inputStatements += `            else if (operation == "${methodName}") {\n`;
+                    
+                    if (methodParams && Array.isArray(methodParams)) {
+                        methodParams.forEach(param => {
+                            if (Array.isArray(param) && param.length === 2) {
+                                const [paramType, paramName] = param;
+                                inputStatements += `                ${paramType};\n`;
+                                inputStatements += `                input(${paramName});\n`;
+                            }
+                        });
+                    }
+                    inputStatements += `                `;
+
+                    const methodHasReturn = (returnType && returnType !== 'void');
+                    if (methodHasReturn) {
+                        inputStatements += `output(obj->${methodName}(`;
+                    } else {
+                        inputStatements += `obj->${methodName}(`;
+                    }
+                    
+                    if (methodParams && Array.isArray(methodParams)) {
+                        let args = methodParams.map(param => param[1]).join(', ');
+                        if (methodHasReturn) {
+                            inputStatements += `${args}));\n`;
+                            inputStatements += `                cout << endl;\n`;
+                        }
+                        else {  
+                            inputStatements += `${args});\n`;
+                        }
+                    } else {
+                        if (methodHasReturn) {
+                            inputStatements += '));\n';
+                            inputStatements += `                cout << endl;\n`;
+                        }
+                        else {
+                            inputStatements += ');\n';
+                        }
+                    }
+                    inputStatements += `            }\n`;
+                }
+            }
+            inputStatements += `        }\n`;
+        }
+    }
+    return inputStatements;
+}
+
+/**
+ * Generates the input code for the main function based on the provided parameters.
+ * @param {Object} data - The data object containing inputCode and parameters.
+ * @returns {string} The formatted complete code with solution class and input statements.
+ */
+function generateCode(data) {
+    if (!data || !data.inputCode) {
+        throw new Error('Invalid data provided. inputCode is required.');
+    }
+    if (typeof data.inputCode !== 'string') {
+        throw new Error('inputCode must be a string.');
+    }
+
+    let inputStatements = '';
+
+    if(data.problemClass === 'Solution') {
+        inputStatements = solutionClassInputCode(data);
+    }
+    else{
+        inputStatements = specialClassInputCode(data);
+    }
 
     let generatedCode = BASE_TEMPLATE
         .replace('{{Solution Class}}', (data.inputCode || '').trim())
