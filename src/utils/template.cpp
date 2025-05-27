@@ -47,7 +47,7 @@ namespace {
     template <typename F, typename S>
     void output(pair<F, S> x);
     template <typename T>
-    void output(vector<T> x) { int n = x.size(); for(int i = 0; i < n; i++){ output(x[i]); }}
+    void output(vector<T> x) { int n = x.size(); for(int i = 0; i < n; i++){ output(x[i]); cout<<" "; }}
     template <typename F, typename S>
     void output(pair<F, S> x) { output(x.first); output(x.second); }
 }
