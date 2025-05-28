@@ -3,15 +3,55 @@
   line-height: 1.5;
   font-weight: 400;
 
+  /* Light theme variables */
+  --bg-color: #ffffff;
+  --text-color: #333333;
+  --border-color: #e0e0e0;
+  --button-primary: #2cbb5d;
+  --button-primary-hover: #259d4f;
+  --button-secondary: #2196f3;
+  --button-secondary-hover: #0b7dda;
+  --button-disabled: #cccccc;
+  --error-bg: #ffebee;
+  --error-border: #ffcdd2;
+  --error-text: #d32f2f;
+  --warning-text: #ff6b6b;
+  --header-bg: #e9e9e9;
+  --code-bg: #f0f0f0;
+  --panel-bg: #ffffff;
+
   color-scheme: light;
-  color: #333333;
-  background-color: #ffffff;
+  color: var(--text-color);
+  background-color: var(--bg-color);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+}
+
+/* Dark theme */
+[data-theme='dark'] {
+  --bg-color: #1e1e1e;
+  --text-color: #f0f0f0;
+  --border-color: #444444;
+  --button-primary: #3dd56d;
+  --button-primary-hover: #35bf61;
+  --button-secondary: #2979ff;
+  --button-secondary-hover: #1c54b2;
+  --button-disabled: #555555;
+  --error-bg: #4a1414;
+  --error-border: #6b1b1b;
+  --error-text: #ff6b6b;
+  --warning-text: #ff9e80;
+  --header-bg: #333333;
+  --code-bg: #2d2d2d;
+  --panel-bg: #2a2a2a;
+  
+  color-scheme: dark;
+  color: var(--text-color);
+  background-color: var(--bg-color);
 }
 
 a {
@@ -29,18 +69,34 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #ffffff;
-  color: #333333;
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
 
-/* Force light mode regardless of user's preference */
-:root {
-  color: #333333;
-  background-color: #ffffff;
-}
-a:hover {
-  color: #747bff;
-}
 button {
-  background-color: #f9f9f9;
+  background-color: var(--button-primary);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg-color: #1e1e1e;
+    --text-color: #f0f0f0;
+    --border-color: #444444;
+    --button-primary: #3dd56d;
+    --button-primary-hover: #35bf61;
+    --button-secondary: #2979ff;
+    --button-secondary-hover: #1c54b2;
+    --button-disabled: #555555;
+    --error-bg: #4a1414;
+    --error-border: #6b1b1b;
+    --error-text: #ff6b6b;
+    --warning-text: #ff9e80;
+    --header-bg: #333333;
+    --code-bg: #2d2d2d;
+    --panel-bg: #2a2a2a;
+    
+    color-scheme: dark;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+  }
 }

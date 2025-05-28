@@ -2,11 +2,11 @@
 
 ![LeetCode Parser Logo](public/icons/icon2.png)
 
-A powerful Chrome extension built with Vite and React that helps competitive programmers parse LeetCode problems and generate ready-to-use C++ boilerplate code with test cases.
+A powerful Chrome extension built with Vite and React that helps competitive programmers parse LeetCode problems and generate ready-to-use boilerplate code with test cases.
 
 ## 📝 Description
 
-LeetCode Parser is a developer-oriented Chrome extension that streamlines the process of solving LeetCode problems in your own C++ development environment. It automatically extracts problem details, generates boilerplate code with proper input/output handling, and formats test cases for easy testing.
+LeetCode Parser is a developer-oriented Chrome extension that streamlines the process of solving LeetCode problems in your own development environment. It automatically extracts problem details, generates boilerplate code with proper input/output handling, and formats test cases for easy testing.
 
 ## ✨ Features
 
@@ -16,6 +16,11 @@ LeetCode Parser is a developer-oriented Chrome extension that streamlines the pr
   - Standard input/output handling code included
   - Support for standard C++ data structures (vectors, maps, strings, etc.)
   - Support for LeetCode special data structures (ListNode, TreeNode)
+- **Theme Support**: Choose between:
+  - Light mode
+  - Dark mode
+  - System preference
+- **Auto-Parse Option**: Automatically parse problems when loading the page
 - **Complex Data Structure Support**: Automatically handle:
   - Linked Lists
   - Binary Trees

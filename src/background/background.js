@@ -1,7 +1,18 @@
 import { generateCode } from '../utils/codeGenerator.js';
 
+const defaultSettings = {
+  theme: 'system',
+  preferredLanguage: 'cpp'
+};
+
 chrome.runtime.onInstalled.addListener((details) => {
   console.log('Extension installed or updated:', details.reason);
+  
+  if (details.reason === 'install') {
+    chrome.storage.sync.set(defaultSettings, () => {
+      console.log('Default settings initialized');
+    });
+  }
 });
 
 let activePopupPorts = {};

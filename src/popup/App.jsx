@@ -9,6 +9,22 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [connectionAttempted, setConnectionAttempted] = useState(false);
+  const [theme, setTheme] = useState(() => {
+    const savedTheme = localStorage.getItem('leetcode-parser-theme');
+    if (savedTheme) {
+      return savedTheme;
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
+  const [copyBadges, setCopyBadges] = useState({
+    input: false,
+    code: false
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('leetcode-parser-theme', theme);
+  }, [theme]);
 
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -78,19 +94,33 @@ function App() {
     });
   };
 
-  const copyToClipboard = (text) => {
+  const copyToClipboard = (text, type) => {
     navigator.clipboard.writeText(text)
       .then(() => {
         console.log('Copied to clipboard');
+        setCopyBadges(prev => ({ ...prev, [type]: true }));
+        setTimeout(() => {
+          setCopyBadges(prev => ({ ...prev, [type]: false }));
+        }, 2000);
       })
       .catch(err => {
         console.error('Could not copy text: ', err);
+        setError('Failed to copy to clipboard');
       });
+  };
+
+  const toggleTheme = () => {
+    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
   };
 
   return (
     <div className="App">
+      <button onClick={toggleTheme} className="theme-switch" title="Toggle theme">
+        {theme === 'light' ? '🌙' : '☀️'}
+      </button>
+      
       <h1>LeetCode Parser</h1>
+      
       <button 
         onClick={handleParseProblem} 
         disabled={!isLeetCodeProblem || loading}
@@ -105,6 +135,13 @@ function App() {
         </p>
       )}
       
+      {loading && (
+        <div className="loader-container">
+          <div className="spinner"></div>
+          <p>Parsing problem, please wait...</p>
+        </div>
+      )}
+      
       {error && (
         <div className="error-container">
           <p className="error-text">Error: {error}</p>
@@ -117,9 +154,10 @@ function App() {
           <pre className="code-block">{cfInput}</pre>
           <button 
             className="copy-button"
-            onClick={() => copyToClipboard(cfInput)}
+            onClick={() => copyToClipboard(cfInput, 'input')}
           >
             Copy Input
+            <span className={`badge ${copyBadges.input ? 'visible' : ''}`}>Copied!</span>
           </button>
         </div>
       )}
@@ -130,9 +168,10 @@ function App() {
           <pre className="code-block">{boilerplateCode}</pre>
           <button 
             className="copy-button"
-            onClick={() => copyToClipboard(boilerplateCode)}
+            onClick={() => copyToClipboard(boilerplateCode, 'code')}
           >
             Copy Code
+            <span className={`badge ${copyBadges.code ? 'visible' : ''}`}>Copied!</span>
           </button>
         </div>
       )}

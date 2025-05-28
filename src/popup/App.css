@@ -3,14 +3,15 @@
   padding: 16px;
   text-align: center;
   font-family: Arial, sans-serif;
-  background-color: white;
-  color: #333;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: all 0.3s ease;
 }
 
 h1 {
   font-size: 18px;
   margin-bottom: 16px;
-  color: #333;
+  color: var(--text-color);
 }
 
 button {
@@ -23,24 +24,25 @@ button {
 }
 
 .button-enabled {
-  background-color: #2cbb5d;
-  border: 1px solid #2cbb5d;
+  background-color: var(--button-primary);
+  border: 1px solid var(--button-primary);
   color: white;
 }
 
 .button-enabled:hover {
-  background-color: #259d4f;
+  background-color: var(--button-primary-hover);
 }
 
 .button-disabled {
-  background-color: #cccccc;
-  border: 1px solid #bbbbbb;
-  color: #666666;
+  background-color: var(--button-disabled);
+  border: 1px solid var(--button-disabled);
+  color: var(--text-color);
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
 .warning-text {
-  color: #ff6b6b;
+  color: var(--warning-text);
   font-size: 12px;
   margin-top: 8px;
 }
@@ -48,13 +50,13 @@ button {
 .error-container {
   margin-top: 12px;
   padding: 8px;
-  background-color: #ffebee;
-  border: 1px solid #ffcdd2;
+  background-color: var(--error-bg);
+  border: 1px solid var(--error-border);
   border-radius: 4px;
 }
 
 .error-text {
-  color: #d32f2f;
+  color: var(--error-text);
   font-size: 12px;
   margin: 0;
 }
@@ -62,33 +64,34 @@ button {
 .result-container {
   margin-top: 20px;
   text-align: left;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   overflow: hidden;
-  background-color: white;
+  background-color: var(--panel-bg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .result-container h2 {
   font-size: 14px;
   margin: 0;
   padding: 8px 12px;
-  background-color: #e9e9e9;
-  border-bottom: 1px solid #e0e0e0;
-  color: #333;
+  background-color: var(--header-bg);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-color);
 }
 
 .code-block {
   margin: 0;
   padding: 12px;
-  background-color: #f0f0f0;
-  color: #333333;
+  background-color: var(--code-bg);
+  color: var(--text-color);
   font-family: 'Courier New', monospace;
   font-size: 12px;
   white-space: pre-wrap;
   word-break: break-word;
   max-height: 200px;
   overflow-y: auto;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color);
   text-shadow: none;
 }
 
@@ -97,12 +100,81 @@ button {
   margin: 0;
   padding: 6px;
   border-radius: 0;
-  background-color: #2196f3;
+  background-color: var(--button-secondary);
   border: none;
   color: white;
   font-size: 12px;
 }
 
 .copy-button:hover {
-  background-color: #0b7dda;
+  background-color: var(--button-secondary-hover);
+}
+
+/* Theme toggle styles */
+.theme-switch {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: var(--text-color);
+  font-size: 18px;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  transition: all 0.3s ease;
+}
+
+.theme-switch:hover {
+  background-color: rgba(128, 128, 128, 0.2);
+}
+
+/* Loading spinner styles */
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 16px 0;
+}
+
+.spinner {
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 3px solid var(--button-primary);
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 8px;
+}
+
+[data-theme='dark'] .spinner {
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top: 3px solid var(--button-primary);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Badge style for successful operations */
+.badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 10px;
+  background-color: var(--button-primary);
+  color: white;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.badge.visible {
+  opacity: 1;
 }
