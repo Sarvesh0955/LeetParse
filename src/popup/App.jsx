@@ -318,40 +318,132 @@ function App() {
         </Box>
 
         {!isLeetCodeProblem ? (
-          <Paper 
-            elevation={0} 
-            sx={{ 
-              p: 3, 
-              textAlign: 'center',
-              bgcolor: 'background.code',
-              border: '1px solid',
-              borderColor: 'divider'
-            }}
-          >
-            <Typography variant="h6" gutterBottom>
-              Not on a LeetCode Problem Page
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-              Navigate to a LeetCode problem to use this extension
-            </Typography>
-            <Stack spacing={2} direction="column" alignItems="center">
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<OpenInNewIcon />}
-                onClick={handleGoToLeetCode}
-                fullWidth
-              >
-                Go to LeetCode Problems
-              </Button>
-              <Typography variant="caption" color="text.secondary">
-                Or open any LeetCode problem page to get started
+          <>
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                p: 3, 
+                textAlign: 'center',
+                bgcolor: 'background.code',
+                border: '1px solid',
+                borderColor: 'divider',
+                mb: 2
+              }}
+            >
+              <Typography variant="h6" gutterBottom>
+                Not on a LeetCode Problem Page
               </Typography>
-            </Stack>
-          </Paper>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                Navigate to a LeetCode problem to use this extension
+              </Typography>
+              <Stack spacing={2} direction="column" alignItems="center">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<OpenInNewIcon />}
+                  onClick={handleGoToLeetCode}
+                  fullWidth
+                >
+                  Go to LeetCode Problems
+                </Button>
+                <Typography variant="caption" color="text.secondary">
+                  Or open any LeetCode problem page to get started
+                </Typography>
+              </Stack>
+            </Paper>
+            
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                p: 3, 
+                bgcolor: 'background.paper',
+                border: '1px solid',
+                borderColor: 'divider',
+              }}
+            >
+              <Typography variant="subtitle1" fontWeight="medium" mb={1.5}>
+                About LeetCode Parser
+              </Typography>
+              
+              <Typography variant="body2" color="text.secondary" paragraph>
+                This extension helps you solve LeetCode problems in your preferred C++ environment by:
+              </Typography>
+              
+              <Stack spacing={1.5}>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+                  <Box 
+                    sx={{ 
+                      width: 24, 
+                      height: 24, 
+                      borderRadius: 1, 
+                      bgcolor: 'primary.light',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'background.paper',
+                      fontSize: '0.75rem',
+                      fontWeight: 'bold',
+                      mt: 0.5
+                    }} 
+                  >
+                    1
+                  </Box>
+                  <Typography variant="body2">
+                    Automatically extracting problem details and generating boilerplate code
+                  </Typography>
+                </Box>
+                
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+                  <Box 
+                    sx={{ 
+                      width: 24, 
+                      height: 24, 
+                      borderRadius: 1, 
+                      bgcolor: 'primary.light',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'background.paper',
+                      fontSize: '0.75rem',
+                      fontWeight: 'bold',
+                      mt: 0.5
+                    }} 
+                  >
+                    2
+                  </Box>
+                  <Typography variant="body2">
+                    Formatting test cases for immediate testing in your IDE
+                  </Typography>
+                </Box>
+                
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+                  <Box 
+                    sx={{ 
+                      width: 24, 
+                      height: 24, 
+                      borderRadius: 1, 
+                      bgcolor: 'primary.light',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'background.paper',
+                      fontSize: '0.75rem',
+                      fontWeight: 'bold',
+                      mt: 0.5
+                    }} 
+                  >
+                    3
+                  </Box>
+                  <Typography variant="body2">
+                    Supporting complex data structures like linked lists and binary trees
+                  </Typography>
+                </Box>
+              </Stack>
+            </Paper>
+          </>
         ) : (
           <>
-            <Button
+              <Button
               variant="contained"
               disabled={loading}
               onClick={handleParseProblem}
@@ -372,6 +464,75 @@ function App() {
                 'Parse Problem'
               )}
             </Button>
+            {!cfInput && !boilerplateCode ? (
+              <>
+                <Paper 
+                  elevation={0} 
+                  sx={{ 
+                    p: 3, 
+                    bgcolor: 'background.code',
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    mb: 2
+                  }}
+                >
+                  <Typography variant="subtitle1" fontWeight="medium" gutterBottom>
+                    Ready to parse this LeetCode problem!
+                  </Typography>
+                  
+                  <Typography variant="body2" color="text.secondary" paragraph>
+                    This extension will extract the problem details and generate:
+                  </Typography>
+                  
+                  <Stack spacing={1} sx={{ mb: 2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                      <Box 
+                        sx={{ 
+                          width: 6, 
+                          height: 6, 
+                          borderRadius: '50%', 
+                          bgcolor: 'primary.main' 
+                        }} 
+                      />
+                      <Typography variant="body2">
+                        Complete C++ boilerplate with input/output handling
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                      <Box 
+                        sx={{ 
+                          width: 6, 
+                          height: 6, 
+                          borderRadius: '50%', 
+                          bgcolor: 'primary.main' 
+                        }} 
+                      />
+                      <Typography variant="body2">
+                        Formatted test cases for direct testing
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                      <Box 
+                        sx={{ 
+                          width: 6, 
+                          height: 6, 
+                          borderRadius: '50%', 
+                          bgcolor: 'primary.main' 
+                        }} 
+                      />
+                      <Typography variant="body2">
+                        Support for special data structures (ListNode, TreeNode)
+                      </Typography>
+                    </Box>
+                  </Stack>
+                  
+                  <Typography variant="caption" color="text.secondary">
+                    Click the button below to start parsing the current problem
+                  </Typography>
+                </Paper>
+              </>
+            ) : null}
+            
 
             <Fade in={loading}>
               <Box sx={{ 
