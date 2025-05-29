@@ -1,7 +1,7 @@
 {
-  "name": "leetcode-parser",
+  "name": "leetparse",
   "version": "1.0.0",
-  "description": "Chrome extension to parse leetcode problems",
+  "description": "Chrome extension to parse LeetCode problems",
   "type": "module",
   "scripts": {
     "dev": "vite",

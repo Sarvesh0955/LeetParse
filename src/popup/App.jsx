@@ -301,7 +301,7 @@ function App() {
           mb: 3
         }}>
           <Typography variant="h6" component="h1" fontWeight="bold">
-            LeetCode Parser
+            LeetParse
           </Typography>
           <IconButton 
             onClick={toggleTheme} 
@@ -362,7 +362,7 @@ function App() {
               }}
             >
               <Typography variant="subtitle1" fontWeight="medium" mb={1.5}>
-                About LeetCode Parser
+                About LeetParse
               </Typography>
               
               <Typography variant="body2" color="text.secondary" paragraph>

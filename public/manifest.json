@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "LeetCode Parser",
+  "name": "LeetParse",
   "version": "1.0.0",
   "description": "A Chrome extension to parse LeetCode problems",
   "action": {

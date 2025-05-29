@@ -216,7 +216,7 @@ function Options() {
             <Stack direction="row" spacing={2} alignItems="center">
               <SettingsIcon color="primary" sx={{ fontSize: 28 }} />
               <Typography variant="h5" component="h1" fontWeight="bold">
-                LeetCode Parser Settings
+                LeetParse Settings
               </Typography>
             </Stack>
             <IconButton 

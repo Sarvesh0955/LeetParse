@@ -1,12 +1,12 @@
 # LeetParse - Chrome Extension
 
-![LeetCode Parser Logo](public/icons/icon2.png)
+![LeetParse Logo](public/icons/icon2.png)
 
 A powerful Chrome extension built with Vite and React that helps competitive programmers parse LeetCode problems and generate ready-to-use boilerplate code with test cases.
 
 ## 📝 Description
 
-LeetCode Parser is a developer-oriented Chrome extension that streamlines the process of solving LeetCode problems in your own development environment. It automatically extracts problem details, generates boilerplate code with proper input/output handling, and formats test cases for easy testing.
+LeetParse is a developer-oriented Chrome extension that streamlines the process of solving LeetCode problems in your own development environment. It automatically extracts problem details, generates boilerplate code with proper input/output handling, and formats test cases for easy testing.
 
 ## ✨ Features
 
@@ -39,8 +39,8 @@ LeetCode Parser is a developer-oriented Chrome extension that streamlines the pr
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/leetcode-parser.git
-   cd leetcode-parser
+   git clone https://github.com/yourusername/leetparse.git
+   cd leetparse
    ```
 
 2. Install dependencies:
@@ -62,7 +62,7 @@ LeetCode Parser is a developer-oriented Chrome extension that streamlines the pr
 ## 📋 Usage
 
 1. Navigate to any LeetCode problem page (e.g., https://leetcode.com/problems/two-sum/)
-2. Click the LeetCode Parser extension icon in your Chrome toolbar
+2. Click the LeetParse extension icon in your Chrome toolbar
 3. Click the "Parse Problem" button in the popup
 4. Wait for the extension to parse the problem and generate code (usually instantaneous)
 5. Use the "Copy Input" button to copy the test cases
