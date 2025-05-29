@@ -1,17 +1,26 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
-import './index.css'
+
+const applyTheme = (theme) => {
+  if (theme === 'system') {
+    theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+}
 
 const initializeTheme = () => {
   chrome.storage.sync.get(['theme'], (result) => {
     let theme = result.theme || 'system';
-    if (theme === 'system') {
-      theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-    document.documentElement.setAttribute('data-theme', theme);
+    applyTheme(theme);
   });
 }
+
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'sync' && changes.theme) {
+    applyTheme(changes.theme.newValue);
+  }
+});
 
 initializeTheme();
 
