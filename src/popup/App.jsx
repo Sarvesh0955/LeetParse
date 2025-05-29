@@ -11,14 +11,16 @@ import {
   CircularProgress,
   Fade,
   useMediaQuery,
-  Stack
+  Stack,
+  Divider
 } from '@mui/material';
 import { 
   DarkMode as DarkModeIcon, 
   LightMode as LightModeIcon,
   ContentCopy as ContentCopyIcon,
   Check as CheckIcon,
-  OpenInNew as OpenInNewIcon
+  OpenInNew as OpenInNewIcon,
+  Code as CodeIcon
 } from '@mui/icons-material';
 import { SnackbarProvider, useSnackbar } from 'notistack';
 
@@ -34,12 +36,13 @@ const CodeBlock = ({ title, content, onCopy }) => {
 
   return (
     <Paper 
-      elevation={2} 
+      elevation={0} 
       sx={{ 
         mt: 2,
         overflow: 'hidden',
         border: '1px solid',
-        borderColor: 'divider'
+        borderColor: 'divider',
+        bgcolor: 'background.code',
       }}
     >
       <Box sx={{ 
@@ -48,13 +51,27 @@ const CodeBlock = ({ title, content, onCopy }) => {
         borderColor: 'divider',
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        bgcolor: 'background.paper',
       }}>
-        <Typography variant="subtitle2" fontWeight="medium">
-          {title}
-        </Typography>
-        <IconButton size="small" onClick={handleCopy}>
-          {copied ? <CheckIcon fontSize="small\" color="success" /> : <ContentCopyIcon fontSize="small" />}
+        <Stack direction="row" spacing={1} alignItems="center">
+          <CodeIcon fontSize="small" color="primary" />
+          <Typography variant="subtitle2" fontWeight="medium">
+            {title}
+          </Typography>
+        </Stack>
+        <IconButton 
+          size="small" 
+          onClick={handleCopy}
+          sx={{
+            bgcolor: copied ? 'success.main' : 'background.code',
+            color: copied ? 'white' : 'inherit',
+            '&:hover': {
+              bgcolor: copied ? 'success.dark' : 'action.hover',
+            },
+          }}
+        >
+          {copied ? <CheckIcon fontSize="small" /> : <ContentCopyIcon fontSize="small" />}
         </IconButton>
       </Box>
       <Box
@@ -66,7 +83,6 @@ const CodeBlock = ({ title, content, onCopy }) => {
           overflow: 'auto',
           fontSize: '0.875rem',
           fontFamily: 'monospace',
-          bgcolor: 'background.paper',
           '&::-webkit-scrollbar': {
             width: '8px',
             height: '8px',
@@ -100,42 +116,55 @@ function App() {
     palette: {
       mode,
       primary: {
-        main: mode === 'light' ? '#2E7D32' : '#4CAF50',
-        light: mode === 'light' ? '#4CAF50' : '#66BB6A',
-        dark: mode === 'light' ? '#1B5E20' : '#388E3C',
+        main: mode === 'light' ? '#0A84FF' : '#60A5FA',
+        light: mode === 'light' ? '#3B82F6' : '#93C5FD',
+        dark: mode === 'light' ? '#1D4ED8' : '#2563EB',
       },
       secondary: {
-        main: mode === 'light' ? '#0288D1' : '#29B6F6',
-        light: mode === 'light' ? '#29B6F6' : '#4FC3F7',
-        dark: mode === 'light' ? '#01579B' : '#0288D1',
+        main: mode === 'light' ? '#8B5CF6' : '#A78BFA',
+        light: mode === 'light' ? '#A78BFA' : '#C4B5FD',
+        dark: mode === 'light' ? '#6D28D9' : '#7C3AED',
       },
       success: {
-        main: mode === 'light' ? '#2E7D32' : '#4CAF50',
+        main: mode === 'light' ? '#10B981' : '#34D399',
+        light: mode === 'light' ? '#34D399' : '#6EE7B7',
+        dark: mode === 'light' ? '#059669' : '#10B981',
       },
       error: {
-        main: '#D32F2F',
+        main: '#EF4444',
+        light: '#F87171',
+        dark: '#DC2626',
       },
       background: {
-        default: mode === 'light' ? '#F8FAFC' : '#121212',
-        paper: mode === 'light' ? '#FFFFFF' : '#1E1E1E',
-        code: mode === 'light' ? '#F1F5F9' : '#262626',
+        default: mode === 'light' ? '#F9FAFB' : '#111827',
+        paper: mode === 'light' ? '#FFFFFF' : '#1F2937',
+        code: mode === 'light' ? '#F3F4F6' : '#374151',
       },
       text: {
-        primary: mode === 'light' ? '#1A2027' : '#E0E0E0',
-        secondary: mode === 'light' ? '#3E5060' : '#A0AEC0',
+        primary: mode === 'light' ? '#111827' : '#F9FAFB',
+        secondary: mode === 'light' ? '#4B5563' : '#9CA3AF',
       },
-      divider: mode === 'light' ? '#E2E8F0' : '#2D3748',
+      divider: mode === 'light' ? '#E5E7EB' : '#374151',
     },
     typography: {
       fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
+      h1: { fontWeight: 700 },
+      h2: { fontWeight: 600 },
+      h3: { fontWeight: 600 },
+      h4: { fontWeight: 600 },
+      h5: { fontWeight: 600 },
+      h6: { fontWeight: 600 },
+    },
+    shape: {
+      borderRadius: 12,
     },
     components: {
       MuiButton: {
         styleOverrides: {
           root: {
             textTransform: 'none',
-            borderRadius: '8px',
             fontWeight: 500,
+            padding: '10px 20px',
           },
           contained: {
             boxShadow: 'none',
@@ -148,15 +177,7 @@ function App() {
       MuiPaper: {
         styleOverrides: {
           root: {
-            borderRadius: '12px',
             backgroundImage: 'none',
-          },
-        },
-      },
-      MuiIconButton: {
-        styleOverrides: {
-          root: {
-            borderRadius: '8px',
           },
         },
       },
@@ -234,12 +255,21 @@ function App() {
           display: 'flex', 
           justifyContent: 'space-between',
           alignItems: 'center',
-          mb: 2
+          mb: 3
         }}>
           <Typography variant="h6" component="h1" fontWeight="bold">
             LeetCode Parser
           </Typography>
-          <IconButton onClick={toggleTheme} size="small">
+          <IconButton 
+            onClick={toggleTheme} 
+            size="small"
+            sx={{ 
+              bgcolor: 'background.code',
+              '&:hover': {
+                bgcolor: mode === 'light' ? 'grey.200' : 'grey.800',
+              },
+            }}
+          >
             {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
           </IconButton>
         </Box>
@@ -250,7 +280,7 @@ function App() {
             sx={{ 
               p: 3, 
               textAlign: 'center',
-              bgcolor: 'background.paper',
+              bgcolor: 'background.code',
               border: '1px solid',
               borderColor: 'divider'
             }}
@@ -282,7 +312,13 @@ function App() {
               variant="contained"
               disabled={loading}
               onClick={handleParseProblem}
-              sx={{ mb: 2 }}
+              sx={{ 
+                mb: 2,
+                bgcolor: 'primary.main',
+                '&:hover': {
+                  bgcolor: 'primary.dark',
+                },
+              }}
             >
               {loading ? (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -302,7 +338,7 @@ function App() {
                 gap: 1,
                 my: 2
               }}>
-                <CircularProgress size={24} />
+                <CircularProgress size={24} color="primary" />
                 <Typography variant="body2" color="text.secondary">
                   Parsing problem, please wait...
                 </Typography>
