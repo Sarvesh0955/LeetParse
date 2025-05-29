@@ -1,46 +1,137 @@
-import { useState, useEffect } from 'react'
-import './App.css'
+import { useState, useEffect } from 'react';
+import { 
+  ThemeProvider, 
+  createTheme, 
+  CssBaseline,
+  Box,
+  Button,
+  Typography,
+  Paper,
+  IconButton,
+  CircularProgress,
+  Fade,
+  useMediaQuery
+} from '@mui/material';
+import { 
+  DarkMode as DarkModeIcon, 
+  LightMode as LightModeIcon,
+  ContentCopy as ContentCopyIcon,
+  Check as CheckIcon
+} from '@mui/icons-material';
+import { SnackbarProvider, useSnackbar } from 'notistack';
+
+const CodeBlock = ({ title, content, onCopy }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(content);
+    setCopied(true);
+    onCopy();
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <Paper 
+      elevation={2} 
+      sx={{ 
+        mt: 2,
+        overflow: 'hidden',
+        border: '1px solid',
+        borderColor: 'divider'
+      }}
+    >
+      <Box sx={{ 
+        p: 1.5, 
+        borderBottom: '1px solid',
+        borderColor: 'divider',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+      }}>
+        <Typography variant="subtitle2" fontWeight="medium">
+          {title}
+        </Typography>
+        <IconButton size="small" onClick={handleCopy}>
+          {copied ? <CheckIcon fontSize="small\" color="success" /> : <ContentCopyIcon fontSize="small" />}
+        </IconButton>
+      </Box>
+      <Box
+        component="pre"
+        sx={{
+          m: 0,
+          p: 2,
+          maxHeight: 200,
+          overflow: 'auto',
+          fontSize: '0.875rem',
+          fontFamily: 'monospace',
+          bgcolor: 'background.paper',
+          '&::-webkit-scrollbar': {
+            width: '8px',
+            height: '8px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: 'action.hover',
+            borderRadius: '4px',
+          },
+        }}
+      >
+        <code>{content}</code>
+      </Box>
+    </Paper>
+  );
+};
 
 function App() {
   const [isLeetCodeProblem, setIsLeetCodeProblem] = useState(false);
-  const [currentUrl, setCurrentUrl] = useState('');
-  const [cfInput, setCfInput] = useState('');
-  const [boilerplateCode, setBoilerplateCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [connectionAttempted, setConnectionAttempted] = useState(false);
-  const [theme, setTheme] = useState(() => {
-    const savedTheme = localStorage.getItem('leetcode-parser-theme');
-    if (savedTheme) {
-      return savedTheme;
-    }
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  const [cfInput, setCfInput] = useState('');
+  const [boilerplateCode, setBoilerplateCode] = useState('');
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const [mode, setMode] = useState(() => {
+    const savedMode = localStorage.getItem('leetcode-parser-theme');
+    return savedMode || (prefersDarkMode ? 'dark' : 'light');
   });
-  const [copyBadges, setCopyBadges] = useState({
-    input: false,
-    code: false
-  });
+  const { enqueueSnackbar } = useSnackbar();
 
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('leetcode-parser-theme', theme);
-  }, [theme]);
+  const theme = createTheme({
+    palette: {
+      mode,
+      primary: {
+        main: mode === 'light' ? '#2cbb5d' : '#3dd56d',
+      },
+      background: {
+        default: mode === 'light' ? '#ffffff' : '#1e1e1e',
+        paper: mode === 'light' ? '#ffffff' : '#2a2a2a',
+      },
+    },
+    typography: {
+      fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
+    },
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            textTransform: 'none',
+          },
+        },
+      },
+    },
+  });
 
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const url = tabs[0]?.url || '';
-      setCurrentUrl(url);
       setIsLeetCodeProblem(url.match(/^https:\/\/leetcode\.com\/problems\//) !== null);
     });
 
-    const port = chrome.runtime.connect({ name: 'popup' });
-    
     const messageListener = (message) => {
       if (message.action === "codeGenerated") {
         setLoading(false);
         
         if (message.error) {
           setError(message.error);
+          enqueueSnackbar(message.error, { variant: 'error' });
         } else {
           setBoilerplateCode(message.boilerplateCode || '');
           setCfInput(message.testCase || '');
@@ -50,133 +141,132 @@ function App() {
     };
     
     chrome.runtime.onMessage.addListener(messageListener);
-    
-    return () => {
-      chrome.runtime.onMessage.removeListener(messageListener);
-      if (port) {
-        port.disconnect();
-      }
-    };
-  }, []);
+    return () => chrome.runtime.onMessage.removeListener(messageListener);
+  }, [enqueueSnackbar]);
 
   const handleParseProblem = () => {
     setLoading(true);
     setError('');
     setCfInput('');
     setBoilerplateCode('');
-    setConnectionAttempted(true);
     
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (!tabs[0] || !tabs[0].id) {
+      if (!tabs[0]?.id) {
         setLoading(false);
-        setError('Cannot access the current tab');
+        enqueueSnackbar('Cannot access the current tab', { variant: 'error' });
         return;
       }
       
-      const timeoutId = setTimeout(() => {
-        if (loading && connectionAttempted) {
-          setLoading(false);
-          setError('Content script not responding. Make sure you are on a LeetCode problem page and try refreshing.');
-        }
-      }, 5000);
-      
       chrome.tabs.sendMessage(tabs[0].id, { action: "parseProblem" }, (response) => {
-        clearTimeout(timeoutId);
-        
         if (chrome.runtime.lastError) {
-          console.error("Error sending message:", chrome.runtime.lastError);
           setLoading(false);
-          setError('Content script not accessible. Make sure you are on a LeetCode problem page.');
-        } else {
-          console.log("Message acknowledged by content script:", response);
+          enqueueSnackbar('Please refresh the page and try again', { variant: 'error' });
         }
       });
     });
   };
 
-  const copyToClipboard = (text, type) => {
-    navigator.clipboard.writeText(text)
-      .then(() => {
-        console.log('Copied to clipboard');
-        setCopyBadges(prev => ({ ...prev, [type]: true }));
-        setTimeout(() => {
-          setCopyBadges(prev => ({ ...prev, [type]: false }));
-        }, 2000);
-      })
-      .catch(err => {
-        console.error('Could not copy text: ', err);
-        setError('Failed to copy to clipboard');
-      });
-  };
-
   const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+    const newMode = mode === 'light' ? 'dark' : 'light';
+    setMode(newMode);
+    localStorage.setItem('leetcode-parser-theme', newMode);
   };
 
   return (
-    <div className="App">
-      <button onClick={toggleTheme} className="theme-switch" title="Toggle theme">
-        {theme === 'light' ? '🌙' : '☀️'}
-      </button>
-      
-      <h1>LeetCode Parser</h1>
-      
-      <button 
-        onClick={handleParseProblem} 
-        disabled={!isLeetCodeProblem || loading}
-        className={isLeetCodeProblem && !loading ? 'button-enabled' : 'button-disabled'}
-      >
-        {loading ? 'Parsing...' : 'Parse Problem'}
-      </button>
-      
-      {!isLeetCodeProblem && (
-        <p className="warning-text">
-          Please navigate to a LeetCode problem page (https://leetcode.com/problems/*)
-        </p>
-      )}
-      
-      {loading && (
-        <div className="loader-container">
-          <div className="spinner"></div>
-          <p>Parsing problem, please wait...</p>
-        </div>
-      )}
-      
-      {error && (
-        <div className="error-container">
-          <p className="error-text">Error: {error}</p>
-        </div>
-      )}
-      
-      {cfInput && (
-        <div className="result-container">
-          <h2>Input</h2>
-          <pre className="code-block">{cfInput}</pre>
-          <button 
-            className="copy-button"
-            onClick={() => copyToClipboard(cfInput, 'input')}
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box sx={{ 
+        width: 400,
+        p: 2,
+        minHeight: 200,
+        display: 'flex',
+        flexDirection: 'column'
+      }}>
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 2
+        }}>
+          <Typography variant="h6" component="h1" fontWeight="bold">
+            LeetCode Parser
+          </Typography>
+          <IconButton onClick={toggleTheme} size="small">
+            {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
+          </IconButton>
+        </Box>
+
+        <Button
+          variant="contained"
+          disabled={!isLeetCodeProblem || loading}
+          onClick={handleParseProblem}
+          sx={{ mb: 2 }}
+        >
+          {loading ? (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <CircularProgress size={16} color="inherit" />
+              <span>Parsing...</span>
+            </Box>
+          ) : (
+            'Parse Problem'
+          )}
+        </Button>
+
+        {!isLeetCodeProblem && (
+          <Typography 
+            variant="body2" 
+            color="warning.main"
+            sx={{ mb: 2 }}
           >
-            Copy Input
-            <span className={`badge ${copyBadges.input ? 'visible' : ''}`}>Copied!</span>
-          </button>
-        </div>
-      )}
-      
-      {boilerplateCode && (
-        <div className="result-container">
-          <h2>Boilerplate Code</h2>
-          <pre className="code-block">{boilerplateCode}</pre>
-          <button 
-            className="copy-button"
-            onClick={() => copyToClipboard(boilerplateCode, 'code')}
-          >
-            Copy Code
-            <span className={`badge ${copyBadges.code ? 'visible' : ''}`}>Copied!</span>
-          </button>
-        </div>
-      )}
-    </div>
-  )
+            Please navigate to a LeetCode problem page
+          </Typography>
+        )}
+
+        <Fade in={loading}>
+          <Box sx={{ 
+            display: loading ? 'flex' : 'none',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 1,
+            my: 2
+          }}>
+            <CircularProgress size={24} />
+            <Typography variant="body2" color="text.secondary">
+              Parsing problem, please wait...
+            </Typography>
+          </Box>
+        </Fade>
+
+        {cfInput && (
+          <CodeBlock
+            title="Input"
+            content={cfInput}
+            onCopy={() => enqueueSnackbar('Input copied to clipboard', { variant: 'success' })}
+          />
+        )}
+
+        {boilerplateCode && (
+          <CodeBlock
+            title="Boilerplate Code"
+            content={boilerplateCode}
+            onCopy={() => enqueueSnackbar('Code copied to clipboard', { variant: 'success' })}
+          />
+        )}
+      </Box>
+    </ThemeProvider>
+  );
 }
 
-export default App
+function AppWrapper() {
+  return (
+    <SnackbarProvider 
+      maxSnack={3}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      autoHideDuration={2000}
+    >
+      <App />
+    </SnackbarProvider>
+  );
+}
+
+export default AppWrapper;

@@ -1,117 +1,179 @@
-import { useState, useEffect } from 'react'
-import './Options.css'
+import { useState, useEffect } from 'react';
+import {
+  ThemeProvider,
+  createTheme,
+  CssBaseline,
+  Box,
+  Container,
+  Typography,
+  IconButton,
+  Paper,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Button,
+  Fade,
+  useMediaQuery
+} from '@mui/material';
+import {
+  DarkMode as DarkModeIcon,
+  LightMode as LightModeIcon,
+} from '@mui/icons-material';
+import { SnackbarProvider, useSnackbar } from 'notistack';
 
 function Options() {
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const [mode, setMode] = useState(() => {
+    const savedMode = localStorage.getItem('leetcode-parser-theme');
+    return savedMode || (prefersDarkMode ? 'dark' : 'light');
+  });
+
   const defaultSettings = {
-    theme: 'system', // system, light, dark
-    preferredLanguage: 'cpp', // cpp
+    theme: 'system',
+    preferredLanguage: 'cpp',
   };
 
   const [settings, setSettings] = useState(defaultSettings);
-  const [saveNotification, setSaveNotification] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState('light');
+  const { enqueueSnackbar } = useSnackbar();
+
+  const theme = createTheme({
+    palette: {
+      mode,
+      primary: {
+        main: mode === 'light' ? '#2cbb5d' : '#3dd56d',
+      },
+      background: {
+        default: mode === 'light' ? '#f5f5f5' : '#1e1e1e',
+        paper: mode === 'light' ? '#ffffff' : '#2a2a2a',
+      },
+    },
+    typography: {
+      fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
+    },
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            textTransform: 'none',
+          },
+        },
+      },
+    },
+  });
 
   useEffect(() => {
     chrome.storage.sync.get(defaultSettings, (items) => {
       setSettings(items);
-      
       let themeToUse = items.theme;
       if (themeToUse === 'system') {
-        themeToUse = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        themeToUse = prefersDarkMode ? 'dark' : 'light';
       }
-      setCurrentTheme(themeToUse);
-      document.documentElement.setAttribute('data-theme', themeToUse);
+      setMode(themeToUse);
     });
-  }, []);
+  }, [prefersDarkMode]);
 
   const saveSettings = () => {
     chrome.storage.sync.set(settings, () => {
-      showSaveNotification();
-      
+      enqueueSnackbar('Settings saved successfully', { variant: 'success' });
       let themeToUse = settings.theme;
       if (themeToUse === 'system') {
-        themeToUse = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        themeToUse = prefersDarkMode ? 'dark' : 'light';
       }
-      setCurrentTheme(themeToUse);
-      document.documentElement.setAttribute('data-theme', themeToUse);
+      setMode(themeToUse);
     });
   };
 
   const resetSettings = () => {
     setSettings(defaultSettings);
     chrome.storage.sync.set(defaultSettings, () => {
-      showSaveNotification();
+      enqueueSnackbar('Settings reset to defaults', { variant: 'info' });
     });
-  };
-
-  const showSaveNotification = () => {
-    setSaveNotification(true);
-    setTimeout(() => setSaveNotification(false), 3000);
   };
 
   const toggleTheme = () => {
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    setCurrentTheme(newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
-    setSettings({...settings, theme: newTheme});
+    const newMode = mode === 'light' ? 'dark' : 'light';
+    setMode(newMode);
+    setSettings(prev => ({ ...prev, theme: newMode }));
   };
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setSettings({
-      ...settings,
-      [name]: type === 'checkbox' ? checked : value,
-    });
-  };
-  
   return (
-    <div className="options-container">
-      <div className="header">
-        <h1>LeetCode Parser Settings</h1>
-        <button 
-          onClick={toggleTheme}
-          className="theme-switch"
-          title="Toggle theme"
-        >
-          {currentTheme === 'light' ? '🌙' : '☀️'}
-        </button>
-      </div>
-      
-      <div className="section">
-        <h2>Appearance</h2>
-        <div className="option-row">
-          <div className="option-description">
-            <h3>Theme</h3>
-            <p>Choose between light, dark, or system theme</p>
-          </div>
-          <div className="option-control">
-            <select 
-              name="theme" 
-              value={settings.theme}
-              onChange={handleChange}
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Container maxWidth="md" sx={{ py: 4 }}>
+        <Paper elevation={0} sx={{ p: 3, borderRadius: 2 }}>
+          <Box sx={{ 
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 4
+          }}>
+            <Typography variant="h5" component="h1" fontWeight="bold">
+              LeetCode Parser Settings
+            </Typography>
+            <IconButton onClick={toggleTheme} size="large">
+              {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
+            </IconButton>
+          </Box>
+
+          <Paper elevation={1} sx={{ p: 3, mb: 3, borderRadius: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Appearance
+            </Typography>
+            <Box sx={{ mt: 2 }}>
+              <FormControl fullWidth>
+                <InputLabel id="theme-select-label">Theme</InputLabel>
+                <Select
+                  labelId="theme-select-label"
+                  value={settings.theme}
+                  label="Theme"
+                  onChange={(e) => setSettings(prev => ({ ...prev, theme: e.target.value }))}
+                >
+                  <MenuItem value="system">System Default</MenuItem>
+                  <MenuItem value="light">Light</MenuItem>
+                  <MenuItem value="dark">Dark</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+          </Paper>
+
+          <Box sx={{ 
+            display: 'flex',
+            justifyContent: 'flex-end',
+            gap: 2,
+            mt: 4
+          }}>
+            <Button
+              variant="outlined"
+              onClick={resetSettings}
+              color="inherit"
             >
-              <option value="system">System Default</option>
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      
-      <div className="button-group">
-        <button className="reset-button" onClick={resetSettings}>
-          Reset to Defaults
-        </button>
-        <button className="save-button" onClick={saveSettings}>
-          Save Settings
-        </button>
-      </div>
-      
-      <div className={`save-notification ${saveNotification ? 'visible' : ''}`}>
-        Settings saved successfully!
-      </div>
-    </div>
-  )
+              Reset to Defaults
+            </Button>
+            <Button
+              variant="contained"
+              onClick={saveSettings}
+              color="primary"
+            >
+              Save Settings
+            </Button>
+          </Box>
+        </Paper>
+      </Container>
+    </ThemeProvider>
+  );
 }
 
-export default Options
+function OptionsWrapper() {
+  return (
+    <SnackbarProvider 
+      maxSnack={3}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      autoHideDuration={3000}
+    >
+      <Options />
+    </SnackbarProvider>
+  );
+}
+
+export default OptionsWrapper;
