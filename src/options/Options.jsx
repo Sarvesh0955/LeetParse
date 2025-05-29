@@ -28,10 +28,7 @@ import { SnackbarProvider, useSnackbar } from 'notistack';
 
 function Options() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const [mode, setMode] = useState(() => {
-    const savedMode = localStorage.getItem('leetcode-parser-theme');
-    return savedMode || (prefersDarkMode ? 'dark' : 'light');
-  });
+  const [mode, setMode] = useState(prefersDarkMode ? 'dark' : 'light');
 
   const defaultSettings = {
     theme: 'system',
@@ -143,6 +140,23 @@ function Options() {
       }
       setMode(themeToUse);
     });
+    
+    const handleStorageChange = (changes, area) => {
+      if (area === 'sync' && changes.theme) {
+        let themeToUse = changes.theme.newValue;
+        if (themeToUse === 'system') {
+          themeToUse = prefersDarkMode ? 'dark' : 'light';
+        }
+        setMode(themeToUse);
+        setSettings(prev => ({ ...prev, theme: changes.theme.newValue }));
+      }
+    };
+    
+    chrome.storage.onChanged.addListener(handleStorageChange);
+    
+    return () => {
+      chrome.storage.onChanged.removeListener(handleStorageChange);
+    };
   }, [prefersDarkMode]);
 
   const saveSettings = () => {
@@ -172,13 +186,20 @@ function Options() {
           horizontal: 'center',
         },
       });
+      
+      let themeToUse = defaultSettings.theme;
+      if (themeToUse === 'system') {
+        themeToUse = prefersDarkMode ? 'dark' : 'light';
+      }
+      setMode(themeToUse);
     });
   };
 
   const toggleTheme = () => {
     const newMode = mode === 'light' ? 'dark' : 'light';
     setMode(newMode);
-    setSettings(prev => ({ ...prev, theme: newMode }));
+    const newSettings = { ...settings, theme: newMode };
+    setSettings(newSettings);
   };
 
   return (
@@ -235,7 +256,11 @@ function Options() {
                   labelId="theme-select-label"
                   value={settings.theme}
                   label="Theme"
-                  onChange={(e) => setSettings(prev => ({ ...prev, theme: e.target.value }))}
+                  onChange={(e) => {
+                    const newTheme = e.target.value;
+                    setMode(newTheme === 'system' ? (prefersDarkMode ? 'dark' : 'light') : newTheme);
+                    setSettings(prev => ({ ...prev, theme: newTheme }));
+                  }}
                   sx={{
                     bgcolor: 'background.paper',
                   }}

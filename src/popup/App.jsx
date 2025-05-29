@@ -11,8 +11,7 @@ import {
   CircularProgress,
   Fade,
   useMediaQuery,
-  Stack,
-  Divider
+  Stack
 } from '@mui/material';
 import { 
   DarkMode as DarkModeIcon, 
@@ -88,7 +87,7 @@ const CodeBlock = ({ title, content, onCopy, type = 'code' }) => {
           overflow: 'auto',
           fontSize: '0.875rem',
           fontFamily: '"Fira Code", "Consolas", monospace',
-          bgcolor: type === 'code' ? 'background.code' : 'background.default',
+          bgcolor: 'background.default',
           color: type === 'code' ? 'text.primary' : 'text.secondary',
           lineHeight: 1.5,
           '& .keyword': { color: '#C678DD' },
@@ -123,10 +122,35 @@ function App() {
   const [cfInput, setCfInput] = useState('');
   const [boilerplateCode, setBoilerplateCode] = useState('');
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const [mode, setMode] = useState(() => {
-    const savedMode = localStorage.getItem('leetcode-parser-theme');
-    return savedMode || (prefersDarkMode ? 'dark' : 'light');
-  });
+  const [mode, setMode] = useState(prefersDarkMode ? 'dark' : 'light');
+  
+  // Initialize mode from chrome storage on component mount
+  useEffect(() => {
+    chrome.storage.sync.get(['theme'], (result) => {
+      let themeToUse = result.theme || 'system';
+      if (themeToUse === 'system') {
+        themeToUse = prefersDarkMode ? 'dark' : 'light';
+      }
+      setMode(themeToUse);
+    });
+    
+    // Listen for theme changes in storage
+    const handleStorageChange = (changes, area) => {
+      if (area === 'sync' && changes.theme) {
+        let themeToUse = changes.theme.newValue;
+        if (themeToUse === 'system') {
+          themeToUse = prefersDarkMode ? 'dark' : 'light';
+        }
+        setMode(themeToUse);
+      }
+    };
+    
+    chrome.storage.onChanged.addListener(handleStorageChange);
+    
+    return () => {
+      chrome.storage.onChanged.removeListener(handleStorageChange);
+    };
+  }, [prefersDarkMode]);
   const { enqueueSnackbar } = useSnackbar();
 
   const theme = createTheme({
@@ -255,7 +279,9 @@ function App() {
   const toggleTheme = () => {
     const newMode = mode === 'light' ? 'dark' : 'light';
     setMode(newMode);
-    localStorage.setItem('leetcode-parser-theme', newMode);
+    chrome.storage.sync.set({ theme: newMode }, () => {
+      console.log('Theme saved to chrome.storage.sync');
+    });
   };
 
   return (
