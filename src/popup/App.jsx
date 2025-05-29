@@ -20,11 +20,12 @@ import {
   ContentCopy as ContentCopyIcon,
   Check as CheckIcon,
   OpenInNew as OpenInNewIcon,
-  Code as CodeIcon
+  Code as CodeIcon,
+  Terminal as TerminalIcon
 } from '@mui/icons-material';
 import { SnackbarProvider, useSnackbar } from 'notistack';
 
-const CodeBlock = ({ title, content, onCopy }) => {
+const CodeBlock = ({ title, content, onCopy, type = 'code' }) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -55,7 +56,11 @@ const CodeBlock = ({ title, content, onCopy }) => {
         bgcolor: 'background.paper',
       }}>
         <Stack direction="row" spacing={1} alignItems="center">
-          <CodeIcon fontSize="small" color="primary" />
+          {type === 'code' ? (
+            <CodeIcon fontSize="small\" color="primary" />
+          ) : (
+            <TerminalIcon fontSize="small\" color="secondary" />
+          )}
           <Typography variant="subtitle2" fontWeight="medium">
             {title}
           </Typography>
@@ -82,7 +87,16 @@ const CodeBlock = ({ title, content, onCopy }) => {
           maxHeight: 200,
           overflow: 'auto',
           fontSize: '0.875rem',
-          fontFamily: 'monospace',
+          fontFamily: '"Fira Code", "Consolas", monospace',
+          bgcolor: type === 'code' ? 'background.code' : 'background.default',
+          color: type === 'code' ? 'text.primary' : 'text.secondary',
+          lineHeight: 1.5,
+          '& .keyword': { color: '#C678DD' },
+          '& .type': { color: '#E5C07B' },
+          '& .string': { color: '#98C379' },
+          '& .comment': { color: '#7F848E', fontStyle: 'italic' },
+          '& .number': { color: '#D19A66' },
+          '& .operator': { color: '#56B6C2' },
           '&::-webkit-scrollbar': {
             width: '8px',
             height: '8px',
@@ -90,6 +104,9 @@ const CodeBlock = ({ title, content, onCopy }) => {
           '&::-webkit-scrollbar-thumb': {
             backgroundColor: 'action.hover',
             borderRadius: '4px',
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: 'background.paper',
           },
         }}
       >
@@ -347,16 +364,18 @@ function App() {
 
             {cfInput && (
               <CodeBlock
-                title="Input"
+                title="Test Cases"
                 content={cfInput}
-                onCopy={() => enqueueSnackbar('Input copied to clipboard', { variant: 'success' })}
+                type="terminal"
+                onCopy={() => enqueueSnackbar('Test cases copied to clipboard', { variant: 'success' })}
               />
             )}
 
             {boilerplateCode && (
               <CodeBlock
-                title="Boilerplate Code"
+                title="C++ Solution"
                 content={boilerplateCode}
+                type="code"
                 onCopy={() => enqueueSnackbar('Code copied to clipboard', { variant: 'success' })}
               />
             )}
