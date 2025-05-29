@@ -381,10 +381,6 @@ function App() {
                 gap: 1,
                 my: 2
               }}>
-                <CircularProgress size={24} color="primary" />
-                <Typography variant="body2" color="text.secondary">
-                  Parsing problem, please wait...
-                </Typography>
               </Box>
             </Fade>
 
