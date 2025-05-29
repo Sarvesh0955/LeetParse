@@ -10,13 +10,15 @@ import {
   IconButton,
   CircularProgress,
   Fade,
-  useMediaQuery
+  useMediaQuery,
+  Stack
 } from '@mui/material';
 import { 
   DarkMode as DarkModeIcon, 
   LightMode as LightModeIcon,
   ContentCopy as ContentCopyIcon,
-  Check as CheckIcon
+  Check as CheckIcon,
+  OpenInNew as OpenInNewIcon
 } from '@mui/icons-material';
 import { SnackbarProvider, useSnackbar } from 'notistack';
 
@@ -52,7 +54,7 @@ const CodeBlock = ({ title, content, onCopy }) => {
           {title}
         </Typography>
         <IconButton size="small" onClick={handleCopy}>
-          {copied ? <CheckIcon fontSize="small\" color="success" /> : <ContentCopyIcon fontSize="small" />}
+          {copied ? <CheckIcon fontSize="small" color="success" /> : <ContentCopyIcon fontSize="small" />}
         </IconButton>
       </Box>
       <Box
@@ -208,6 +210,10 @@ function App() {
     });
   };
 
+  const handleGoToLeetCode = () => {
+    chrome.tabs.create({ url: 'https://leetcode.com/problemset/all/' });
+  };
+
   const toggleTheme = () => {
     const newMode = mode === 'light' ? 'dark' : 'light';
     setMode(newMode);
@@ -238,61 +244,87 @@ function App() {
           </IconButton>
         </Box>
 
-        <Button
-          variant="contained"
-          disabled={!isLeetCodeProblem || loading}
-          onClick={handleParseProblem}
-          sx={{ mb: 2 }}
-        >
-          {loading ? (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <CircularProgress size={16} color="inherit" />
-              <span>Parsing...</span>
-            </Box>
-          ) : (
-            'Parse Problem'
-          )}
-        </Button>
-
-        {!isLeetCodeProblem && (
-          <Typography 
-            variant="body2" 
-            color="warning.main"
-            sx={{ mb: 2 }}
+        {!isLeetCodeProblem ? (
+          <Paper 
+            elevation={0} 
+            sx={{ 
+              p: 3, 
+              textAlign: 'center',
+              bgcolor: 'background.paper',
+              border: '1px solid',
+              borderColor: 'divider'
+            }}
           >
-            Please navigate to a LeetCode problem page
-          </Typography>
-        )}
-
-        <Fade in={loading}>
-          <Box sx={{ 
-            display: loading ? 'flex' : 'none',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: 1,
-            my: 2
-          }}>
-            <CircularProgress size={24} />
-            <Typography variant="body2" color="text.secondary">
-              Parsing problem, please wait...
+            <Typography variant="h6" gutterBottom>
+              Not on a LeetCode Problem Page
             </Typography>
-          </Box>
-        </Fade>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              Navigate to a LeetCode problem to use this extension
+            </Typography>
+            <Stack spacing={2} direction="column" alignItems="center">
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<OpenInNewIcon />}
+                onClick={handleGoToLeetCode}
+                fullWidth
+              >
+                Go to LeetCode Problems
+              </Button>
+              <Typography variant="caption" color="text.secondary">
+                Or open any LeetCode problem page to get started
+              </Typography>
+            </Stack>
+          </Paper>
+        ) : (
+          <>
+            <Button
+              variant="contained"
+              disabled={loading}
+              onClick={handleParseProblem}
+              sx={{ mb: 2 }}
+            >
+              {loading ? (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <CircularProgress size={16} color="inherit" />
+                  <span>Parsing...</span>
+                </Box>
+              ) : (
+                'Parse Problem'
+              )}
+            </Button>
 
-        {cfInput && (
-          <CodeBlock
-            title="Input"
-            content={cfInput}
-            onCopy={() => enqueueSnackbar('Input copied to clipboard', { variant: 'success' })}
-          />
-        )}
+            <Fade in={loading}>
+              <Box sx={{ 
+                display: loading ? 'flex' : 'none',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 1,
+                my: 2
+              }}>
+                <CircularProgress size={24} />
+                <Typography variant="body2" color="text.secondary">
+                  Parsing problem, please wait...
+                </Typography>
+              </Box>
+            </Fade>
 
-        {boilerplateCode && (
-          <CodeBlock
-            title="Boilerplate Code"
-            content={boilerplateCode}
-            onCopy={() => enqueueSnackbar('Code copied to clipboard', { variant: 'success' })}
-          />
+            {cfInput && (
+              <CodeBlock
+                title="Input"
+                content={cfInput}
+                onCopy={() => enqueueSnackbar('Input copied to clipboard', { variant: 'success' })}
+              />
+            )}
+
+            {boilerplateCode && (
+              <CodeBlock
+                title="Boilerplate Code"
+                content={boilerplateCode}
+                onCopy={() => enqueueSnackbar('Code copied to clipboard', { variant: 'success' })}
+              />
+            )}
+          </>
         )}
       </Box>
     </ThemeProvider>
