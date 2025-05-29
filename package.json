@@ -9,18 +9,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.1",
+    "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
-    "@mui/material": "^5.14.18",
-    "@mui/icons-material": "^5.14.18",
-    "chrome-types": "^0.1.352",
+    "@mui/material": "^5.15.2",
+    "@mui/icons-material": "^5.15.2",
+    "chrome-types": "^0.1.252",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "notistack": "^3.0.1"
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.246",
-    "@vitejs/plugin-react": "^4.1.1",
-    "vite": "^5.0.0"
+    "@types/chrome": "^0.0.254",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.10"
   }
 }
