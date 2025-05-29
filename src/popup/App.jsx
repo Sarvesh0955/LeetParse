@@ -52,7 +52,7 @@ const CodeBlock = ({ title, content, onCopy }) => {
           {title}
         </Typography>
         <IconButton size="small" onClick={handleCopy}>
-          {copied ? <CheckIcon fontSize="small\" color="success" /> : <ContentCopyIcon fontSize="small" />}
+          {copied ? <CheckIcon fontSize="small\" color=\"success" /> : <ContentCopyIcon fontSize="small" />}
         </IconButton>
       </Box>
       <Box
@@ -98,12 +98,31 @@ function App() {
     palette: {
       mode,
       primary: {
-        main: mode === 'light' ? '#2cbb5d' : '#3dd56d',
+        main: mode === 'light' ? '#2E7D32' : '#4CAF50',
+        light: mode === 'light' ? '#4CAF50' : '#66BB6A',
+        dark: mode === 'light' ? '#1B5E20' : '#388E3C',
+      },
+      secondary: {
+        main: mode === 'light' ? '#0288D1' : '#29B6F6',
+        light: mode === 'light' ? '#29B6F6' : '#4FC3F7',
+        dark: mode === 'light' ? '#01579B' : '#0288D1',
+      },
+      success: {
+        main: mode === 'light' ? '#2E7D32' : '#4CAF50',
+      },
+      error: {
+        main: '#D32F2F',
       },
       background: {
-        default: mode === 'light' ? '#ffffff' : '#1e1e1e',
-        paper: mode === 'light' ? '#ffffff' : '#2a2a2a',
+        default: mode === 'light' ? '#F8FAFC' : '#121212',
+        paper: mode === 'light' ? '#FFFFFF' : '#1E1E1E',
+        code: mode === 'light' ? '#F1F5F9' : '#262626',
       },
+      text: {
+        primary: mode === 'light' ? '#1A2027' : '#E0E0E0',
+        secondary: mode === 'light' ? '#3E5060' : '#A0AEC0',
+      },
+      divider: mode === 'light' ? '#E2E8F0' : '#2D3748',
     },
     typography: {
       fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
@@ -113,6 +132,29 @@ function App() {
         styleOverrides: {
           root: {
             textTransform: 'none',
+            borderRadius: '8px',
+            fontWeight: 500,
+          },
+          contained: {
+            boxShadow: 'none',
+            '&:hover': {
+              boxShadow: 'none',
+            },
+          },
+        },
+      },
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            borderRadius: '12px',
+            backgroundImage: 'none',
+          },
+        },
+      },
+      MuiIconButton: {
+        styleOverrides: {
+          root: {
+            borderRadius: '8px',
           },
         },
       },
