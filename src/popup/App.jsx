@@ -54,7 +54,7 @@ const CodeBlock = ({ title, content, onCopy }) => {
           {title}
         </Typography>
         <IconButton size="small" onClick={handleCopy}>
-          {copied ? <CheckIcon fontSize="small" color="success" /> : <ContentCopyIcon fontSize="small" />}
+          {copied ? <CheckIcon fontSize="small\" color="success" /> : <ContentCopyIcon fontSize="small" />}
         </IconButton>
       </Box>
       <Box
