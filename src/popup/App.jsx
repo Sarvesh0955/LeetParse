@@ -227,8 +227,13 @@ function App() {
 
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const url = tabs[0]?.url || '';
-      setIsLeetCodeProblem(url.match(/^https:\/\/leetcode\.com\/problems\//) !== null);
+      try {
+        const url = tabs[0]?.url || '';
+        setIsLeetCodeProblem(url.match(/^https:\/\/leetcode\.com\/problems\//) !== null);
+      } catch (err) {
+        console.error('Error checking URL:', err);
+        enqueueSnackbar('Failed to check current page', { variant: 'error' });
+      }
     });
 
     const messageListener = (message) => {
@@ -251,37 +256,51 @@ function App() {
   }, [enqueueSnackbar]);
 
   const handleParseProblem = () => {
-    setLoading(true);
-    setError('');
-    setCfInput('');
-    setBoilerplateCode('');
-    
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (!tabs[0]?.id) {
-        setLoading(false);
-        enqueueSnackbar('Cannot access the current tab', { variant: 'error' });
-        return;
-      }
+    try {
+      setLoading(true);
+      setError('');
+      setCfInput('');
+      setBoilerplateCode('');
       
-      chrome.tabs.sendMessage(tabs[0].id, { action: "parseProblem" }, (response) => {
-        if (chrome.runtime.lastError) {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (!tabs[0]?.id) {
           setLoading(false);
-          enqueueSnackbar('Please refresh the page and try again', { variant: 'error' });
+          enqueueSnackbar('Cannot access the current tab', { variant: 'error' });
+          return;
         }
+        
+        chrome.tabs.sendMessage(tabs[0].id, { action: "parseProblem" }, (response) => {
+          if (chrome.runtime.lastError) {
+            setLoading(false);
+            enqueueSnackbar('Please refresh the page and try again', { variant: 'error' });
+          }
+        });
       });
-    });
+    } catch (err) {
+      setLoading(false);
+      console.error('Error parsing problem:', err);
+      enqueueSnackbar('Failed to parse problem', { variant: 'error' });
+    }
   };
 
   const handleGoToLeetCode = () => {
-    chrome.tabs.create({ url: 'https://leetcode.com/problemset/all/' });
+    try {
+      chrome.tabs.create({ url: 'https://leetcode.com/problemset/all/' });
+    } catch (err) {
+      console.error('Error opening LeetCode:', err);
+      enqueueSnackbar('Failed to open LeetCode', { variant: 'error' });
+    }
   };
 
   const toggleTheme = () => {
-    const newMode = mode === 'light' ? 'dark' : 'light';
-    setMode(newMode);
-    chrome.storage.sync.set({ theme: newMode }, () => {
-      console.log('Theme saved to chrome.storage.sync');
-    });
+    try {
+      const newMode = mode === 'light' ? 'dark' : 'light';
+      setMode(newMode);
+      chrome.storage.sync.set({ theme: newMode });
+    } catch (err) {
+      console.error('Error toggling theme:', err);
+      enqueueSnackbar('Failed to change theme', { variant: 'error' });
+    }
   };
 
   return (

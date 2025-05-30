@@ -133,73 +133,103 @@ function Options() {
 
   useEffect(() => {
     chrome.storage.sync.get(defaultSettings, (items) => {
-      setSettings(items);
-      let themeToUse = items.theme;
-      if (themeToUse === 'system') {
-        themeToUse = prefersDarkMode ? 'dark' : 'light';
-      }
-      setMode(themeToUse);
-    });
-    
-    const handleStorageChange = (changes, area) => {
-      if (area === 'sync' && changes.theme) {
-        let themeToUse = changes.theme.newValue;
+      try {
+        setSettings(items || defaultSettings);
+        let themeToUse = items?.theme || 'system';
         if (themeToUse === 'system') {
           themeToUse = prefersDarkMode ? 'dark' : 'light';
         }
         setMode(themeToUse);
-        setSettings(prev => ({ ...prev, theme: changes.theme.newValue }));
+      } catch (error) {
+        console.error('Failed to load settings:', error);
+        setSettings(defaultSettings);
+        setMode(prefersDarkMode ? 'dark' : 'light');
+      }
+    });
+    
+    const handleStorageChange = (changes, area) => {
+      if (area === 'sync' && changes.theme) {
+        try {
+          let themeToUse = changes.theme.newValue;
+          if (themeToUse === 'system') {
+            themeToUse = prefersDarkMode ? 'dark' : 'light';
+          }
+          setMode(themeToUse);
+          setSettings(prev => ({ ...prev, theme: changes.theme.newValue }));
+        } catch (error) {
+          console.error('Failed to handle theme change:', error);
+        }
       }
     };
     
-    chrome.storage.onChanged.addListener(handleStorageChange);
+    try {
+      chrome.storage.onChanged.addListener(handleStorageChange);
+    } catch (error) {
+      console.error('Failed to set up storage listener:', error);
+    }
     
     return () => {
-      chrome.storage.onChanged.removeListener(handleStorageChange);
+      try {
+        chrome.storage.onChanged.removeListener(handleStorageChange);
+      } catch (error) {
+        console.error('Failed to remove storage listener:', error);
+      }
     };
   }, [prefersDarkMode]);
 
   const saveSettings = () => {
-    chrome.storage.sync.set(settings, () => {
-      enqueueSnackbar('Settings saved successfully', { 
-        variant: 'success',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'center',
-        },
+    try {
+      chrome.storage.sync.set(settings, () => {
+        if (chrome.runtime.lastError) {
+          console.error('Save settings error:', chrome.runtime.lastError);
+          enqueueSnackbar('Failed to save settings', { variant: 'error' });
+          return;
+        }
+        enqueueSnackbar('Settings saved successfully', { variant: 'success' });
+        let themeToUse = settings.theme;
+        if (themeToUse === 'system') {
+          themeToUse = prefersDarkMode ? 'dark' : 'light';
+        }
+        setMode(themeToUse);
       });
-      let themeToUse = settings.theme;
-      if (themeToUse === 'system') {
-        themeToUse = prefersDarkMode ? 'dark' : 'light';
-      }
-      setMode(themeToUse);
-    });
+    } catch (error) {
+      console.error('Failed to save settings:', error);
+      enqueueSnackbar('Failed to save settings', { variant: 'error' });
+    }
   };
 
   const resetSettings = () => {
-    setSettings(defaultSettings);
-    chrome.storage.sync.set(defaultSettings, () => {
-      enqueueSnackbar('Settings reset to defaults', { 
-        variant: 'info',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'center',
-        },
+    try {
+      setSettings(defaultSettings);
+      chrome.storage.sync.set(defaultSettings, () => {
+        if (chrome.runtime.lastError) {
+          console.error('Reset settings error:', chrome.runtime.lastError);
+          enqueueSnackbar('Failed to reset settings', { variant: 'error' });
+          return;
+        }
+        enqueueSnackbar('Settings reset to defaults', { variant: 'info' });
+        
+        let themeToUse = defaultSettings.theme;
+        if (themeToUse === 'system') {
+          themeToUse = prefersDarkMode ? 'dark' : 'light';
+        }
+        setMode(themeToUse);
       });
-      
-      let themeToUse = defaultSettings.theme;
-      if (themeToUse === 'system') {
-        themeToUse = prefersDarkMode ? 'dark' : 'light';
-      }
-      setMode(themeToUse);
-    });
+    } catch (error) {
+      console.error('Failed to reset settings:', error);
+      enqueueSnackbar('Failed to reset settings', { variant: 'error' });
+    }
   };
 
   const toggleTheme = () => {
-    const newMode = mode === 'light' ? 'dark' : 'light';
-    setMode(newMode);
-    const newSettings = { ...settings, theme: newMode };
-    setSettings(newSettings);
+    try {
+      const newMode = mode === 'light' ? 'dark' : 'light';
+      setMode(newMode);
+      const newSettings = { ...settings, theme: newMode };
+      setSettings(newSettings);
+    } catch (error) {
+      console.error('Failed to toggle theme:', error);
+    }
   };
 
   return (

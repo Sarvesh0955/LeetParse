@@ -6,63 +6,90 @@ const defaultSettings = {
 };
 
 chrome.runtime.onInstalled.addListener((details) => {
-  console.log('Extension installed or updated:', details.reason);
-  
-  if (details.reason === 'install') {
-    chrome.storage.sync.set(defaultSettings, () => {
-      console.log('Default settings initialized');
-    });
+  try {
+    console.log('Extension installed or updated:', details.reason);
+    
+    if (details.reason === 'install') {
+      chrome.storage.sync.set(defaultSettings, () => {
+        if (chrome.runtime.lastError) {
+          console.error('Error saving default settings:', chrome.runtime.lastError);
+          return;
+        }
+        console.log('Default settings initialized');
+      });
+    }
+  } catch (error) {
+    console.error('Error in onInstalled handler:', error);
   }
 });
 
 let activePopupPorts = {};
 
 chrome.runtime.onConnect.addListener((port) => {
-  if (port.name === 'popup') {
-    const tabId = port.sender.tab ? port.sender.tab.id : 'popup';
-    activePopupPorts[tabId] = port;
-    
-    port.onDisconnect.addListener(() => {
-      delete activePopupPorts[tabId];
-    });
+  try {
+    if (port.name === 'popup') {
+      const tabId = port.sender.tab ? port.sender.tab.id : 'popup';
+      activePopupPorts[tabId] = port;
+      
+      port.onDisconnect.addListener(() => {
+        delete activePopupPorts[tabId];
+      });
+    }
+  } catch (error) {
+    console.error('Error in onConnect handler:', error);
   }
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  sendResponse({ received: true });
-  
-  if (message.action === "processCode" && message.data) {
-    console.log('Processing code from parsed data');
+  try {
+    sendResponse({ received: true });
     
-    try {
-      const generatedCode = generateCode(message.data);
-      console.log('Generated C++ code successfully');
-      
-      const messageToSend = {
-        action: "codeGenerated",
-        boilerplateCode: generatedCode,
-        testCase: message.data.testCases || ''
-      };
-      
-      chrome.runtime.sendMessage(messageToSend, (response) => {
-        if (chrome.runtime.lastError) {
-          console.log('Info: Popup not currently active to receive message');
-        }
-      });
-      
-    } catch (error) {
-      console.error('Error generating code:', error);
-      
-      chrome.runtime.sendMessage({
-        action: "codeGenerated",
-        error: error.message
-      }, () => {
-        if (chrome.runtime.lastError) {
-          console.log('Could not send error to popup (probably closed)');
-        }
-      });
+    if (!message || !message.action) {
+      console.error('Invalid message received:', message);
+      return true;
     }
     
+    if (message.action === "processCode") {
+      if (!message.data) {
+        console.error('No data provided for code processing');
+        return true;
+      }
+      
+      console.log('Processing code from parsed data');
+      
+      try {
+        const generatedCode = generateCode(message.data);
+        console.log('Generated C++ code successfully');
+        
+        const messageToSend = {
+          action: "codeGenerated",
+          boilerplateCode: generatedCode,
+          testCase: message.data.testCases || ''
+        };
+        
+        chrome.runtime.sendMessage(messageToSend, (response) => {
+          if (chrome.runtime.lastError) {
+            console.log('Info: Popup not currently active to receive message');
+          }
+        });
+        
+      } catch (error) {
+        console.error('Error generating code:', error);
+        
+        chrome.runtime.sendMessage({
+          action: "codeGenerated",
+          error: error.message || 'Unknown error generating code'
+        }, () => {
+          if (chrome.runtime.lastError) {
+            console.log('Could not send error to popup (probably closed)');
+          }
+        });
+      }
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error in message handler:', error);
     return true;
   }
 });
