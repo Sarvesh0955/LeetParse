@@ -342,9 +342,8 @@ namespace IO {
         Output::write(x);
         cout << " ";
     }
-} // namespace IO
+} 
 
-// Use IO namespace for brevity in solution code
 using namespace IO;
 
 {{Solution Class}}
