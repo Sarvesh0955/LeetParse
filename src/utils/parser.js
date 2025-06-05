@@ -313,9 +313,9 @@ function parseTestCasesSpecialClass(data) {
   }
 }
 
-function parseData() {
+async function parseData() {
   try {
-    const data = extractData();
+    const data = await extractData();
     if (!data) {
       console.error('Failed to extract data from page');
       return null;
@@ -335,9 +335,11 @@ function parseData() {
       testCases: '',
       inputCode: '',
       parameters: [],
+      userCode: ''
     };
 
     result.inputCode = data.inputCode;
+    result.userCode = data.userCode; 
     const arr = [];
     
     try {

@@ -548,7 +548,7 @@ function generateCode(data) {
         }
         
         let generatedCode = BASE_TEMPLATE
-            .replace('{{Solution Class}}', (data.inputCode || '').trim())
+            .replace('{{Solution Class}}', data.userCode)
             .replace('{{Input Statements}}', inputStatements || '');
         
         generatedCode = generatedCode

@@ -4,13 +4,13 @@ console.log('Content script loaded');
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "parseProblem") {
-    try {
-      sendResponse({ status: 'parsing' });
+    sendResponse({ status: 'parsing' });
     
-      const data = parseData();
-      console.log('Parsed data:', data);
-      
-      setTimeout(() => {
+    (async () => {
+      try {
+        const data = await parseData();
+        console.log('Parsed data:', data);
+        
         chrome.runtime.sendMessage({
           action: "processCode", 
           data: data
@@ -19,12 +19,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             console.error("Error sending to background:", chrome.runtime.lastError);
           }
         });
-      }, 1000); 
-    } catch (error) {
-      console.error("Error parsing problem:", error);
-      sendResponse({ status: 'error', message: error.message });
-    }
+      } catch (error) {
+        console.error("Error parsing problem:", error);
+        chrome.runtime.sendMessage({
+          action: "parseError",
+          error: error.message
+        });
+      }
+    })();
     
-    return true;
+    return true; // Keep the message channel open for sendResponse
   }
 });
