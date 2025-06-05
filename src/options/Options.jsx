@@ -34,6 +34,12 @@ function Options() {
     theme: 'system',
     preferredLanguage: 'cpp',
   };
+  
+  const supportedLanguages = [
+    { value: 'cpp', label: 'C++' },
+    { value: 'java', label: 'Java' },
+    { value: 'python', label: 'Python' }
+  ];
 
   const [settings, setSettings] = useState(defaultSettings);
   const { enqueueSnackbar } = useSnackbar();
@@ -148,16 +154,31 @@ function Options() {
     });
     
     const handleStorageChange = (changes, area) => {
-      if (area === 'sync' && changes.theme) {
+      if (area === 'sync') {
         try {
-          let themeToUse = changes.theme.newValue;
-          if (themeToUse === 'system') {
-            themeToUse = prefersDarkMode ? 'dark' : 'light';
+          const updatedSettings = { ...settings };
+          let shouldUpdateSettings = false;
+          
+          if (changes.theme) {
+            let themeToUse = changes.theme.newValue;
+            if (themeToUse === 'system') {
+              themeToUse = prefersDarkMode ? 'dark' : 'light';
+            }
+            setMode(themeToUse);
+            updatedSettings.theme = changes.theme.newValue;
+            shouldUpdateSettings = true;
           }
-          setMode(themeToUse);
-          setSettings(prev => ({ ...prev, theme: changes.theme.newValue }));
+          
+          if (changes.preferredLanguage) {
+            updatedSettings.preferredLanguage = changes.preferredLanguage.newValue;
+            shouldUpdateSettings = true;
+          }
+          
+          if (shouldUpdateSettings) {
+            setSettings(updatedSettings);
+          }
         } catch (error) {
-          console.error('Failed to handle theme change:', error);
+          console.error('Failed to handle storage change:', error);
         }
       }
     };
@@ -179,6 +200,32 @@ function Options() {
 
   const saveSettings = () => {
     try {
+      if (settings.preferredLanguage === 'java' || settings.preferredLanguage === 'python') {
+        enqueueSnackbar(`${settings.preferredLanguage === 'java' ? 'Java' : 'Python'} is currently not implemented`, { 
+          variant: 'warning' 
+        });
+        
+        const updatedSettings = { ...settings, preferredLanguage: 'cpp' };
+        setSettings(updatedSettings);
+        
+        chrome.storage.sync.set(updatedSettings, () => {
+          if (chrome.runtime.lastError) {
+            console.error('Save settings error:', chrome.runtime.lastError);
+            enqueueSnackbar('Failed to save settings', { variant: 'error' });
+            return;
+          }
+          
+          enqueueSnackbar('Settings saved with C++ as default language', { variant: 'info' });
+          
+          let themeToUse = updatedSettings.theme;
+          if (themeToUse === 'system') {
+            themeToUse = prefersDarkMode ? 'dark' : 'light';
+          }
+          setMode(themeToUse);
+        });
+        return;
+      }
+      
       chrome.storage.sync.set(settings, () => {
         if (chrome.runtime.lastError) {
           console.error('Save settings error:', chrome.runtime.lastError);
@@ -191,6 +238,8 @@ function Options() {
           themeToUse = prefersDarkMode ? 'dark' : 'light';
         }
         setMode(themeToUse);
+        
+        console.log('Saved preferred language:', settings.preferredLanguage);
       });
     } catch (error) {
       console.error('Failed to save settings:', error);
@@ -298,6 +347,79 @@ function Options() {
                   <MenuItem value="system">System Default</MenuItem>
                   <MenuItem value="light">Light</MenuItem>
                   <MenuItem value="dark">Dark</MenuItem>
+                </Select>
+              </FormControl>
+            </Paper>
+
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                p: 3, 
+                borderRadius: 2,
+                bgcolor: 'background.code',
+                border: '1px solid',
+                borderColor: 'divider'
+              }}
+            >
+              <Stack direction="row" spacing={2} alignItems="center" mb={3}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="24"
+                  viewBox="0 -960 960 960"
+                  width="24"
+                  fill={mode === 'light' ? '#0A84FF' : '#60A5FA'}
+                  style={{ flexShrink: 0 }}
+                >
+                  <path d="M320-240v-480l440 240-440 240Zm80-240Zm0 100 210-100-210-100v200Z"/>
+                </svg>
+                <Typography variant="h6">
+                  Language Preferences
+                </Typography>
+              </Stack>
+              <FormControl fullWidth variant="outlined">
+                <InputLabel id="language-select-label">Default Language</InputLabel>
+                <Select
+                  labelId="language-select-label"
+                  value={settings.preferredLanguage}
+                  label="Default Language"
+                  onChange={(e) => {
+                    const newLang = e.target.value;
+                    setSettings(prev => ({ ...prev, preferredLanguage: newLang }));
+                    
+                    // Show immediate feedback when user selects Java or Python
+                    if (newLang === 'java' || newLang === 'python') {
+                      enqueueSnackbar(`Note: ${newLang === 'java' ? 'Java' : 'Python'} support is not implemented yet`, { 
+                        variant: 'info',
+                        preventDuplicate: true
+                      });
+                    }
+                  }}
+                  sx={{
+                    bgcolor: 'background.paper',
+                  }}
+                >
+                  {supportedLanguages.map((lang) => (
+                    <MenuItem 
+                      key={lang.value} 
+                      value={lang.value}
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        width: '100%'
+                      }}
+                    >
+                      <span>{lang.label}</span>
+                      {lang.value !== 'cpp' && (
+                        <Typography 
+                          variant="caption" 
+                          color="text.secondary" 
+                          sx={{ ml: 2, fontSize: '0.7rem', opacity: 0.7 }}
+                        >
+                          (Coming soon)
+                        </Typography>
+                      )}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Paper>
