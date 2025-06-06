@@ -179,38 +179,6 @@ const TestCaseInstructions = () => {
         </AccordionDetails>
       </Accordion>
       
-      {/* <Accordion 
-        expanded={expanded === 'panel2'} 
-        onChange={handleChange('panel2')}
-        sx={{ 
-          bgcolor: 'background.default',
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 1,
-          mb: 1
-        }}
-      >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel2bh-content"
-          id="panel2bh-header"
-          sx={{ 
-            bgcolor: 'background.paper',
-            borderBottom: '1px solid',
-            borderColor: 'divider',
-          }}
-        >
-          <Typography variant="body2" sx={{ width: '100%', flexShrink: 0 }}>
-            Manually Adding Test Cases
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography variant="body2" color="text.secondary">
-            To manually add test cases, follow the format shown in the example below. Each test case should be separated by a newline.
-          </Typography>
-        </AccordionDetails>
-      </Accordion> */}
-      
       <Accordion 
         expanded={expanded === 'panel3'} 
         onChange={handleChange('panel3')}
@@ -311,7 +279,8 @@ const TestCaseInstructions = () => {
 
 function App() {
   const [isLeetCodeProblem, setIsLeetCodeProblem] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [parseLoading, setParseLoading] = useState(false);
+  const [extractLoading, setExtractLoading] = useState(false);
   const [error, setError] = useState('');
   const [cfInput, setCfInput] = useState('');
   const [boilerplateCode, setBoilerplateCode] = useState('');
@@ -437,13 +406,24 @@ function App() {
 
     const messageListener = (message) => {
       if (message.action === "codeGenerated") {
-        setLoading(false);
+        setParseLoading(false);
         
         if (message.error) {
           setError(message.error);
           enqueueSnackbar(message.error, { variant: 'error' });
         } else {
           setBoilerplateCode(message.boilerplateCode || '');
+          setCfInput(message.testCase || '');
+          setError('');
+        }
+      }
+      else if(message.action === "otherTestsGenerated") {
+        setExtractLoading(false);
+        
+        if (message.error) {
+          setError(message.error);
+          enqueueSnackbar(message.error, { variant: 'error' });
+        } else {
           setCfInput(message.testCase || '');
           setError('');
         }
@@ -456,7 +436,7 @@ function App() {
 
   const handleParseProblem = () => {
     try {
-      setLoading(true);
+      setParseLoading(true);
       setError('');
       setCfInput('');
       setBoilerplateCode('');
@@ -464,7 +444,7 @@ function App() {
       
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (!tabs[0]?.id) {
-          setLoading(false);
+          setParseLoading(false);
           enqueueSnackbar('Cannot access the current tab', { variant: 'error' });
           return;
         }
@@ -474,15 +454,47 @@ function App() {
           language: language
         }, (response) => {
           if (chrome.runtime.lastError) {
-            setLoading(false);
+            setParseLoading(false);
             enqueueSnackbar('Please refresh the page and try again', { variant: 'error' });
           }
         });
       });
     } catch (err) {
-      setLoading(false);
+      setParseLoading(false);
       console.error('Error parsing problem:', err);
       enqueueSnackbar('Failed to parse problem', { variant: 'error' });
+    }
+  };
+
+  const handleExtractTestCasesOnly = () => {
+    try {
+      setExtractLoading(true);
+      setError('');
+      setCfInput('');
+      setBoilerplateCode('');
+      const language = selectedLanguage;
+      
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (!tabs[0]?.id) {
+          setExtractLoading(false);
+          enqueueSnackbar('Cannot access the current tab', { variant: 'error' });
+          return;
+        }
+        
+        chrome.tabs.sendMessage(tabs[0].id, { 
+          action: "otherTests",
+          language: language
+        }, (response) => {
+          if (chrome.runtime.lastError) {
+            setExtractLoading(false);
+            enqueueSnackbar('Please refresh the page and try again', { variant: 'error' });
+          }
+        });
+      });
+    } catch (err) {
+      setExtractLoading(false);
+      console.error('Error extracting test cases:', err);
+      enqueueSnackbar('Failed to extract test cases', { variant: 'error' });
     }
   };
 
@@ -706,100 +718,62 @@ function App() {
                 </Select>
                 <FormHelperText>Select language to parse the problem</FormHelperText>
               </FormControl>
-              <Button
-                variant="contained"
-                disabled={loading}
-                onClick={handleParseProblem}
-                sx={{ 
-                  bgcolor: 'primary.main',
-                  '&:hover': {
-                    bgcolor: 'primary.dark',
-                  },
-                }}
-              >
-                {loading ? (
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <CircularProgress size={16} color="inherit" />
-                    <span>Parsing...</span>
-                  </Box>
-                ) : (
-                  'Parse Problem with sample tests'
-                )}
-              </Button>
-            </Stack>
-            {!cfInput && !boilerplateCode ? (
-              <>
-                {/* button goes here */}
-                
-                {/* <Paper 
-                  elevation={0} 
+              <Stack direction="row" spacing={1.5} width="100%">
+                <Button
+                  variant="contained"
+                  disabled={parseLoading || extractLoading}
+                  onClick={handleParseProblem}
                   sx={{ 
-                    p: 3, 
-                    bgcolor: 'background.code',
-                    border: '1px solid',
-                    borderColor: 'divider',
-                    mb: 2
+                    flex: 1,
+                    bgcolor: 'primary.main',
+                    '&:hover': {
+                      bgcolor: 'primary.dark',
+                    },
                   }}
                 >
-                  <Typography variant="subtitle1" fontWeight="medium" gutterBottom>
-                    Ready to parse this LeetCode problem!
-                  </Typography>
-                  
-                  <Typography variant="body2" color="text.secondary" paragraph>
-                    This extension will extract the problem details and generate:
-                  </Typography>
-                  
-                  <Stack spacing={1} sx={{ mb: 2 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                      <Box 
-                        sx={{ 
-                          width: 6, 
-                          height: 6, 
-                          borderRadius: '50%', 
-                          bgcolor: 'primary.main' 
-                        }} 
-                      />
-                      <Typography variant="body2">
-                        Complete C++ boilerplate with input/output handling
-                      </Typography>
+                  {parseLoading ? (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <CircularProgress size={16} color="inherit" />
+                      <span>Parsing...</span>
                     </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                      <Box 
-                        sx={{ 
-                          width: 6, 
-                          height: 6, 
-                          borderRadius: '50%', 
-                          bgcolor: 'primary.main' 
-                        }} 
-                      />
-                      <Typography variant="body2">
-                        Formatted test cases for direct testing
-                      </Typography>
+                  ) : (
+                    'Parse with sample tests'
+                  )}
+                </Button>
+                <Button
+                  variant="contained"
+                  disabled={parseLoading || extractLoading}
+                  onClick={handleExtractTestCasesOnly}
+                  sx={{ 
+                    flex: 1,
+                    bgcolor: 'primary.main',
+                    '&:hover': {
+                      bgcolor: 'primary.dark',
+                    },
+                  }}
+                >
+                  {extractLoading ? (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <CircularProgress size={16} color="inherit" />
+                      <span>Extracting...</span>
                     </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                      <Box 
-                        sx={{ 
-                          width: 6, 
-                          height: 6, 
-                          borderRadius: '50%', 
-                          bgcolor: 'primary.main' 
-                        }} 
-                      />
-                      <Typography variant="body2">
-                        Support for special data structures (ListNode, TreeNode)
-                      </Typography>
-                    </Box>
-                  </Stack>
-                  
-                </Paper> */}
+                  ) : (
+                    'Extract test cases only'
+                  )}
+                </Button>
+              </Stack>
+            </Stack>
+
+            {!cfInput && !boilerplateCode ? (
+              <>
                 <TestCaseInstructions />
               </>
             ) : null}
             
 
-            <Fade in={loading}>
+            <Fade in={parseLoading || extractLoading}>
               <Box sx={{ 
-                display: loading ? 'flex' : 'none',
+                display: parseLoading || extractLoading ? 'flex' : 'none',
                 flexDirection: 'column',
                 alignItems: 'center',
                 gap: 1,

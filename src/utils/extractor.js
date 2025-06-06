@@ -20,7 +20,6 @@ function extractTestCase() {
   } catch (error) {
     console.error("Error extracting data:", error);
   }
-
   return testCases;
 }
 
@@ -130,7 +129,7 @@ async function fetchProblemDetails(url) {
  * Extracts data from the LeetCode problem page
  * @returns {Object} The extracted problem data
  */
-async function extractData(language = 'cpp') {
+async function extractData(language = 'cpp',otherTests) {
   const problemData = {
     userCode: '',
     inputCode: '',
@@ -151,7 +150,10 @@ async function extractData(language = 'cpp') {
   } catch (error) {
     console.error("Error extracting data:", error);
   }
+  if (otherTests) {
+    problemData.testCases = extractTestCase();
+  }
   return problemData;
 }
 
-export { extractData , extractTestCase };
+export { extractData };

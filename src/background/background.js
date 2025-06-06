@@ -85,6 +85,37 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         });
       }
     }
+    else if (message.action === "parsedTests") {
+      if (!message.data) {
+        console.error('No data provided for other tests');  
+      }
+      try {
+        
+        const messageToSend = {
+          action: "otherTestsGenerated",
+          testCase: message.data.testCases || '',
+        };
+        
+        chrome.runtime.sendMessage(messageToSend, (response) => {
+          if (chrome.runtime.lastError) {
+            console.log('Info: Popup not currently active to receive message');
+          }
+        });
+        
+      } catch (error) {
+        console.error('Error generating other test:', error);
+        
+        chrome.runtime.sendMessage({
+          action: "otherTestsGenerated",
+          error: error.message || 'Unknown error generating other test'
+        }, () => {
+          if (chrome.runtime.lastError) {
+            console.log('Could not send error to popup (probably closed)');
+          }
+        });
+      }
+    }
+    
     
     return true;
   } catch (error) {
