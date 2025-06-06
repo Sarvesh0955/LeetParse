@@ -1,63 +1,59 @@
+/**
+ * LeetCode Parser - Content Script
+ * 
+ * This content script runs on LeetCode problem pages and handles parsing requests
+ * from the extension popup. It communicates with the background script to process
+ * extracted problem data.
+ */
 import { parseData } from '../utils/parser.js';
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === "parseProblem") {
-    sendResponse({ status: 'parsing' });
+/**
+ * Handler for parsing the problem and sending data to the background script
+ * @param {string} language - The programming language to use
+ * @param {boolean} useCustomTests - Whether to use custom test input
+ * @returns {Promise<void>}
+ */
+async function handleParseProblem(language = 'cpp', useCustomTests = false) {
+  try {
+    // Parse the problem data
+    const data = await parseData(language, useCustomTests);
+    console.log(`Parsed data (${useCustomTests ? 'custom tests' : 'default tests'}):`, data);
     
-    (async () => {
-      try {
-        const language = message.language || 'cpp';
-        const data = await parseData(language,false);
-        console.log('Parsed data:', data);
-        
-        chrome.runtime.sendMessage({
-          action: "processCode", 
-          data: data,
-          language: language
-        }, (response) => {
-          if (chrome.runtime.lastError) {
-            console.error("Error sending to background:", chrome.runtime.lastError);
-          }
-        });
-
-      } catch (error) {
-        console.error("Error parsing test case:", error);
-        chrome.runtime.sendMessage({
-          action: "parseError",
-          error: error.message
-        });
+    // Send the parsed data to the background script
+    const action = useCustomTests ? "parsedTests" : "processCode";
+    const message = useCustomTests
+      ? { action, data }
+      : { action, data, language };
+      
+    chrome.runtime.sendMessage(message, (response) => {
+      if (chrome.runtime.lastError) {
+        console.error("Error communicating with background script:", chrome.runtime.lastError);
       }
-    })();
-    
-    return true; // Keep the message channel open for sendResponse
+    });
+  } catch (error) {
+    console.error("Error parsing problem:", error);
+    chrome.runtime.sendMessage({
+      action: "parseError",
+      error: error.message || "Unknown error parsing problem"
+    });
   }
-  else if ( message.action === "otherTests") {
-    sendResponse({ status: 'parsing' });
-    
-    (async () => {
-      try {
-        const language = message.language || 'cpp';
-        const data = await parseData(language,true);
-        console.log('Parsed data:', data);
-        
-        chrome.runtime.sendMessage({
-          action: "parsedTests", 
-          data: data
-        }, (response) => {
-          if (chrome.runtime.lastError) {
-            console.error("Error sending to background:", chrome.runtime.lastError);
-          }
-        });
+}
 
-      } catch (error) {
-        console.error("Error parsing test case:", error);
-        chrome.runtime.sendMessage({
-          action: "parseError",
-          error: error.message
-        });
-      }
-    })();
-    
-    return true;
+// Listen for messages from the popup
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  // Send immediate acknowledgment
+  sendResponse({ status: 'parsing' });
+  
+  if (message.action === "parseProblem") {
+    // Handle regular problem parsing
+    const language = message.language || 'cpp';
+    handleParseProblem(language, false);
+    return true; // Keep the message channel open
+  }
+  else if (message.action === "otherTests") {
+    // Handle custom test input parsing
+    const language = message.language || 'cpp';
+    handleParseProblem(language, true);
+    return true; // Keep the message channel open
   }
 });
