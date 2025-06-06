@@ -25,7 +25,9 @@ function extractTestCase() {
 }
 
 /**
- * Extracts input code data from the LeetCode problem page
+ * Extracts input code data from the browser localStorage
+ * @param {string} questionID - The ID of the LeetCode question
+ * @param {string} language - The programming language used (default is 'cpp')
  * @returns {Object} The extracted problem data
  */
 function extractUserCode(questionID, language = 'cpp') {
@@ -128,7 +130,7 @@ async function fetchProblemDetails(url) {
  * Extracts data from the LeetCode problem page
  * @returns {Object} The extracted problem data
  */
-async function extractData() {
+async function extractData(language = 'cpp') {
   const problemData = {
     userCode: '',
     inputCode: '',
@@ -139,18 +141,17 @@ async function extractData() {
     problemData.problemName = extractProblemSlug(url);
 
     const problemDetails = await fetchProblemDetails(url);
-    if (problemDetails && problemDetails.data) {
-      problemData.inputCode = problemDetails.data.question.codeSnippets
-        .find((snippet) => snippet.langSlug === "cpp")?.code;
-      problemData.testCases = problemDetails.data.question.exampleTestcaseList
-                              .join("\n").trim();
+    const apiData =  problemDetails && problemDetails.data ? problemDetails.data.question : null;
+    if (apiData) {
+      problemData.inputCode = apiData.codeSnippets
+        .find((snippet) => snippet.langSlug === `${language}`)?.code;
+      problemData.testCases = apiData.exampleTestcaseList.join("\n").trim();
+      problemData.userCode = extractUserCode(apiData.questionId, language) || problemData.inputCode;
     }
-
-    problemData.userCode = extractUserCode(problemDetails.data.question.questionId, 'cpp') || problemData.inputCode;
   } catch (error) {
     console.error("Error extracting data:", error);
   }
   return problemData;
 }
 
-export { extractData };
+export { extractData , extractTestCase };

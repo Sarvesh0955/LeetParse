@@ -55,11 +55,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         return true;
       }
       
-      console.log('Processing code from parsed data');
+      const language = message.language || 'cpp';
       
       try {
-        const generatedCode = generateCode(message.data);
-        console.log('Generated C++ code successfully');
+        const generatedCode = generateCode(message.data, language);
         
         const messageToSend = {
           action: "codeGenerated",

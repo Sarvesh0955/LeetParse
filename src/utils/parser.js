@@ -313,9 +313,9 @@ function parseTestCasesSpecialClass(data) {
   }
 }
 
-async function parseData() {
+async function parseData(language = 'cpp') {
   try {
-    const data = await extractData();
+    const data = await extractData(language);
     if (!data) {
       console.error('Failed to extract data from page');
       return null;

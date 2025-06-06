@@ -447,7 +447,6 @@ function specialClassInputCode(data) {
         inputStatements += `            input(params);\n`;
         
         if (!data.problemClass) {
-            console.warn("Problem class name is missing");
             inputStatements += `            if (operation == "constructor") {\n                cout << "null ";\n                continue;\n            }\n`;
         } else {
             inputStatements += `            if (operation == "${data.problemClass}") {\n                cout << "null ";\n                continue;\n            }\n`;
@@ -515,11 +514,18 @@ function specialClassInputCode(data) {
 /**
  * Generates the input code for the main function based on the provided parameters.
  * @param {Object} data - The data object containing inputCode and parameters.
+ * @param {string} language - The programming language to generate code for (default: 'cpp').
  * @returns {string} The formatted complete code with solution class and input statements.
  */
-function generateCode(data) {
+function generateCode(data, language = 'cpp') {
     if (!data) {
         throw new Error('No data provided for code generation.');
+    }
+    
+    // Only C++ is implemented for now
+    if (language !== 'cpp') {
+        console.log(`Language ${language} not yet implemented, using C++ instead`);
+        language = 'cpp';
     }
     
     if (!data.inputCode) {

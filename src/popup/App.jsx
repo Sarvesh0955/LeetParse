@@ -14,7 +14,12 @@ import {
   Stack,
   Accordion,
   AccordionSummary,
-  AccordionDetails
+  AccordionDetails,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  FormHelperText
 } from '@mui/material';
 import { 
   DarkMode as DarkModeIcon, 
@@ -174,7 +179,7 @@ const TestCaseInstructions = () => {
         </AccordionDetails>
       </Accordion>
       
-      <Accordion 
+      {/* <Accordion 
         expanded={expanded === 'panel2'} 
         onChange={handleChange('panel2')}
         sx={{ 
@@ -204,7 +209,7 @@ const TestCaseInstructions = () => {
             To manually add test cases, follow the format shown in the example below. Each test case should be separated by a newline.
           </Typography>
         </AccordionDetails>
-      </Accordion>
+      </Accordion> */}
       
       <Accordion 
         expanded={expanded === 'panel3'} 
@@ -228,7 +233,7 @@ const TestCaseInstructions = () => {
           }}
         >
           <Typography variant="body2" sx={{ width: '100%', flexShrink: 0 }}>
-            Input Format Guidelines
+            Custom Test case Input Guidelines
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -310,6 +315,7 @@ function App() {
   const [error, setError] = useState('');
   const [cfInput, setCfInput] = useState('');
   const [boilerplateCode, setBoilerplateCode] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState('cpp');
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const [mode, setMode] = useState(prefersDarkMode ? 'dark' : 'light');
   
@@ -413,6 +419,12 @@ function App() {
   });
 
   useEffect(() => {
+    chrome.storage.sync.get(['preferredLanguage'], (result) => {
+      if (result.preferredLanguage) {
+        setSelectedLanguage(result.preferredLanguage);
+      }
+    });
+    
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       try {
         const url = tabs[0]?.url || '';
@@ -448,6 +460,7 @@ function App() {
       setError('');
       setCfInput('');
       setBoilerplateCode('');
+      const language = selectedLanguage;
       
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (!tabs[0]?.id) {
@@ -456,7 +469,10 @@ function App() {
           return;
         }
         
-        chrome.tabs.sendMessage(tabs[0].id, { action: "parseProblem" }, (response) => {
+        chrome.tabs.sendMessage(tabs[0].id, { 
+          action: "parseProblem",
+          language: language
+        }, (response) => {
           if (chrome.runtime.lastError) {
             setLoading(false);
             enqueueSnackbar('Please refresh the page and try again', { variant: 'error' });
@@ -649,30 +665,73 @@ function App() {
           </>
         ) : (
           <>
+            <Stack spacing={2} sx={{ mb: 2 }}>
+              <FormControl fullWidth variant="outlined">
+                <InputLabel id="language-select-label">Language</InputLabel>
+                <Select
+                  labelId="language-select-label"
+                  value={selectedLanguage}
+                  label="Language"
+                  onChange={(e) => setSelectedLanguage(e.target.value)}
+                  size="small"
+                  sx={{
+                    bgcolor: 'background.paper',
+                  }}
+                >
+                  <MenuItem value="cpp">C++</MenuItem>
+                  <MenuItem value="python" disabled>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                      <span>Python</span>
+                      <Typography 
+                        variant="caption" 
+                        color="text.secondary" 
+                        sx={{ ml: 2, fontSize: '0.7rem', opacity: 0.7 }}
+                      >
+                        (Coming soon)
+                      </Typography>
+                    </Box>
+                  </MenuItem>
+                  <MenuItem value="java" disabled>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                      <span>Java</span>
+                      <Typography 
+                        variant="caption" 
+                        color="text.secondary" 
+                        sx={{ ml: 2, fontSize: '0.7rem', opacity: 0.7 }}
+                      >
+                        (Coming soon)
+                      </Typography>
+                    </Box>
+                  </MenuItem>
+                </Select>
+                <FormHelperText>Select language to parse the problem</FormHelperText>
+              </FormControl>
               <Button
-              variant="contained"
-              disabled={loading}
-              onClick={handleParseProblem}
-              sx={{ 
-                mb: 2,
-                bgcolor: 'primary.main',
-                '&:hover': {
-                  bgcolor: 'primary.dark',
-                },
-              }}
-            >
-              {loading ? (
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <CircularProgress size={16} color="inherit" />
-                  <span>Parsing...</span>
-                </Box>
-              ) : (
-                'Parse Problem'
-              )}
-            </Button>
+                variant="contained"
+                disabled={loading}
+                onClick={handleParseProblem}
+                sx={{ 
+                  bgcolor: 'primary.main',
+                  '&:hover': {
+                    bgcolor: 'primary.dark',
+                  },
+                }}
+              >
+                {loading ? (
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <CircularProgress size={16} color="inherit" />
+                    <span>Parsing...</span>
+                  </Box>
+                ) : (
+                  'Parse Problem with sample tests'
+                )}
+              </Button>
+            </Stack>
             {!cfInput && !boilerplateCode ? (
               <>
-                <Paper 
+                {/* button goes here */}
+                
+                {/* <Paper 
                   elevation={0} 
                   sx={{ 
                     p: 3, 
@@ -732,7 +791,7 @@ function App() {
                     </Box>
                   </Stack>
                   
-                </Paper>
+                </Paper> */}
                 <TestCaseInstructions />
               </>
             ) : null}

@@ -1,19 +1,19 @@
 import { parseData } from '../utils/parser.js';
 
-console.log('Content script loaded');
-
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "parseProblem") {
     sendResponse({ status: 'parsing' });
     
     (async () => {
       try {
-        const data = await parseData();
+        const language = message.language || 'cpp';
+        const data = await parseData(language);
         console.log('Parsed data:', data);
         
         chrome.runtime.sendMessage({
           action: "processCode", 
-          data: data
+          data: data,
+          language: language
         }, (response) => {
           if (chrome.runtime.lastError) {
             console.error("Error sending to background:", chrome.runtime.lastError);

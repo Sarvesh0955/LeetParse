@@ -200,32 +200,6 @@ function Options() {
 
   const saveSettings = () => {
     try {
-      if (settings.preferredLanguage === 'java' || settings.preferredLanguage === 'python') {
-        enqueueSnackbar(`${settings.preferredLanguage === 'java' ? 'Java' : 'Python'} is currently not implemented`, { 
-          variant: 'warning' 
-        });
-        
-        const updatedSettings = { ...settings, preferredLanguage: 'cpp' };
-        setSettings(updatedSettings);
-        
-        chrome.storage.sync.set(updatedSettings, () => {
-          if (chrome.runtime.lastError) {
-            console.error('Save settings error:', chrome.runtime.lastError);
-            enqueueSnackbar('Failed to save settings', { variant: 'error' });
-            return;
-          }
-          
-          enqueueSnackbar('Settings saved with C++ as default language', { variant: 'info' });
-          
-          let themeToUse = updatedSettings.theme;
-          if (themeToUse === 'system') {
-            themeToUse = prefersDarkMode ? 'dark' : 'light';
-          }
-          setMode(themeToUse);
-        });
-        return;
-      }
-      
       chrome.storage.sync.set(settings, () => {
         if (chrome.runtime.lastError) {
           console.error('Save settings error:', chrome.runtime.lastError);
@@ -385,14 +359,6 @@ function Options() {
                   onChange={(e) => {
                     const newLang = e.target.value;
                     setSettings(prev => ({ ...prev, preferredLanguage: newLang }));
-                    
-                    // Show immediate feedback when user selects Java or Python
-                    if (newLang === 'java' || newLang === 'python') {
-                      enqueueSnackbar(`Note: ${newLang === 'java' ? 'Java' : 'Python'} support is not implemented yet`, { 
-                        variant: 'info',
-                        preventDuplicate: true
-                      });
-                    }
                   }}
                   sx={{
                     bgcolor: 'background.paper',
@@ -407,6 +373,7 @@ function Options() {
                         justifyContent: 'space-between',
                         width: '100%'
                       }}
+                      disabled={lang.value === 'java' || lang.value === 'python'}
                     >
                       <span>{lang.label}</span>
                       {lang.value !== 'cpp' && (
