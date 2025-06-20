@@ -26,7 +26,6 @@ function App() {
   const [isLeetCodeProblem, setIsLeetCodeProblem] = useState(false);
   const [parseLoading, setParseLoading] = useState(false);
   const [extractLoading, setExtractLoading] = useState(false);
-  const [error, setError] = useState('');
   const [cfInput, setCfInput] = useState('');
   const [boilerplateCode, setBoilerplateCode] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState('cpp');
@@ -60,23 +59,19 @@ function App() {
         setParseLoading(false);
         
         if (message.error) {
-          setError(message.error);
           enqueueSnackbar(message.error, { variant: 'error' });
         } else {
           setBoilerplateCode(message.boilerplateCode || '');
           setCfInput(message.testCase || '');
-          setError('');
         }
       }
       else if(message.action === "otherTestsGenerated") {
         setExtractLoading(false);
         
         if (message.error) {
-          setError(message.error);
           enqueueSnackbar(message.error, { variant: 'error' });
         } else {
           setCfInput(message.testCase || '');
-          setError('');
         }
       }
     };
@@ -89,7 +84,6 @@ function App() {
   const handleParseProblem = () => {
     try {
       setParseLoading(true);
-      setError('');
       setCfInput('');
       setBoilerplateCode('');
       const language = selectedLanguage;
@@ -122,7 +116,6 @@ function App() {
   const handleExtractTestCasesOnly = () => {
     try {
       setExtractLoading(true);
-      setError('');
       setCfInput('');
       setBoilerplateCode('');
       const language = selectedLanguage;
