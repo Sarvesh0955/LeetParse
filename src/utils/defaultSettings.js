@@ -1,7 +1,7 @@
-// Default extension settings
 export const defaultSettings = {
-  theme: 'system', // Theme preference (system, light, dark)
-  preferredLanguage: 'cpp' // Default programming language
+  theme: 'system',
+  preferredLanguage: 'cpp',
+  userTemplate: '',
 };
 
 export const supportedLanguages = [

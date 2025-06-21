@@ -26,62 +26,45 @@ function App() {
   const [isLeetCodeProblem, setIsLeetCodeProblem] = useState(false);
   const [parseLoading, setParseLoading] = useState(false);
   const [extractLoading, setExtractLoading] = useState(false);
-  const [cfInput, setCfInput] = useState('');
-  const [boilerplateCode, setBoilerplateCode] = useState('');
+  const [testCase, setTestCase] = useState('');
+  const [codeSnippet, setCodeSnippet] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState('cpp');
-  const [currentTabId, setCurrentTabId] = useState(null);
   
   // Hooks
   const [mode, toggleTheme] = useThemeMode();
   const { enqueueSnackbar } = useSnackbar();
   const theme = createAppTheme(mode);
 
+  // Initialize port connection
   useEffect(() => {
     const backgroundPort = chrome.runtime.connect({ name: 'popup' });
 
-    // Listen for messages from background
     const messageListener = (message) => {
-      console.log('Popup received message:', message);
-      
       switch (message.action) {
         case 'connectionEstablished':
-          setCurrentTabId(message.tabId);
-          window.currentTabId = message.tabId;
-          console.log(`Popup connected to tab: ${message.tabId}`);
           break;
           
         case 'codeGenerated':
+          setParseLoading(false);
           if (message.error) {
             console.error('Code generation error:', message.error);
-            // Dispatch custom event for error handling
-            window.dispatchEvent(new CustomEvent('codeGenerationError', { 
-              detail: { error: message.error } 
-            }));
+            enqueueSnackbar(message.error, { variant: 'error' });
           } else {
-            console.log('Code generated successfully');
-            // Dispatch custom event with generated code
-            window.dispatchEvent(new CustomEvent('codeGenerated', { 
-              detail: { 
-                boilerplateCode: message.boilerplateCode, 
-                testCase: message.testCase 
-              } 
-            }));
+            setCodeSnippet(message.codeSnippet || '');
+            setTestCase(message.testCase || '');
+            enqueueSnackbar('Code generated successfully!', { variant: 'success' });
           }
           break;
           
         case 'otherTestsGenerated':
+          setExtractLoading(false);
           if (message.error) {
             console.error('Test case error:', message.error);
-            // Dispatch custom event for error handling
-            window.dispatchEvent(new CustomEvent('testCaseError', { 
-              detail: { error: message.error } 
-            }));
+            enqueueSnackbar(message.error, { variant: 'error' });
           } else {
             console.log('Test cases generated successfully');
-            // Dispatch custom event with test cases
-            window.dispatchEvent(new CustomEvent('testCasesGenerated', { 
-              detail: { testCase: message.testCase } 
-            }));
+            setTestCase(message.testCase || '');
+            enqueueSnackbar('Test cases extracted successfully!', { variant: 'success' });
           }
           break;
           
@@ -92,33 +75,21 @@ function App() {
 
     backgroundPort.onMessage.addListener(messageListener);
 
-    // Handle port disconnection
     const disconnectListener = () => {
       console.log('Popup disconnected from background');
-      setCurrentTabId(null);
-      window.currentTabId = null;
     };
 
     backgroundPort.onDisconnect.addListener(disconnectListener);
 
-    // Export port for use in components if needed
-    window.backgroundPort = backgroundPort;
-    window.getCurrentTabId = () => window.currentTabId;
-
-    // Cleanup on unmount
     return () => {
       if (backgroundPort) {
         backgroundPort.onMessage.removeListener(messageListener);
         backgroundPort.onDisconnect.removeListener(disconnectListener);
         backgroundPort.disconnect();
       }
-      window.backgroundPort = null;
-      window.getCurrentTabId = () => null;
-      window.currentTabId = null;
     };
-  }, []);
+  }, [enqueueSnackbar]);
 
-  // Load preferred language and check if on LeetCode page
   useEffect(() => {
     chrome.storage.sync.get(['preferredLanguage'], (result) => {
       if (result.preferredLanguage) {
@@ -135,56 +106,14 @@ function App() {
         enqueueSnackbar('Failed to check current page', { variant: 'error' });
       }
     });
-
-    // Event listeners for background communication via port
-    const handleCodeGenerated = (event) => {
-      setParseLoading(false);
-      const { boilerplateCode, testCase } = event.detail;
-      setBoilerplateCode(boilerplateCode || '');
-      setCfInput(testCase || '');
-      enqueueSnackbar('Code generated successfully!', { variant: 'success' });
-    };
-
-    const handleCodeGenerationError = (event) => {
-      setParseLoading(false);
-      const { error } = event.detail;
-      enqueueSnackbar(error || 'Failed to generate code', { variant: 'error' });
-    };
-
-    const handleTestCasesGenerated = (event) => {
-      setExtractLoading(false);
-      const { testCase } = event.detail;
-      setCfInput(testCase || '');
-      enqueueSnackbar('Test cases extracted successfully!', { variant: 'success' });
-    };
-
-    const handleTestCaseError = (event) => {
-      setExtractLoading(false);
-      const { error } = event.detail;
-      enqueueSnackbar(error || 'Failed to extract test cases', { variant: 'error' });
-    };
-
-    // Add event listeners
-    window.addEventListener('codeGenerated', handleCodeGenerated);
-    window.addEventListener('codeGenerationError', handleCodeGenerationError);
-    window.addEventListener('testCasesGenerated', handleTestCasesGenerated);
-    window.addEventListener('testCaseError', handleTestCaseError);
-
-    // Cleanup event listeners
-    return () => {
-      window.removeEventListener('codeGenerated', handleCodeGenerated);
-      window.removeEventListener('codeGenerationError', handleCodeGenerationError);
-      window.removeEventListener('testCasesGenerated', handleTestCasesGenerated);
-      window.removeEventListener('testCaseError', handleTestCaseError);
-    };
   }, [enqueueSnackbar]);
 
   // Handle parse button click
   const handleParseProblem = () => {
     try {
       setParseLoading(true);
-      setCfInput('');
-      setBoilerplateCode('');
+      setTestCase('');
+      setCodeSnippet('');
       const language = selectedLanguage;
       
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -215,8 +144,8 @@ function App() {
   const handleExtractTestCasesOnly = () => {
     try {
       setExtractLoading(true);
-      setCfInput('');
-      setBoilerplateCode('');
+      setTestCase('');
+      setCodeSnippet('');
       const language = selectedLanguage;
       
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -285,25 +214,25 @@ function App() {
               />
             </Stack>
 
-            {!cfInput && !boilerplateCode ? (
+            {!testCase && !codeSnippet ? (
               <TestCaseInstructions />
             ) : null}
             
             <LoadingIndicator loading={parseLoading || extractLoading} />
 
-            {cfInput && (
+            {testCase && (
               <CodeBlock
                 title="Test Cases"
-                content={cfInput}
+                content={testCase}
                 type="terminal"
                 onCopy={() => enqueueSnackbar('Test cases copied to clipboard', { variant: 'success' })}
               />
             )}
 
-            {boilerplateCode && (
+            {codeSnippet && (
               <CodeBlock
                 title="C++ Solution"
-                content={boilerplateCode}
+                content={codeSnippet}
                 type="code"
                 onCopy={() => enqueueSnackbar('Code copied to clipboard', { variant: 'success' })}
               />
@@ -318,9 +247,9 @@ function App() {
 function AppWrapper() {
   return (
     <SnackbarProvider 
-      maxSnack={3}
+      maxSnack={2}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      autoHideDuration={2000}
+      autoHideDuration={1000}
     >
       <App />
     </SnackbarProvider>

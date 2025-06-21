@@ -1,12 +1,8 @@
-// Import the template directly as a string using Vite's import feature
 import templateContent from './template.cpp?raw';
 
-// Use imported template content
 const BASE_TEMPLATE = templateContent;
 
-/**
- * Generates the input code for special class problems
- */
+// Generates the input code for special class problems
 function solutionClassInputCode(data) {
     if (!data || !data.inputCode || !data.parameters || !data.parameters[0]) {
         console.error("Invalid data structure for solution class");
@@ -166,7 +162,6 @@ function generateCode(data, language = 'cpp') {
         throw new Error('No data provided for code generation.');
     }
     
-    // Only C++ is implemented for now
     if (language !== 'cpp') {
         console.log(`Language ${language} not yet implemented, using C++ instead`);
         language = 'cpp';
