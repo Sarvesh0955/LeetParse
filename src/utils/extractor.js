@@ -29,8 +29,9 @@ function extractTestCase() {
  * @param {string} language - The programming language used (default is 'cpp')
  * @returns {string} The user's code as a string
  */
-function extractUserCode(questionID, language = 'cpp') {
+async function extractUserCode(questionID, language = 'cpp') {
   let userCode = '';
+  
   try {
     const localStorageKeys = Object.keys(localStorage);
     const codeKey = localStorageKeys.find(key => 
@@ -39,22 +40,84 @@ function extractUserCode(questionID, language = 'cpp') {
 
     if (codeKey) {
       userCode = localStorage.getItem(codeKey);
-    } else {
-      console.log(`No code found for question ID ${questionID} in ${language}`);
-    }
-
-    if (userCode && userCode.startsWith('"') && userCode.endsWith('"')) {
-      try {
-        userCode = JSON.parse(userCode);
-      } catch (parseError) {
-        console.error("Error parsing code from localStorage:", parseError);
+      
+      if (userCode && userCode.startsWith('"') && userCode.endsWith('"')) {
+        try {
+          userCode = JSON.parse(userCode);
+        } catch (parseError) {
+          console.error("Error parsing code from localStorage:", parseError);
+        }
       }
     }
   } catch (error) {
-    console.error("Error extracting code:", error);
+    console.error("Error extracting code from localStorage:", error);
   }
-  
-  return userCode;
+
+  if (!userCode) {
+    try {
+      userCode = await new Promise((resolve) => {
+        try {
+          const request = indexedDB.open("LeetCode-problems");
+          
+          request.onerror = (event) => {
+            console.error("IndexedDB error:", event);
+            resolve('');
+          };
+          
+          request.onsuccess = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains("problem_code")) {
+              resolve('');
+              return;
+            }
+            
+            const transaction = db.transaction(["problem_code"], "readonly");
+            const store = transaction.objectStore("problem_code");
+            
+            const getAllKeysRequest = store.getAllKeys();
+            getAllKeysRequest.onsuccess = () => {
+              const keys = getAllKeysRequest.result;
+              const keyPattern = new RegExp(`^${questionID}_\\d+_${language}$`);
+              const matchingKey = keys.find(key => keyPattern.test(key));
+              if (matchingKey) {
+                const getRequest = store.get(matchingKey);
+
+                getRequest.onsuccess = () => {
+                  if (getRequest.result) {
+                    resolve(getRequest.result || '');
+                  } else {
+                    console.log(`No code found in IndexedDB for matching key ${matchingKey}`);
+                    resolve('');
+                  }
+                };
+                
+                getRequest.onerror = (event) => {
+                  console.error("Error fetching from IndexedDB:", event);
+                  resolve('');
+                };
+              } else {
+                console.log(`No matching key found for question ID ${questionID} in ${language}`);
+                resolve('');
+              }
+            };
+            
+            getAllKeysRequest.onerror = (event) => {
+              console.error("Error getting keys from IndexedDB:", event);
+              resolve('');
+            };
+          };
+        } catch (error) {
+          console.error("Error accessing IndexedDB:", error);
+          resolve('');
+        }
+      });
+    } catch (error) {
+      console.error("Error in IndexedDB Promise:", error);
+      userCode = '';
+    }
+  }
+
+  return userCode || '';
 }
 
 /**
@@ -156,7 +219,7 @@ async function extractData(language = 'cpp', otherTests = false) {
       
       problemData.testCases = apiData.exampleTestcaseList.join("\n").trim();
       
-      problemData.userCode = extractUserCode(apiData.questionId, language) || problemData.inputCode;
+      problemData.userCode = await extractUserCode(apiData.questionId, language) || problemData.inputCode;
     }
     
     if (otherTests) {
