@@ -1,5 +1,6 @@
 import React from 'react';
-import { Stack } from '@mui/material';
+import { Stack, Button } from '@mui/material';
+import { Settings as SettingsIcon } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 
 // Components
@@ -24,6 +25,12 @@ const LeetCodePageContent = ({
 }) => {
   const { enqueueSnackbar } = useSnackbar();
 
+  const handleOpenTemplateSettings = () => {
+    chrome.tabs.create({
+      url: chrome.runtime.getURL('options.html')
+    });
+  };
+
   return (
     <>
       <Stack spacing={2} sx={{ mb: 2 }}>
@@ -37,6 +44,23 @@ const LeetCodePageContent = ({
           handleParseProblem={handleParseProblem}
           handleExtractTestCasesOnly={handleExtractTestCasesOnly}
         />
+        <Button
+          variant="outlined"
+          startIcon={<SettingsIcon />}
+          onClick={handleOpenTemplateSettings}
+          sx={{ 
+            width: '100%',
+            borderColor: 'primary.main',
+            color: 'primary.main',
+            '&:hover': {
+              borderColor: 'primary.dark',
+              bgcolor: 'primary.main',
+              color: 'white',
+            },
+          }}
+        >
+          Change Template
+        </Button>
       </Stack>
 
       {!testCase && !codeSnippet ? (
