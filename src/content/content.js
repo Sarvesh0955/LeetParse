@@ -1,6 +1,6 @@
 import { parseData } from '../utils/parser.js';
 
-async function handleParseProblem(language, useCustomTests = false) {
+async function handleParseProblem(language = 'cpp', useCustomTests = false) {
   try {
     const data = await parseData(language, useCustomTests);
     

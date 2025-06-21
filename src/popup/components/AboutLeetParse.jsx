@@ -43,7 +43,7 @@ const AboutLeetParse = () => {
             1
           </Box>
           <Typography variant="body2">
-            Automatically extracting problem details and generating boilerplate code
+            Automatically extracting problem details and generating Snippet code
           </Typography>
         </Box>
         

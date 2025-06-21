@@ -84,12 +84,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         return true;
       }
       
-      const language = message.language || defaultSettings.language;
+      const language = message.language || defaultSettings.language || 'cpp';
       try {
         const generatedCode = generateCode(message.data, language);
         const messageToSend = {
           action: "codeGenerated",
-          boilerplateCode: generatedCode,
+          codeSnippet : generatedCode,
           testCase: message.data.testCases || ''
         };
         sendToPopup(messageToSend, senderTabId);
