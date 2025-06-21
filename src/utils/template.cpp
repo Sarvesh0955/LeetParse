@@ -346,6 +346,8 @@ namespace IO {
 
 using namespace IO;
 
+{{user template}}}}
+
 {{Solution Class}}
 
 int main() {

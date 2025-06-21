@@ -69,7 +69,7 @@ function sendToPopup(message, tabId = null) {
 }
 
 //Handles messages from popup and content scripts
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   try {
     sendResponse({ received: true });
     
@@ -86,7 +86,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       
       const language = message.language || defaultSettings.language || 'cpp';
       try {
-        const generatedCode = generateCode(message.data, language);
+        const generatedCode = await generateCode(message.data, language);
         const messageToSend = {
           action: "codeGenerated",
           codeSnippet : generatedCode,

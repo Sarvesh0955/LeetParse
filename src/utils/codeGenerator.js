@@ -157,7 +157,7 @@ function specialClassInputCode(data) {
  * @param {string} language - The programming language to generate code for (default: 'cpp').
  * @returns {string} The formatted complete code with solution class and input statements.
  */
-function generateCode(data, language = 'cpp') {
+async function generateCode(data, language = 'cpp') {
     if (!data) {
         throw new Error('No data provided for code generation.');
     }
@@ -191,10 +191,20 @@ function generateCode(data, language = 'cpp') {
         if (!inputStatements) {
             console.warn('Generated input statements are empty.');
         }
+
+        // Get user template from storage
+        let userTemplate = '';
+        try {
+            const result = await chrome.storage.sync.get(['userTemplate']);
+            userTemplate = result.userTemplate || '';
+        } catch (error) {
+            console.warn('Failed to get user template from storage:', error);
+        }
         
         let generatedCode = BASE_TEMPLATE
             .replace('{{Solution Class}}', data.userCode)
-            .replace('{{Input Statements}}', inputStatements || '');
+            .replace('{{Input Statements}}', inputStatements || '')
+            .replace('{{user template}}}}', userTemplate);
         
         generatedCode = generatedCode
             .replace(/\u00A0/g, ' ')  
