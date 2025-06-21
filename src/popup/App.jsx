@@ -29,11 +29,94 @@ function App() {
   const [cfInput, setCfInput] = useState('');
   const [boilerplateCode, setBoilerplateCode] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState('cpp');
+  const [currentTabId, setCurrentTabId] = useState(null);
   
   // Hooks
   const [mode, toggleTheme] = useThemeMode();
   const { enqueueSnackbar } = useSnackbar();
   const theme = createAppTheme(mode);
+
+  useEffect(() => {
+    const backgroundPort = chrome.runtime.connect({ name: 'popup' });
+
+    // Listen for messages from background
+    const messageListener = (message) => {
+      console.log('Popup received message:', message);
+      
+      switch (message.action) {
+        case 'connectionEstablished':
+          setCurrentTabId(message.tabId);
+          window.currentTabId = message.tabId;
+          console.log(`Popup connected to tab: ${message.tabId}`);
+          break;
+          
+        case 'codeGenerated':
+          if (message.error) {
+            console.error('Code generation error:', message.error);
+            // Dispatch custom event for error handling
+            window.dispatchEvent(new CustomEvent('codeGenerationError', { 
+              detail: { error: message.error } 
+            }));
+          } else {
+            console.log('Code generated successfully');
+            // Dispatch custom event with generated code
+            window.dispatchEvent(new CustomEvent('codeGenerated', { 
+              detail: { 
+                boilerplateCode: message.boilerplateCode, 
+                testCase: message.testCase 
+              } 
+            }));
+          }
+          break;
+          
+        case 'otherTestsGenerated':
+          if (message.error) {
+            console.error('Test case error:', message.error);
+            // Dispatch custom event for error handling
+            window.dispatchEvent(new CustomEvent('testCaseError', { 
+              detail: { error: message.error } 
+            }));
+          } else {
+            console.log('Test cases generated successfully');
+            // Dispatch custom event with test cases
+            window.dispatchEvent(new CustomEvent('testCasesGenerated', { 
+              detail: { testCase: message.testCase } 
+            }));
+          }
+          break;
+          
+        default:
+          console.log('Unknown message action:', message.action);
+      }
+    };
+
+    backgroundPort.onMessage.addListener(messageListener);
+
+    // Handle port disconnection
+    const disconnectListener = () => {
+      console.log('Popup disconnected from background');
+      setCurrentTabId(null);
+      window.currentTabId = null;
+    };
+
+    backgroundPort.onDisconnect.addListener(disconnectListener);
+
+    // Export port for use in components if needed
+    window.backgroundPort = backgroundPort;
+    window.getCurrentTabId = () => window.currentTabId;
+
+    // Cleanup on unmount
+    return () => {
+      if (backgroundPort) {
+        backgroundPort.onMessage.removeListener(messageListener);
+        backgroundPort.onDisconnect.removeListener(disconnectListener);
+        backgroundPort.disconnect();
+      }
+      window.backgroundPort = null;
+      window.getCurrentTabId = () => null;
+      window.currentTabId = null;
+    };
+  }, []);
 
   // Load preferred language and check if on LeetCode page
   useEffect(() => {
@@ -53,31 +136,47 @@ function App() {
       }
     });
 
-    // Message listener for background communication
-    const messageListener = (message) => {
-      if (message.action === "codeGenerated") {
-        setParseLoading(false);
-        
-        if (message.error) {
-          enqueueSnackbar(message.error, { variant: 'error' });
-        } else {
-          setBoilerplateCode(message.boilerplateCode || '');
-          setCfInput(message.testCase || '');
-        }
-      }
-      else if(message.action === "otherTestsGenerated") {
-        setExtractLoading(false);
-        
-        if (message.error) {
-          enqueueSnackbar(message.error, { variant: 'error' });
-        } else {
-          setCfInput(message.testCase || '');
-        }
-      }
+    // Event listeners for background communication via port
+    const handleCodeGenerated = (event) => {
+      setParseLoading(false);
+      const { boilerplateCode, testCase } = event.detail;
+      setBoilerplateCode(boilerplateCode || '');
+      setCfInput(testCase || '');
+      enqueueSnackbar('Code generated successfully!', { variant: 'success' });
     };
-    
-    chrome.runtime.onMessage.addListener(messageListener);
-    return () => chrome.runtime.onMessage.removeListener(messageListener);
+
+    const handleCodeGenerationError = (event) => {
+      setParseLoading(false);
+      const { error } = event.detail;
+      enqueueSnackbar(error || 'Failed to generate code', { variant: 'error' });
+    };
+
+    const handleTestCasesGenerated = (event) => {
+      setExtractLoading(false);
+      const { testCase } = event.detail;
+      setCfInput(testCase || '');
+      enqueueSnackbar('Test cases extracted successfully!', { variant: 'success' });
+    };
+
+    const handleTestCaseError = (event) => {
+      setExtractLoading(false);
+      const { error } = event.detail;
+      enqueueSnackbar(error || 'Failed to extract test cases', { variant: 'error' });
+    };
+
+    // Add event listeners
+    window.addEventListener('codeGenerated', handleCodeGenerated);
+    window.addEventListener('codeGenerationError', handleCodeGenerationError);
+    window.addEventListener('testCasesGenerated', handleTestCasesGenerated);
+    window.addEventListener('testCaseError', handleTestCaseError);
+
+    // Cleanup event listeners
+    return () => {
+      window.removeEventListener('codeGenerated', handleCodeGenerated);
+      window.removeEventListener('codeGenerationError', handleCodeGenerationError);
+      window.removeEventListener('testCasesGenerated', handleTestCasesGenerated);
+      window.removeEventListener('testCaseError', handleTestCaseError);
+    };
   }, [enqueueSnackbar]);
 
   // Handle parse button click

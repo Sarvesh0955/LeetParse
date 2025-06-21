@@ -19,20 +19,11 @@ import { createAppTheme } from '../common/theme/theme';
 import useThemeMode from '../common/hooks/useThemeMode';
 import useOptionsSettings from './hooks/useOptionsSettings';
 
+import { defaultSettings, supportedLanguages} from '../utils/defaultSettings';
+
 function Options() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const [mode, toggleTheme, setMode] = useThemeMode();
-
-  const defaultSettings = {
-    theme: 'system',
-    preferredLanguage: 'cpp',
-  };
-  
-  const supportedLanguages = [
-    { value: 'cpp', label: 'C++' },
-    { value: 'java', label: 'Java' },
-    { value: 'python', label: 'Python' }
-  ];
 
   const { settings, setSettings, saveSettings, resetSettings } = useOptionsSettings(
     defaultSettings, 
@@ -40,7 +31,6 @@ function Options() {
     setMode
   );
 
-  // Create theme
   const theme = createAppTheme(mode);
 
   return (
