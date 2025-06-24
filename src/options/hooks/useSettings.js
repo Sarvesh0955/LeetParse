@@ -13,6 +13,7 @@ export const useSettings = () => {
   const [hasChanges, setHasChanges] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [resetSuccess, setResetSuccess] = useState(false);
 
   // Load settings from storage
   useEffect(() => {
@@ -72,11 +73,18 @@ export const useSettings = () => {
     setUserTemplate(defaultSettings.userTemplate);
     setSavedSettings(defaultSettings);
     chrome.storage.sync.set(defaultSettings);
+    setResetSuccess(true);
+    setHasChanges(false);
   };
 
   // Close save success notification
   const closeSaveSuccess = () => {
     setSaveSuccess(false);
+  };
+
+  // Close reset success notification
+  const closeResetSuccess = () => {
+    setResetSuccess(false);
   };
 
   return {
@@ -86,13 +94,15 @@ export const useSettings = () => {
     hasChanges,
     loading,
     saveSuccess,
+    resetSuccess,
     
     // Actions
     handleSettingChange,
     handleUserTemplateChange,
     handleSaveSettings,
     handleResetToDefaults,
-    closeSaveSuccess
+    closeSaveSuccess,
+    closeResetSuccess
   };
 };
 

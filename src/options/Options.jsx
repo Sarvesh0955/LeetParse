@@ -21,7 +21,8 @@ import {
   TemplateSettings,
   OptionsActionButtons,
   OptionsLoading,
-  SaveSuccessNotification
+  SaveSuccessNotification,
+  ResetSuccessNotification
 } from './components';
 
 function Options() {
@@ -36,11 +37,13 @@ function Options() {
     hasChanges,
     loading,
     saveSuccess,
+    resetSuccess,
     handleSettingChange,
     handleUserTemplateChange,
     handleSaveSettings,
     handleResetToDefaults,
-    closeSaveSuccess
+    closeSaveSuccess,
+    closeResetSuccess
   } = useSettings();
 
   if (loading) {
@@ -85,6 +88,11 @@ function Options() {
           <SaveSuccessNotification 
             open={saveSuccess}
             onClose={closeSaveSuccess}
+          />
+
+          <ResetSuccessNotification 
+            open={resetSuccess}
+            onClose={closeResetSuccess}
           />
         </Box>
       </Box>

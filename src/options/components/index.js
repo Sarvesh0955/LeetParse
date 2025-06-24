@@ -6,3 +6,4 @@ export { default as TemplateSettings } from './TemplateSettings';
 export { default as OptionsActionButtons } from './OptionsActionButtons';
 export { default as OptionsLoading } from './OptionsLoading';
 export { default as SaveSuccessNotification } from './SaveSuccessNotification';
+export { default as ResetSuccessNotification } from './ResetSuccessNotification';
