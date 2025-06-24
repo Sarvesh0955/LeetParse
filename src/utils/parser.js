@@ -94,36 +94,11 @@ function processNestedArray(arr) {
 }
 
 /**
- * Counts the number of parameters in a function definition
- * @param {string} inputCode The code containing the function definition
- * @returns {number} The number of parameters
- */
-function countFunctionParameters(inputCode) {
-  try {
-    if (!inputCode) return 1;
-    
-    const functionMatch = inputCode.match(/\w+\s*\(([^)]*)\)/);
-    if (!functionMatch || !functionMatch[1]) {
-      return 1;
-    }
-    
-    const parameterString = functionMatch[1].trim();
-    if (!parameterString) return 0;
-    
-    const commaCount = (parameterString.match(/,/g) || []).length;
-    return commaCount + 1;
-  } catch (error) {
-    console.error('Error counting function parameters:', error);
-    return 1; 
-  }
-}
-
-/**
  * Parses the test cases into the required format
  * @param {Object} data The problem data containing test cases and input code
  * @returns {string} The parsed test case output
  */
-function parseTestCase(data) {
+function parseTestCase(data,parameterCount) {
   try {
     if (!data || !data.testCases) {
       console.log('No test cases to parse');
@@ -135,7 +110,7 @@ function parseTestCase(data) {
     
     const nonEmptyLines = lines.filter(line => line.trim() !== '').length;
     
-    const parameterCount = countFunctionParameters(data.inputCode);
+    // const parameterCount = countFunctionParameters(data.inputCode);
     let testCaseCount = nonEmptyLines > 0 ? Math.ceil(nonEmptyLines / parameterCount) : 1;
     
     output += testCaseCount + '\n';
@@ -382,7 +357,7 @@ async function parseData(language = 'cpp', otherTests = false) {
       }
       else {
         result.problemClass = 'Solution';
-        result.testCases = parseTestCase(data).trim();
+        result.testCases = parseTestCase(data,result.parameters[0][1].length).trim();
       }
     } catch (processingError) {
       console.error('Error processing code:', processingError);

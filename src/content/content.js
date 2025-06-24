@@ -3,7 +3,7 @@ import { parseData } from '../utils/parser.js';
 async function handleParseProblem(language = 'cpp', useCustomTests = false) {
   try {
     const data = await parseData(language, useCustomTests);
-    
+    console.log("Parsed data:", data);
     const action = useCustomTests ? "parsedTests" : "processCode";
     const message = useCustomTests
       ? { action, data }
