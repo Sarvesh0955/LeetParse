@@ -6,9 +6,8 @@ export const defaultSettings = {
 
 export const supportedLanguages = [
     { value: 'cpp', label: 'C++' },
-    // Future languages will be added here
-    // { value: 'java', label: 'Java' },
-    // { value: 'python', label: 'Python' }
+    { value: 'python', label: 'Python' },
+    { value: 'java', label: 'Java' }
 ];
 
 export const themeOptions = [
