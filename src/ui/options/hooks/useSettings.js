@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { defaultSettings } from '../../utils/defaultSettings';
+import { defaultSettings } from '../../../utils/defaultSettings';
 
 /**
  * Custom hook to manage extension settings

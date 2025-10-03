@@ -32,6 +32,44 @@ LeetParse is a developer-oriented Chrome extension that streamlines the process 
 - **Template Customization**: Modify code templates to match your coding style
 - **Language Selection**: Support for multiple programming languages (extensible architecture)
 
+## 🏗️ Project Structure
+
+```
+leetparse/
+├── public/              # Static assets and manifest
+│   ├── icons/          # Extension icons
+│   └── manifest.json   # Chrome extension manifest
+│
+├── src/
+│   ├── background/     # Background service worker
+│   │   ├── index.js
+│   │   └── messageHandlers/  # Message handling modules
+│   │
+│   ├── content/        # Content script
+│   │   ├── index.js
+│   │   ├── parser/     # DOM parsing logic
+│   │   └── messenger.js
+│   │
+│   ├── ui/             # React UI components
+│   │   ├── popup/      # Popup UI
+│   │   ├── options/    # Options page
+│   │   └── common/     # Shared components, hooks, theme
+│   │
+│   ├── core/           # Pure business logic (browser API-free)
+│   │   ├── codegen/    # Code generation
+│   │   ├── languages/  # Language templates
+│   │   └── utils/      # Parser and extractor utilities
+│   │
+│   ├── messaging/      # Message type constants and router
+│   └── utils/          # General utilities
+│
+├── tests/              # Unit tests
+├── popup.html          # Popup entry HTML
+├── options.html        # Options entry HTML
+├── vite.config.js      # Vite build configuration
+└── package.json
+```
+
 ## 🚀 Installation
 
 ### Method 1: From Chrome Web Store (Recommended)
@@ -61,6 +99,76 @@ LeetParse is a developer-oriented Chrome extension that streamlines the process 
    - Click "Load unpacked" and select the `dist` folder created by the build
    - The extension icon should appear in your browser toolbar
 
+## 🔧 Development
+
+### Development Mode
+Run the development server:
+```bash
+npm run dev
+```
+
+This will start Vite's dev server. Note that for full extension functionality, you'll still need to load the built `dist/` folder as an unpacked extension.
+
+### Build for Production
+```bash
+npm run build
+```
+
+Output will be in the `dist/` directory, ready to be loaded as an unpacked extension.
+
+### Project Architecture
+
+- **Background Script** (`src/background/`): Handles message routing, code generation, and extension lifecycle
+- **Content Script** (`src/content/`): Runs on LeetCode pages to extract problem information
+- **UI Components** (`src/ui/`): React-based popup and options interfaces
+- **Core Logic** (`src/core/`): Pure JavaScript modules for parsing and code generation
+- **Messaging** (`src/messaging/`): Centralized message type definitions for type safety
+
+### Adding New Language Support
+
+To add support for a new programming language:
+
+1. Create a template file in `src/core/languages/` (e.g., `python.template.py`)
+2. Update `src/core/codegen/index.js` to handle the new language
+3. Add language option to the options page UI
+
+### Extending Functionality
+
+The modular structure makes it easy to:
+- Add new message types in `src/messaging/messages.js`
+- Create new message handlers in `src/background/messageHandlers/`
+- Add new UI components in `src/ui/popup/components/` or `src/ui/options/components/`
+- Extend parsing logic in `src/content/parser/`
+
+### Running Tests
+
+Tests are currently scaffolded. To set up:
+
+1. Install test dependencies:
+```bash
+npm install --save-dev jest @babel/preset-env @babel/preset-react
+```
+
+2. Run tests:
+```bash
+npm test
+```
+
+See `tests/README.md` for more details.
+
+## 📦 Build Output
+
+The `dist/` directory contains:
+- `popup.html` & `popup.js` - Popup interface
+- `options.html` & `options.js` - Options page
+- `background.js` - Background service worker
+- `content.js` - Content script
+- `manifest.json` - Extension manifest
+- `icons/` - Extension icons
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 **Made with ❤️ for competitive programmers and LeetCoders**
 

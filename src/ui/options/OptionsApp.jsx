@@ -25,7 +25,7 @@ import {
   ResetSuccessNotification
 } from './components';
 
-function Options() {
+function OptionsApp() {
   // Theme
   const [mode] = useThemeMode();
   const theme = createAppTheme(mode);
@@ -100,4 +100,4 @@ function Options() {
   );
 }
 
-export default Options;
+export default OptionsApp;

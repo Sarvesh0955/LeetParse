@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useSnackbar } from 'notistack';
+import { CONNECTION_ESTABLISHED, CODE_GENERATED, TESTS_GENERATED } from '../../../messaging/messages.js';
 
 /**
  * Custom hook to manage communication with background script
@@ -17,10 +18,10 @@ export const useBackgroundConnection = ({
 
     const messageListener = (message) => {
       switch (message.action) {
-        case 'connectionEstablished':
+        case CONNECTION_ESTABLISHED:
           break;
           
-        case 'codeGenerated':
+        case CODE_GENERATED:
           setParseLoading(false);
           if (message.error) {
             console.error('Code generation error:', message.error);
@@ -32,7 +33,7 @@ export const useBackgroundConnection = ({
           }
           break;
           
-        case 'otherTestsGenerated':
+        case TESTS_GENERATED:
           setExtractLoading(false);
           if (message.error) {
             console.error('Test case error:', message.error);

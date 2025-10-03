@@ -16,7 +16,7 @@ import { createAppTheme } from '../common/theme/theme';
 // Local hooks
 import { usePopupState, useBackgroundConnection, usePopupActions } from './hooks';
 
-function App() {
+function PopupApp() {
   // Theme
   const [mode, toggleTheme] = useThemeMode();
   const theme = createAppTheme(mode);
@@ -88,16 +88,16 @@ function App() {
   );
 }
 
-function AppWrapper() {
+function PopupAppWrapper() {
   return (
     <SnackbarProvider 
       maxSnack={2}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       autoHideDuration={1000}
     >
-      <App />
+      <PopupApp />
     </SnackbarProvider>
   );
 }
 
-export default AppWrapper;
+export default PopupAppWrapper;

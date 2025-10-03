@@ -1,7 +1,10 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import PopupApp from './PopupApp.jsx';
 
+/**
+ * Applies theme to the popup based on stored settings
+ */
 const applyTheme = (theme) => {
   try {
     if (theme === 'system') {
@@ -12,8 +15,11 @@ const applyTheme = (theme) => {
     console.error('Error applying theme:', error);
     document.documentElement.setAttribute('data-theme', 'light');
   }
-}
+};
 
+/**
+ * Initializes theme from chrome storage
+ */
 const initializeTheme = () => {
   try {
     chrome.storage.sync.get(['theme'], (result) => {
@@ -29,8 +35,9 @@ const initializeTheme = () => {
     console.error('Error initializing theme:', error);
     applyTheme('system');
   }
-}
+};
 
+// Listen for theme changes
 try {
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area === 'sync' && changes.theme) {
@@ -41,12 +48,13 @@ try {
   console.error('Error setting up storage listener:', error);
 }
 
+// Initialize theme
 initializeTheme();
 
+// Mount the React app
 const root = document.getElementById('root');
-
 ReactDOM.createRoot(root).render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <PopupApp />
+  </React.StrictMode>
 );
