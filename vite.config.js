@@ -4,11 +4,12 @@ import { resolve } from 'path'
 
 export default defineConfig({
   plugins: [react()],
+  publicDir: 'public',
   build: {
     rollupOptions: {
       input: {
-        popup: resolve(__dirname, 'public/popup.html'),
-        options: resolve(__dirname, 'public/options.html'),
+        popup: resolve(__dirname, 'popup.html'),
+        options: resolve(__dirname, 'options.html'),
         content: resolve(__dirname, 'src/content/index.js'),
         background: resolve(__dirname, 'src/background/index.js'),
       },
@@ -17,6 +18,7 @@ export default defineConfig({
         chunkFileNames: '[name].js',
         assetFileNames: '[name].[ext]'
       }
-    }
+    },
+    outDir: 'dist',
   }
 })

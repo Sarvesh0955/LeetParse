@@ -7,8 +7,8 @@ import {
 } from '@mui/material';
 
 // Common hooks and theme
-import useThemeMode from '../../common/hooks/useThemeMode';
-import { createAppTheme } from '../../common/theme/theme';
+import useThemeMode from '../common/hooks/useThemeMode';
+import { createAppTheme } from '../common/theme/theme';
 
 // Local hooks
 import { useSettings } from './hooks';

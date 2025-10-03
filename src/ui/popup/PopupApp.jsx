@@ -10,8 +10,8 @@ import { SnackbarProvider } from 'notistack';
 import { AppHeader, LeetCodePageContent, NonLeetCodePageContent } from './components';
 
 // Common hooks and theme
-import useThemeMode from '../../common/hooks/useThemeMode';
-import { createAppTheme } from '../../common/theme/theme';
+import useThemeMode from '../common/hooks/useThemeMode';
+import { createAppTheme } from '../common/theme/theme';
 
 // Local hooks
 import { usePopupState, useBackgroundConnection, usePopupActions } from './hooks';
