@@ -1,4 +1,5 @@
 import { useSnackbar } from 'notistack';
+import { PARSE_REQUEST, EXTRACT_TESTS_REQUEST } from '../../../messaging/messages.js';
 
 /**
  * Custom hook to manage popup actions (parse, extract, navigate)
@@ -28,7 +29,7 @@ export const usePopupActions = ({
         }
         
         chrome.tabs.sendMessage(tabs[0].id, { 
-          action: "parseProblem",
+          action: PARSE_REQUEST,
           language: language
         }, (response) => {
           if (chrome.runtime.lastError) {
@@ -60,7 +61,7 @@ export const usePopupActions = ({
         }
         
         chrome.tabs.sendMessage(tabs[0].id, { 
-          action: "otherTests",
+          action: EXTRACT_TESTS_REQUEST,
           language: language
         }, (response) => {
           if (chrome.runtime.lastError) {
