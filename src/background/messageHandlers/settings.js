@@ -3,7 +3,7 @@
  * Manages extension settings initialization
  */
 
-import { defaultSettings } from '../../utils/defaultSettings.js';
+import { defaultSettings } from '../../core/defaultSettings.js';
 
 /**
  * Initializes default settings when extension is installed

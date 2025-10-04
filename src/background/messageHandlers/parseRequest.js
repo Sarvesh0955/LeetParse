@@ -4,7 +4,7 @@
  */
 
 import { generateCode } from '../../core/codegen/index.js';
-import { defaultSettings } from '../../utils/defaultSettings.js';
+import { defaultSettings } from '../../core/defaultSettings.js';
 import { CODE_GENERATED } from '../../messaging/messages.js';
 
 /**
