@@ -5,7 +5,8 @@
 
 import { parseLeetCodeProblem } from './parser/leetcodeParser.js';
 import { sendParseResult } from './messenger.js';
-import { PARSE_REQUEST, EXTRACT_TESTS_REQUEST } from '../messaging/messages.js';
+export const PARSE_REQUEST = 'parseProblem';
+export const EXTRACT_TESTS_REQUEST = 'otherTests';
 
 /**
  * Handles parse problem request

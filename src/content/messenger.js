@@ -3,8 +3,9 @@
  * Handles sending messages to background script
  */
 
-import { PARSE_RESULT, TESTS_RESULT, PARSE_ERROR } from '../messaging/messages.js';
-
+export const PARSE_RESULT = 'processCode';
+export const TESTS_RESULT = 'parsedTests';
+export const PARSE_ERROR = 'parseError';
 /**
  * Sends parsed problem data to background script
  * @param {Object} result - Parse result from leetcodeParser
