@@ -20,14 +20,21 @@ export async function handleParseRequest(message, sender, sendToPopup) {
   }
   
   const senderTabId = sender.tab ? sender.tab.id : null;
-  const language = message.language || defaultSettings.language || 'cpp';
+  const language = message.language || defaultSettings.preferredLanguage || 'cpp';
   
   try {
-    const generatedCode = await generateCode(message.data, language);
+    // Extract the necessary data for code generation
+    const { userCode, inputCode, testCases } = message.data;
+    
+    // Use userCode if available, otherwise fall back to inputCode
+    const codeToUse = userCode || inputCode || '';
+    const testCasesToUse = testCases || '';
+    
+    const generatedCode = await generateCode(message.data, language, testCasesToUse, codeToUse);
     const messageToSend = {
       action: CODE_GENERATED,
       codeSnippet: generatedCode,
-      testCase: message.data.testCases || ''
+      testCase: testCasesToUse
     };
     sendToPopup(messageToSend, senderTabId);
   } catch (error) {

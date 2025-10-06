@@ -346,7 +346,7 @@ namespace IO {
 
 using namespace IO;
 
-{{user template}}}}
+{{user template}}
 
 {{Solution Class}}
 

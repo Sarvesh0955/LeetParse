@@ -6,8 +6,11 @@ import {
   Select,
   MenuItem,
   Paper,
-  Alert
+  Alert,
+  Chip,
+  Box
 } from '@mui/material';
+import { supportedLanguages } from '../../../core/defaultSettings.js';
 
 /**
  * Language preferences settings component
@@ -29,13 +32,39 @@ const LanguageSettings = ({ settings, onSettingChange }) => {
           label="Default Language"
           onChange={(e) => onSettingChange('preferredLanguage', e.target.value)}
         >
-          <MenuItem value="cpp">C++</MenuItem>
-          {/* Currently only C++ is available as requested */}
+          {supportedLanguages.map((language) => (
+            <MenuItem key={language.value} value={language.value}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                {language.label}
+                {language.value === 'cpp' ? (
+                  <Chip 
+                    label="Fully Supported" 
+                    size="small" 
+                    color="success" 
+                    variant="outlined" 
+                  />
+                ) : (
+                  <Chip 
+                    label="Coming Soon" 
+                    size="small" 
+                    color="warning" 
+                    variant="outlined" 
+                  />
+                )}
+              </Box>
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
       
       <Alert severity="info" sx={{ mt: 2 }}>
-        Currently, only C++ is supported. More languages will be added in future updates.
+        <Typography variant="body2">
+          <strong>Language Support Status:</strong>
+        </Typography>
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          • <strong>C++:</strong> Fully implemented with complete code generation<br/>
+          • <strong>Java, Python, JavaScript:</strong> Framework ready, implementation coming soon
+        </Typography>
       </Alert>
     </Paper>
   );

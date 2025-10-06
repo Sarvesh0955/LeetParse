@@ -330,7 +330,9 @@ async function parseData(language = 'cpp', otherTests = false) {
       testCases: '',     
       inputCode: '',     
       parameters: [],    
-      userCode: ''      
+      userCode: '',
+      isClass: false,        // Flag to indicate if this is a class-based problem
+      isSpecialClass: false  // Flag to indicate if this is a special class (like data structure)
     };
 
     result.inputCode = data.inputCode;
@@ -351,19 +353,27 @@ async function parseData(language = 'cpp', otherTests = false) {
       }
       result.parameters = functionDetails;
       if (functionDetails.length > 1) {
+        // Multiple functions indicate a special class (like data structure)
         const classMatch = data.inputCode.match(/class\s+(\w+)/);
         result.problemClass = classMatch ? classMatch[1] : 'Unknown';
         result.testCases = parseTestCasesSpecialClass(data).trim();
+        result.isClass = true;
+        result.isSpecialClass = true;
       }
       else {
+        // Single function indicates a regular Solution class
         result.problemClass = 'Solution';
         result.testCases = parseTestCase(data,result.parameters[0][1].length).trim();
+        result.isClass = true;
+        result.isSpecialClass = false;
       }
     } catch (processingError) {
       console.error('Error processing code:', processingError);
       result.problemClass = 'Solution';
       result.parameters = functionDetails.length > 0 ? functionDetails : [['solve', [], '']];
       result.testCases = data.testCases ? '1\n0' : '';
+      result.isClass = true;
+      result.isSpecialClass = false;
     }
 
     return result;
@@ -374,7 +384,9 @@ async function parseData(language = 'cpp', otherTests = false) {
       testCases: '1\n0',
       inputCode: 'class Solution { void solve() {} }',
       parameters: [['solve', [], '']], 
-      userCode: ''
+      userCode: '',
+      isClass: true,
+      isSpecialClass: false
     };
   }
 }

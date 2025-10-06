@@ -7,6 +7,7 @@ import {
   Typography,
   FormHelperText
 } from '@mui/material';
+import { supportedLanguages } from '../../../core/defaultSettings.js';
 
 /**
  * Component for selecting programming language
@@ -30,31 +31,26 @@ const LanguageSelector = ({ selectedLanguage, setSelectedLanguage }) => {
           bgcolor: 'background.paper',
         }}
       >
-        <MenuItem value="cpp">C++</MenuItem>
-        <MenuItem value="python" disabled>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-            <span>Python</span>
-            <Typography 
-              variant="caption" 
-              color="text.secondary" 
-              sx={{ ml: 2, fontSize: '0.7rem', opacity: 0.7 }}
-            >
-              (Coming soon)
-            </Typography>
-          </Box>
-        </MenuItem>
-        <MenuItem value="java" disabled>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-            <span>Java</span>
-            <Typography 
-              variant="caption" 
-              color="text.secondary" 
-              sx={{ ml: 2, fontSize: '0.7rem', opacity: 0.7 }}
-            >
-              (Coming soon)
-            </Typography>
-          </Box>
-        </MenuItem>
+        {supportedLanguages.map((language) => (
+          <MenuItem 
+            key={language.value} 
+            value={language.value}
+            disabled={language.value !== 'cpp'} // Only C++ is fully implemented
+          >
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+              <span>{language.label}</span>
+              {language.value !== 'cpp' && (
+                <Typography 
+                  variant="caption" 
+                  color="text.secondary" 
+                  sx={{ ml: 2, fontSize: '0.7rem', opacity: 0.7 }}
+                >
+                  (Coming soon)
+                </Typography>
+              )}
+            </Box>
+          </MenuItem>
+        ))}
       </Select>
       <FormHelperText>Select language to parse the problem</FormHelperText>
     </FormControl>
