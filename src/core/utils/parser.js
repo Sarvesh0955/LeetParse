@@ -1,61 +1,5 @@
 import { extractData } from "./extractor";
-
-/**
- * Extracts parameter data types and names from the Solution class function
- * @param {string} inputCode The code containing the function definition
- * @returns {Array<Array<string>>} Array of parameter strings with data types and names
- */
-function extractParameterTypes(inputCode) {
-  try {
-    if (!inputCode) return [];
-    
-    const functionMatch = inputCode.match(/\w+\s*\(([^)]*)\)/);
-    
-    if (functionMatch && functionMatch[1]) {
-      const parametersStr = functionMatch[1].trim();
-      if (!parametersStr) return [];
-      
-      let parameters = [];
-      let currentParam = '';
-      let templateDepth = 0;
-      
-      for (let i = 0; i < parametersStr.length; i++) {
-        const char = parametersStr[i];
-        
-        if (char === '<') {
-          templateDepth++;
-          currentParam += char;
-        } else if (char === '>') {
-          templateDepth--;
-          currentParam += char;
-        } else if (char === ',' && templateDepth === 0) {
-          parameters.push(currentParam.trim());
-          currentParam = '';
-        } else {
-          currentParam += char;
-        }
-      }
-      
-      if (currentParam.trim()) {
-        parameters.push(currentParam.trim());
-      }
-      
-      return parameters
-        .filter(param => param.trim())
-        .map(param => {
-          const cleanParam = param.replace(/&|\n|\r/g, '').trim();
-          const paramNameMatch = cleanParam.match(/\S+\s+(\S+)/);
-          const paramName = paramNameMatch ? paramNameMatch[1] : '';
-          return [cleanParam, paramName];
-        });
-    }
-    
-    return [];
-  } catch (error) {
-    console.error('Error extracting parameter types:', error);
-    return [];
-  }
-}
+import { getLanguageParser } from "./languageParserFactory.js";
 
 /**
  * Processes a nested array recursively, outputting size before each level
@@ -146,91 +90,7 @@ function parseTestCase(data,parameterCount) {
   }
 }
 
-/**
- * Splits a class code into individual functions
- * @param {string} inputCode The code containing the class definition
- * @returns {Array<string>} Array of strings each containing one function
- */
-function splitClassIntoFunctions(inputCode) {
-  try {
-    if (!inputCode) return [];
-    
-    const classBodyMatch = inputCode.match(/class\s+\w+\s*{([\s\S]*)}/);
-    if (!classBodyMatch) {
-      console.warn('No valid class found in code');
-      return [];
-    }
-     
-    const classBody = classBodyMatch[1];
-    const functions = [];
-    let currentFunction = '';
-    let braceCount = 0;
-    let inFunction = false;
-    for (let i = 0; i < classBody.length; i++) {
-      const char = classBody[i];
-      currentFunction += char;
-      
-      if (char === '{') {
-        braceCount++;
-        inFunction = true;
-      } else if (char === '}') {
-        braceCount--;
-        if (braceCount === 0 && inFunction) {
-          if (currentFunction.includes('(') && currentFunction.includes(')')) {
-            functions.push(currentFunction.trim());
-          }
-          currentFunction = '';
-          inFunction = false;
-        }
-      }
-    }
-    return functions.filter(func => func.trim() !== '');
-  } catch (error) {
-    console.error('Error splitting class into functions:', error);
-    return [];
-  }
-}
 
-/**
- * Extracts the function name from a code snippet
- * @param {string} inputCode The code containing the function definition
- * @returns {string} The extracted function name
- */
-function extractFunctionName(inputCode) {
-  try {
-    if (!inputCode) return '';
-    
-    const functionNameMatch = inputCode.match(/(\w+)\s*\(/);
-    if (functionNameMatch && functionNameMatch[1]) {
-      return functionNameMatch[1];
-    }
-    
-    return '';
-  } catch (error) {
-    console.error('Error extracting function name:', error);
-    return '';
-  }
-}
-
-/**
- * Extracts the return type of a function from the code
- * @param {string} inputCode The code containing the function definition
- * @returns {string} The return type of the function
- */
-function extractReturnType(inputCode) {
-  try {
-    if (!inputCode) return '';
-    const returnTypeMatch = inputCode.match(/(\w+(?:<[\w\s,<>*]+>)?(?:\s*\*)?)\s+\w+\s*\(/);
-    if (returnTypeMatch && returnTypeMatch[1]) {
-      return returnTypeMatch[1].trim();
-    }
-
-    return '';
-  } catch (error) {
-    console.error('Error extracting return type:', error);
-    return '';
-  }
-}
 
 
 /**
@@ -340,29 +200,32 @@ async function parseData(language = 'cpp', otherTests = false) {
     const functionDetails = [];
     
     try {
-      const functions = splitClassIntoFunctions(data.inputCode);
+      // Get language-specific parser
+      const parser = getLanguageParser(language);
+      
+      const functions = parser.splitClassIntoFunctions(data.inputCode);
       if (!functions || functions.length === 0) {
         console.warn('No functions found in the input code');
       }
       for (const func of functions) {
         functionDetails.push([
-          extractFunctionName(func),
-          extractParameterTypes(func),
-          extractReturnType(func)
+          parser.extractFunctionName(func),
+          parser.extractParameterTypes(func),
+          parser.extractReturnType(func)
         ]);
       }
       result.parameters = functionDetails;
+      
       if (functionDetails.length > 1) {
         // Multiple functions indicate a special class (like data structure)
-        const classMatch = data.inputCode.match(/class\s+(\w+)/);
-        result.problemClass = classMatch ? classMatch[1] : 'Unknown';
+        result.problemClass = parser.extractClassName(data.inputCode);
         result.testCases = parseTestCasesSpecialClass(data).trim();
         result.isClass = true;
         result.isSpecialClass = true;
       }
       else {
         // Single function indicates a regular Solution class
-        result.problemClass = 'Solution';
+        result.problemClass = parser.extractClassName(data.inputCode);
         result.testCases = parseTestCase(data,result.parameters[0][1].length).trim();
         result.isClass = true;
         result.isSpecialClass = false;
