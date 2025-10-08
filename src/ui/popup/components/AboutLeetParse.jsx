@@ -20,7 +20,7 @@ const AboutLeetParse = () => {
         About LeetParse
       </Typography>
       <Typography variant="body2" color="text.secondary" paragraph>
-        This extension helps you solve LeetCode problems in your preferred C++ environment by:
+        This extension helps you solve LeetCode problems in your preferred development environment by:
       </Typography>
       
       <Stack spacing={1.5}>

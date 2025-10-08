@@ -13,20 +13,20 @@ import {
  */
 const TemplateSettings = ({ userTemplate, onUserTemplateChange }) => {
   const getDefaultTemplate = () => {
-    return `// Your custom C++ code here
-// Add your commonly used macros, typedefs, and utility functions
+    return `// Your custom code here
+// Add your commonly used imports, macros, typedefs, and utility functions
 // This will be inserted into the main template
 
-#define ll long long
-#define vi vector<int>
-#define vll vector<long long>
-#define pii pair<int, int>
-#define pb push_back
-#define mp make_pair
+// C++ Example:
+// #define ll long long
+// #define vi vector<int>
+
+// Java Example:  
+// import java.math.BigInteger;
+// public static final int MOD = 1000000007;
 
 // Example utility functions:
 // int gcd(int a, int b) { return b ? gcd(b, a % b) : a; }
-// int power(int a, int b, int mod) { ... }
 `;
   };
 
@@ -36,7 +36,7 @@ const TemplateSettings = ({ userTemplate, onUserTemplateChange }) => {
         User Template
       </Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-        Add your custom C++ code that will be inserted into the main template. This can include macros, typedefs, utility functions, etc.
+        Add your custom code that will be inserted into the main template. This can include imports, macros, typedefs, utility functions, etc.
       </Typography>
       
       <TextField
@@ -73,7 +73,7 @@ const TemplateSettings = ({ userTemplate, onUserTemplateChange }) => {
       </Stack>
       
       <Alert severity="info" sx={{ mt: 2 }}>
-        Your custom template will be inserted into the main C++ template at the designated location. 
+        Your custom template will be inserted into the main code template at the designated location. 
         Leave empty to use no additional template code.
       </Alert>
     </Paper>

@@ -90,8 +90,36 @@ class IO {
         
         // 2D Arrays
         public static int[][] readInt2DArray() {
-            int m = readInt();
-            int n = readInt();
+            int m = readInt(); // number of rows
+            int[][] arr = new int[m][];
+            for (int i = 0; i < m; i++) {
+                int n = readInt(); // number of elements in this row
+                arr[i] = new int[n];
+                for (int j = 0; j < n; j++) {
+                    arr[i][j] = readInt();
+                }
+            }
+            return arr;
+        }
+        
+        public static char[][] readChar2DArray() {
+            int m = readInt(); // number of rows
+            char[][] arr = new char[m][];
+            scanner.nextLine(); // consume newline
+            for (int i = 0; i < m; i++) {
+                String row = scanner.nextLine();
+                arr[i] = new char[row.length()];
+                for (int j = 0; j < row.length(); j++) {
+                    arr[i][j] = row.charAt(j);
+                }
+            }
+            return arr;
+        }
+        
+        // Fixed-size 2D Arrays (for cases where all rows have same length)
+        public static int[][] readFixedInt2DArray() {
+            int m = readInt(); // number of rows
+            int n = readInt(); // number of columns (fixed for all rows)
             int[][] arr = new int[m][n];
             for (int i = 0; i < m; i++) {
                 for (int j = 0; j < n; j++) {
@@ -101,14 +129,14 @@ class IO {
             return arr;
         }
         
-        public static char[][] readChar2DArray() {
-            int m = readInt();
-            int n = readInt();
+        public static char[][] readFixedChar2DArray() {
+            int m = readInt(); // number of rows
+            int n = readInt(); // number of columns (fixed for all rows)
             char[][] arr = new char[m][n];
             scanner.nextLine(); // consume newline
             for (int i = 0; i < m; i++) {
                 String row = scanner.nextLine();
-                for (int j = 0; j < n; j++) {
+                for (int j = 0; j < Math.min(n, row.length()); j++) {
                     arr[i][j] = row.charAt(j);
                 }
             }
@@ -133,6 +161,36 @@ class IO {
                 list.add(scanner.nextLine());
             }
             return list;
+        }
+        
+        // 2D Lists (variable-length rows)
+        public static List<List<Integer>> readIntListList() {
+            int m = readInt(); // number of rows
+            List<List<Integer>> result = new ArrayList<>();
+            for (int i = 0; i < m; i++) {
+                int n = readInt(); // number of elements in this row
+                List<Integer> row = new ArrayList<>();
+                for (int j = 0; j < n; j++) {
+                    row.add(readInt());
+                }
+                result.add(row);
+            }
+            return result;
+        }
+        
+        public static List<List<String>> readStringListList() {
+            int m = readInt(); // number of rows
+            List<List<String>> result = new ArrayList<>();
+            scanner.nextLine(); // consume newline
+            for (int i = 0; i < m; i++) {
+                int n = readInt(); // number of elements in this row
+                List<String> row = new ArrayList<>();
+                for (int j = 0; j < n; j++) {
+                    row.add(scanner.next());
+                }
+                result.add(row);
+            }
+            return result;
         }
         
         public static Set<Integer> readIntSet() {

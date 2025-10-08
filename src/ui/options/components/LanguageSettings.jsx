@@ -36,7 +36,7 @@ const LanguageSettings = ({ settings, onSettingChange }) => {
             <MenuItem key={language.value} value={language.value}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 {language.label}
-                {language.value === 'cpp' ? (
+                {['cpp', 'java'].includes(language.value) ? (
                   <Chip 
                     label="Fully Supported" 
                     size="small" 
@@ -63,7 +63,8 @@ const LanguageSettings = ({ settings, onSettingChange }) => {
         </Typography>
         <Typography variant="body2" sx={{ mt: 1 }}>
           • <strong>C++:</strong> Fully implemented with complete code generation<br/>
-          • <strong>Java, Python, JavaScript:</strong> Framework ready, implementation coming soon
+          • <strong>Java:</strong> Fully implemented with complete code generation<br/>
+          • <strong>Python, JavaScript:</strong> Framework ready, implementation coming soon
         </Typography>
       </Alert>
     </Paper>

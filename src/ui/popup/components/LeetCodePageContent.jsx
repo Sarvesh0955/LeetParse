@@ -80,7 +80,7 @@ const LeetCodePageContent = ({
 
       {codeSnippet && (
         <CodeBlock
-          title="C++ Code Snippet"
+          title={`${selectedLanguage.toUpperCase()} Code Snippet`}
           content={codeSnippet}
           type="code"
           onCopy={() => enqueueSnackbar('Code copied to clipboard', { variant: 'success' })}
