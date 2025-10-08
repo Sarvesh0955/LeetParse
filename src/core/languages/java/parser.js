@@ -111,7 +111,7 @@ function splitClassIntoFunctions(inputCode) {
         
         // Check if this looks like a method signature
         if (j < classBody.length && classBody[j] === '{' && 
-            lookAhead.match(/(?:public|private|protected).*\w+\s*\([^)]*\)\s*$/)) {
+            lookAhead.match(/(?:public|private|protected)?\s*(?:static)?\s*[\w<>\[\]]+\s+\w+\s*\([^)]*\)\s*$/)) {
           inMethod = true;
           currentMethod = lookAhead + '{';
           braceCount = 1;
