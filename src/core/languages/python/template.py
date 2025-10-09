@@ -4,6 +4,38 @@ import json
 from collections import deque, defaultdict
 import re
 
+# Global input buffer for single word reading
+class InputBuffer:
+    def __init__(self):
+        self.buffer = []
+        self.index = 0
+    
+    def next_word(self):
+        while self.index >= len(self.buffer):
+            try:
+                line = input().strip()
+                if line:
+                    self.buffer.extend(line.split())
+                    self.index = len(self.buffer) - len(line.split())
+            except EOFError:
+                return None
+        
+        word = self.buffer[self.index]
+        self.index += 1
+        return word
+    
+    def next_line(self):
+        # Clear any remaining words from current line buffer
+        self.buffer = []
+        self.index = 0
+        try:
+            return input().strip()
+        except EOFError:
+            return None
+
+# Global input buffer instance
+_input_buffer = InputBuffer()
+
 # Definition for singly-linked list
 class ListNode:
     def __init__(self, val=0, next=None):
@@ -28,34 +60,38 @@ class IO:
         
         @staticmethod
         def read_bool() -> bool:
-            return input().strip().lower() in ['true', '1', 'yes']
+            word = _input_buffer.next_word()
+            return word.lower() in ['true', '1', 'yes'] if word else False
         
         @staticmethod
         def read_int() -> int:
-            return int(input().strip())
+            word = _input_buffer.next_word()
+            return int(word) if word else 0
         
         @staticmethod
         def read_float() -> float:
-            return float(input().strip())
+            word = _input_buffer.next_word()
+            return float(word) if word else 0.0
         
         @staticmethod
         def read_string() -> str:
-            return input().strip()
+            return _input_buffer.next_line()
         
         @staticmethod
         def read_char() -> str:
-            return input().strip()[0]
+            word = _input_buffer.next_word()
+            return word[0] if word else ''
         
         # Array functions
         @staticmethod
         def read_int_array() -> List[int]:
             n = IO.Input.read_int()  # Read array size first
-            return list(map(int, input().strip().split()))  # Then read space-separated elements
+            return [IO.Input.read_int() for _ in range(n)]  # Read each element as single word
         
         @staticmethod
         def read_float_array() -> List[float]:
             n = IO.Input.read_int()  # Read array size first
-            return list(map(float, input().strip().split()))  # Then read space-separated elements
+            return [IO.Input.read_float() for _ in range(n)]  # Read each element as single word
         
         @staticmethod
         def read_string_array() -> List[str]:
@@ -73,7 +109,7 @@ class IO:
             result = []
             for _ in range(m):
                 n = IO.Input.read_int()  # number of elements in this row
-                row = list(map(int, input().strip().split()))  # space-separated elements
+                row = [IO.Input.read_int() for _ in range(n)]  # read each element as single word
                 result.append(row)
             return result
         
@@ -82,25 +118,28 @@ class IO:
             m = IO.Input.read_int()  # number of rows
             result = []
             for _ in range(m):
-                row = list(input().strip())
-                result.append(row)
+                row_str = IO.Input.read_string()  # read full line for char array
+                result.append(list(row_str))
             return result
         
         # Set and Dictionary functions
         @staticmethod
         def read_int_set() -> Set[int]:
-            return set(map(int, input().strip().split()))
+            n = IO.Input.read_int()
+            return {IO.Input.read_int() for _ in range(n)}
         
         @staticmethod
         def read_string_set() -> Set[str]:
-            return set(input().strip().split())
+            n = IO.Input.read_int()
+            return {_input_buffer.next_word() for _ in range(n)}
         
         @staticmethod
         def read_int_int_dict() -> Dict[int, int]:
             n = IO.Input.read_int()
             result = {}
             for _ in range(n):
-                key, value = map(int, input().strip().split())
+                key = IO.Input.read_int()
+                value = IO.Input.read_int()
                 result[key] = value
             return result
         
@@ -109,27 +148,19 @@ class IO:
             n = IO.Input.read_int()
             result = {}
             for _ in range(n):
-                line_parts = input().strip().split()
-                key = line_parts[0]
-                value = int(line_parts[1])
+                key = _input_buffer.next_word()
+                value = IO.Input.read_int()
                 result[key] = value
             return result
         
         # Linked List
         @staticmethod
         def read_list_node() -> Optional[ListNode]:
-            line = input().strip()
-            if not line or line == "[]":
+            n = IO.Input.read_int()
+            if n == 0:
                 return None
             
-            # Handle [1,2,3] format or space-separated format
-            if line.startswith('[') and line.endswith(']'):
-                line = line[1:-1]  # Remove brackets
-            
-            if not line:
-                return None
-                
-            values = [int(x.strip()) for x in line.split(',') if x.strip()]
+            values = [IO.Input.read_int() for _ in range(n)]
             if not values:
                 return None
                 
@@ -143,24 +174,17 @@ class IO:
         # Binary Tree (level-order traversal format)
         @staticmethod
         def read_tree_node() -> Optional[TreeNode]:
-            line = input().strip()
-            if not line or line == "[]":
-                return None
-            
-            # Handle [1,2,3,null,null,4,5] format
-            if line.startswith('[') and line.endswith(']'):
-                line = line[1:-1]  # Remove brackets
-            
-            if not line:
+            n = IO.Input.read_int()
+            if n == 0:
                 return None
                 
             values = []
-            for val_str in line.split(','):
-                val_str = val_str.strip()
-                if val_str.lower() == 'null':
+            for _ in range(n):
+                word = _input_buffer.next_word()
+                if word and word.lower() == 'null':
                     values.append(None)
                 else:
-                    values.append(int(val_str))
+                    values.append(int(word) if word else 0)
             
             if not values or values[0] is None:
                 return None
@@ -191,12 +215,14 @@ class IO:
         # Tuple functions
         @staticmethod
         def read_int_pair() -> Tuple[int, int]:
-            first, second = map(int, input().strip().split())
+            first = IO.Input.read_int()
+            second = IO.Input.read_int()
             return (first, second)
         
         @staticmethod
         def read_string_pair() -> Tuple[str, str]:
-            first, second = input().strip().split()
+            first = _input_buffer.next_word()
+            second = _input_buffer.next_word()
             return (first, second)
     
     class Output:
@@ -417,6 +443,13 @@ def input_array() -> List[int]:
 
 def output(x) -> None:
     IO.output(x)
+
+# Additional convenience functions for single word reading
+def input_word() -> str:
+    return _input_buffer.next_word()
+
+def input_line() -> str:
+    return _input_buffer.next_line()
 
 {{user template}}
 
