@@ -4,7 +4,7 @@ import * as javaParser from '../languages/java/parser.js';
 /**
  * Language parser factory
  * Returns the appropriate parser functions based on the language
- * @param {string} language - The programming language (cpp, java, python, javascript)
+ * @param {string} language - The programming language (cpp, java, python)
  * @returns {Object} Parser object with language-specific parsing functions
  */
 export function getLanguageParser(language) {
@@ -48,21 +48,6 @@ export function getLanguageParser(language) {
         }
       };
       
-    case 'javascript':
-    case 'js':
-      // Fallback to C++ parser for now - can be extended later
-      return {
-        language: 'javascript',
-        extractParameterTypes: cppParser.extractParameterTypes,
-        splitClassIntoFunctions: cppParser.splitClassIntoFunctions,
-        extractFunctionName: cppParser.extractFunctionName,
-        extractReturnType: cppParser.extractReturnType,
-        extractClassName: (inputCode) => {
-          const classMatch = inputCode.match(/class\s+(\w+)/);
-          return classMatch ? classMatch[1] : 'Solution';
-        }
-      };
-      
     default:
       console.warn(`Language '${language}' not fully supported, falling back to C++ parser`);
       return {
@@ -84,7 +69,7 @@ export function getLanguageParser(language) {
  * @returns {Array<string>} Array of supported language identifiers
  */
 export function getSupportedLanguages() {
-  return ['cpp', 'c++', 'java', 'python', 'python3', 'javascript', 'js'];
+  return ['cpp', 'c++', 'java', 'python', 'python3'];
 }
 
 /**

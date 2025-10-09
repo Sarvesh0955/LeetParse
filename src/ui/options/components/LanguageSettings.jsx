@@ -64,7 +64,7 @@ const LanguageSettings = ({ settings, onSettingChange }) => {
         <Typography variant="body2" sx={{ mt: 1 }}>
           • <strong>C++:</strong> Fully implemented with complete code generation<br/>
           • <strong>Java:</strong> Fully implemented with complete code generation<br/>
-          • <strong>Python, JavaScript:</strong> Framework ready, implementation coming soon
+          • <strong>Python:</strong> Framework ready, implementation coming soon
         </Typography>
       </Alert>
     </Paper>

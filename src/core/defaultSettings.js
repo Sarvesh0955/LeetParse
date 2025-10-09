@@ -6,8 +6,7 @@ export const defaultSettings = {
   userTemplates: {
     cpp: ' ',
     java: ' ',
-    python3: ' ',
-    javascript: ' '
+    python3: ' '
   }
 };
 

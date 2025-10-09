@@ -83,29 +83,7 @@ def power(a, b, mod=10**9+7):
 
 # Constants
 MOD = 10**9 + 7
-INF = float('inf')`,
-      javascript: `// JavaScript Template - Add your custom code here
-// Utility functions
-function gcd(a, b) {
-    while (b !== 0) {
-        [a, b] = [b, a % b];
-    }
-    return a;
-}
-
-function power(a, b, mod = 1000000007) {
-    let res = 1;
-    while (b > 0) {
-        if (b & 1) res = (res * a) % mod;
-        a = (a * a) % mod;
-        b >>= 1;
-    }
-    return res;
-}
-
-// Constants
-const MOD = 1000000007;
-const INF = Number.MAX_SAFE_INTEGER;`
+INF = float('inf')`
     };
     return templates[language] || templates.cpp;
   };

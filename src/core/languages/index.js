@@ -1,7 +1,6 @@
 import { cppConfig, CppCodeGenerator } from './cpp/index.js';
 import { javaConfig, JavaCodeGenerator } from './java/index.js';
 import { pythonConfig, PythonCodeGenerator } from './python/index.js';
-import { javascriptConfig, JavaScriptCodeGenerator } from './javascript/index.js';
 
 /**
  * Language registry that manages all supported programming languages
@@ -15,7 +14,6 @@ class LanguageRegistry {
     this.registerLanguage(cppConfig, CppCodeGenerator);
     this.registerLanguage(javaConfig, JavaCodeGenerator);
     this.registerLanguage(pythonConfig, PythonCodeGenerator);
-    this.registerLanguage(javascriptConfig, JavaScriptCodeGenerator);
   }
 
   /**
@@ -118,4 +116,3 @@ export function isLanguageSupported(languageId) {
 export { cppConfig, CppCodeGenerator };
 export { javaConfig, JavaCodeGenerator };
 export { pythonConfig, PythonCodeGenerator };
-export { javascriptConfig, JavaScriptCodeGenerator };
