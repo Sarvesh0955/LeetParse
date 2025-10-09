@@ -3,7 +3,12 @@ import { languageRegistry } from './languages/index.js';
 export const defaultSettings = {
   theme: 'system',
   preferredLanguage: 'cpp',
-  userTemplate: '',
+  userTemplates: {
+    cpp: ' ',
+    java: ' ',
+    python3: ' ',
+    javascript: ' '
+  }
 };
 
 // Get supported languages dynamically from the language registry

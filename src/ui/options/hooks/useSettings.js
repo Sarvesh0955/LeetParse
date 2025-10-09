@@ -8,7 +8,7 @@ import { defaultSettings } from '../../../core/defaultSettings.js';
 export const useSettings = () => {
   // Settings state
   const [settings, setSettings] = useState(defaultSettings);
-  const [userTemplate, setUserTemplate] = useState('');
+  const [userTemplates, setUserTemplates] = useState(defaultSettings.userTemplates);
   const [savedSettings, setSavedSettings] = useState(defaultSettings);
   const [hasChanges, setHasChanges] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -17,15 +17,15 @@ export const useSettings = () => {
 
   // Load settings from storage
   useEffect(() => {
-    chrome.storage.sync.get(['theme', 'preferredLanguage', 'userTemplate'], (result) => {
+    chrome.storage.sync.get(['theme', 'preferredLanguage', 'userTemplates'], (result) => {
+      let templates = result.userTemplates || { ...defaultSettings.userTemplates };
       const loadedSettings = {
         theme: result.theme || defaultSettings.theme,
         preferredLanguage: result.preferredLanguage || defaultSettings.preferredLanguage,
-        userTemplate: result.userTemplate || defaultSettings.userTemplate
       };
       setSettings(loadedSettings);
-      setSavedSettings(loadedSettings);
-      setUserTemplate(loadedSettings.userTemplate);
+      setSavedSettings({ ...loadedSettings, userTemplates: templates });
+      setUserTemplates(templates);
       setLoading(false);
     });
   }, []);
@@ -35,18 +35,21 @@ export const useSettings = () => {
     const hasChanged = 
       settings.theme !== savedSettings.theme ||
       settings.preferredLanguage !== savedSettings.preferredLanguage ||
-      userTemplate !== savedSettings.userTemplate;
+      JSON.stringify(userTemplates) !== JSON.stringify(savedSettings.userTemplates);
     setHasChanges(hasChanged);
-  }, [settings, userTemplate, savedSettings]);
+  }, [settings, userTemplates, savedSettings]);
 
   // Handle setting changes
   const handleSettingChange = (key, value) => {
     setSettings(prev => ({ ...prev, [key]: value }));
   };
 
-  // Handle user template changes
-  const handleUserTemplateChange = (template) => {
-    setUserTemplate(template);
+  // Handle user template changes for a specific language
+  const handleUserTemplateChange = (language, template) => {
+    setUserTemplates(prev => ({
+      ...prev,
+      [language]: template
+    }));
   };
 
   // Save settings to storage
@@ -54,7 +57,7 @@ export const useSettings = () => {
     try {
       const settingsToSave = {
         ...settings,
-        userTemplate: userTemplate
+        userTemplates: userTemplates
       };
       
       await chrome.storage.sync.set(settingsToSave);
@@ -70,7 +73,7 @@ export const useSettings = () => {
   // Reset to default settings
   const handleResetToDefaults = () => {
     setSettings(defaultSettings);
-    setUserTemplate(defaultSettings.userTemplate);
+    setUserTemplates(defaultSettings.userTemplates);
     setSavedSettings(defaultSettings);
     chrome.storage.sync.set(defaultSettings);
     setResetSuccess(true);
@@ -90,7 +93,7 @@ export const useSettings = () => {
   return {
     // State
     settings,
-    userTemplate,
+    userTemplates,
     hasChanges,
     loading,
     saveSuccess,

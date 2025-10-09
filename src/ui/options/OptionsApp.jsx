@@ -33,7 +33,7 @@ function OptionsApp() {
   // Settings management
   const {
     settings,
-    userTemplate,
+    userTemplates,
     hasChanges,
     loading,
     saveSuccess,
@@ -74,7 +74,8 @@ function OptionsApp() {
             />
 
             <TemplateSettings 
-              userTemplate={userTemplate}
+              userTemplates={userTemplates}
+              selectedLanguage={settings.preferredLanguage}
               onUserTemplateChange={handleUserTemplateChange}
             />
           </Stack>

@@ -39,8 +39,12 @@ async function generateCode(data, language = 'cpp', testCases = '', userCode = '
         let userTemplate = '';
         try {
             if (typeof chrome !== 'undefined' && chrome.storage) {
-                const result = await chrome.storage.sync.get(['userTemplate']);
-                userTemplate = result.userTemplate || '';
+                const result = await chrome.storage.sync.get(['userTemplates']);
+                
+                // Use language-specific template if available
+                if (result.userTemplates && result.userTemplates[language]) {
+                    userTemplate = result.userTemplates[language];
+                }
             }
         } catch (error) {
             console.warn('Failed to get user template from storage:', error);
