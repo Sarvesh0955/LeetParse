@@ -36,7 +36,7 @@ const LanguageSettings = ({ settings, onSettingChange }) => {
             <MenuItem key={language.value} value={language.value}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 {language.label}
-                {['cpp', 'java'].includes(language.value) ? (
+                {['cpp', 'java', 'python3'].includes(language.value) ? (
                   <Chip 
                     label="Fully Supported" 
                     size="small" 

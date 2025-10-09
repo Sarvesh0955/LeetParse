@@ -35,11 +35,11 @@ const LanguageSelector = ({ selectedLanguage, setSelectedLanguage }) => {
           <MenuItem 
             key={language.value} 
             value={language.value}
-            disabled={!['cpp', 'java'].includes(language.value)} // C++ and Java are fully implemented
+            disabled={!['cpp', 'java', 'python3'].includes(language.value)} // C++, Java, and Python are fully implemented
           >
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
               <span>{language.label}</span>
-              {!['cpp', 'java'].includes(language.value) && (
+              {!['cpp', 'java', 'python3'].includes(language.value) && (
                 <Typography 
                   variant="caption" 
                   color="text.secondary" 

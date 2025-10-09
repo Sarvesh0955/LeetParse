@@ -1,5 +1,6 @@
 import * as cppParser from '../languages/cpp/parser.js';
 import * as javaParser from '../languages/java/parser.js';
+import * as pythonParser from '../languages/python/parser.js';
 
 /**
  * Language parser factory
@@ -35,17 +36,13 @@ export function getLanguageParser(language) {
       
     case 'python':
     case 'python3':
-      // Fallback to C++ parser for now - can be extended later
       return {
         language: 'python',
-        extractParameterTypes: cppParser.extractParameterTypes,
-        splitClassIntoFunctions: cppParser.splitClassIntoFunctions,
-        extractFunctionName: cppParser.extractFunctionName,
-        extractReturnType: cppParser.extractReturnType,
-        extractClassName: (inputCode) => {
-          const classMatch = inputCode.match(/class\s+(\w+)/);
-          return classMatch ? classMatch[1] : 'Solution';
-        }
+        extractParameterTypes: pythonParser.extractParameterTypes,
+        splitClassIntoFunctions: pythonParser.splitClassIntoFunctions,
+        extractFunctionName: pythonParser.extractFunctionName,
+        extractReturnType: pythonParser.extractReturnType,
+        extractClassName: pythonParser.extractClassName
       };
       
     default:
