@@ -64,8 +64,8 @@ export class JavaCodeGenerator {
    * @returns {string} - Generated input handling code
    */
   generateSolutionClassInputCode(data) {
-    if (!data || !data.parameters || !data.parameters[0]) {
-      console.error("Invalid data structure for solution class", data);
+    if (!data?.parameters?.[0]) {
+      console.error("Invalid data structure for solution class:", data);
       return '';
     }
     
@@ -84,10 +84,9 @@ export class JavaCodeGenerator {
       });
     }
     
-    let functionName = data.parameters[0][0];
-    if (!functionName) {
-      console.error("Function name is missing");
-      functionName = "unknownFunction";
+    const functionName = data.parameters[0][0] || "unknownFunction";
+    if (!data.parameters[0][0]) {
+      console.warn("Function name is missing, using default:", functionName);
     }
     
     const returnType = data.parameters[0][2];
@@ -113,8 +112,8 @@ export class JavaCodeGenerator {
    * @returns {string} - Generated input handling code for class-based problems
    */
   generateSpecialClassInputCode(data) {
-    if (!data || !data.parameters || !Array.isArray(data.parameters) || data.parameters.length < 1) {
-      console.error("Invalid data structure for special class");
+    if (!data?.parameters?.length || !Array.isArray(data.parameters)) {
+      console.error("Invalid data structure for special class:", data);
       return '';
     }
     
@@ -128,7 +127,7 @@ export class JavaCodeGenerator {
 
       const [className, constructorParams] = data.parameters[0];
       if (!className) {
-        console.error("Class name is missing");
+        console.error("Class name is missing in parameters");
         return '';
       }
       
@@ -212,8 +211,8 @@ export class JavaCodeGenerator {
    * @returns {string} - Generated input handling code
    */
   generateMainInputCode(data) {
-    if (!data || !data.parameters) {
-      console.error("Invalid data structure for main input code");
+    if (!data?.parameters) {
+      console.error("Invalid data structure for main input code:", data);
       return '';
     }
     

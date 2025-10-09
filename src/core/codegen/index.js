@@ -77,25 +77,6 @@ async function generateCode(data, language = 'cpp', testCases = '', userCode = '
     }
 }
 
-// Legacy functions for backward compatibility
-// These will be deprecated once all components are updated
 
-/**
- * @deprecated Use generateCode with language parameter instead
- */
-function solutionClassInputCode(data) {
-    console.warn('solutionClassInputCode is deprecated. Use generateCode with language-specific generators.');
-    const cppGenerator = createCodeGenerator('cpp');
-    return cppGenerator ? cppGenerator.generateSolutionClassInputCode(data) : '';
-}
-
-/**
- * @deprecated Use generateCode with language parameter instead
- */
-function specialClassInputCode(data) {
-    console.warn('specialClassInputCode is deprecated. Use generateCode with language-specific generators.');
-    const cppGenerator = createCodeGenerator('cpp');
-    return cppGenerator ? cppGenerator.generateSpecialClassInputCode(data) : '';
-}
 
 export { generateCode };

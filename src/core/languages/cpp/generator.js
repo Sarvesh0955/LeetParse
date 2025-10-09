@@ -14,8 +14,8 @@ export class CppCodeGenerator {
    * @returns {string} - Generated input handling code
    */
   generateSolutionClassInputCode(data) {
-    if (!data || !data.inputCode || !data.parameters || !data.parameters[0]) {
-      console.error("Invalid data structure for solution class");
+    if (!data?.parameters?.[0] || !data?.inputCode) {
+      console.error("Invalid data structure for solution class:", data);
       return '';
     }
     
@@ -32,10 +32,9 @@ export class CppCodeGenerator {
       });
     }
     
-    let functionName = data.parameters[0][0];
-    if (!functionName) {
-      console.error("Function name is missing");
-      functionName = "unknownFunction";
+    const functionName = data.parameters[0][0] || "unknownFunction";
+    if (!data.parameters[0][0]) {
+      console.warn("Function name is missing, using default:", functionName);
     }
     
     const returnType = data.parameters[0][2];
@@ -75,7 +74,7 @@ export class CppCodeGenerator {
 
       const [className, constructorParams] = data.parameters[0];
       if (!className) {
-        console.error("Class name is missing");
+        console.error("Class name is missing in parameters");
         return '';
       }
       

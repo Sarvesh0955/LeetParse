@@ -42,7 +42,10 @@ export function createMessageRouter(handlers) {
  * @param {number|null} tabId - Optional specific tab ID
  */
 export function sendToPopup(activePopupPorts, message, tabId = null) {
-  console.log(`Attempting to send message to ${tabId ? `tab ${tabId}` : 'all tabs'}:`, message);
+  // Only log in development mode
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`Attempting to send message to ${tabId ? `tab ${tabId}` : 'all tabs'}:`, message);
+  }
   
   const sendMessageToPort = (id, port) => {
     try {

@@ -1,8 +1,5 @@
 from typing import *
-import sys
-import json
 from collections import deque, defaultdict
-import re
 
 # Global input buffer for single word reading
 class InputBuffer:
@@ -15,8 +12,12 @@ class InputBuffer:
             try:
                 line = input().strip()
                 if line:
-                    self.buffer.extend(line.split())
-                    self.index = len(self.buffer) - len(line.split())
+                    # Clear buffer and add new words
+                    self.buffer = line.split()
+                    self.index = 0
+                else:
+                    # Empty line, try again
+                    continue
             except EOFError:
                 return None
         

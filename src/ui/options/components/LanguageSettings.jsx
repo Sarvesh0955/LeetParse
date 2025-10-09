@@ -36,37 +36,11 @@ const LanguageSettings = ({ settings, onSettingChange }) => {
             <MenuItem key={language.value} value={language.value}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 {language.label}
-                {['cpp', 'java', 'python3'].includes(language.value) ? (
-                  <Chip 
-                    label="Fully Supported" 
-                    size="small" 
-                    color="success" 
-                    variant="outlined" 
-                  />
-                ) : (
-                  <Chip 
-                    label="Coming Soon" 
-                    size="small" 
-                    color="warning" 
-                    variant="outlined" 
-                  />
-                )}
               </Box>
             </MenuItem>
           ))}
         </Select>
       </FormControl>
-      
-      <Alert severity="info" sx={{ mt: 2 }}>
-        <Typography variant="body2">
-          <strong>Language Support Status:</strong>
-        </Typography>
-        <Typography variant="body2" sx={{ mt: 1 }}>
-          • <strong>C++:</strong> Fully implemented with complete code generation<br/>
-          • <strong>Java:</strong> Fully implemented with complete code generation<br/>
-          • <strong>Python:</strong> Framework ready, implementation coming soon
-        </Typography>
-      </Alert>
     </Paper>
   );
 };
