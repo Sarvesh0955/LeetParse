@@ -9,3 +9,4 @@ export { default as LoadingIndicator } from './LoadingIndicator';
 export { default as NonLeetCodePageContent } from './NonLeetCodePageContent';
 export { default as NotOnLeetcodePage } from './NotOnLeetcodePage';
 export { default as TestCaseInstructions } from './TestCaseInstructions';
+export { default as VSCodeIntegration } from './VSCodeIntegration';

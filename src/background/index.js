@@ -4,9 +4,10 @@
  */
 
 import { createMessageRouter, sendToPopup as sendToPopupUtil } from '../messaging/router.js';
-import { PARSE_RESULT, TESTS_RESULT, CONNECTION_ESTABLISHED } from '../messaging/messages.js';
+import { PARSE_RESULT, TESTS_RESULT, CONNECTION_ESTABLISHED, EXPORT_TO_VSCODE } from '../messaging/messages.js';
 import { handleParseRequest } from './messageHandlers/parseRequest.js';
 import { handleTestsRequest } from './messageHandlers/testsRequest.js';
+import { handleVSCodeExport } from './messageHandlers/vscodeIntegration.js';
 import { initializeSettings } from './messageHandlers/settings.js';
 
 // Track active popup connections
@@ -70,6 +71,9 @@ const messageHandlers = {
   },
   [TESTS_RESULT]: async (message, sender) => {
     await handleTestsRequest(message, sender, sendToPopup);
+  },
+  [EXPORT_TO_VSCODE]: async (message, sender) => {
+    await handleVSCodeExport(message, sender, sendToPopup);
   }
 };
 

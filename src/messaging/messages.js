@@ -15,6 +15,11 @@ export const CODE_GENERATED = 'codeGenerated';
 export const TESTS_GENERATED = 'otherTestsGenerated';
 export const CONNECTION_ESTABLISHED = 'connectionEstablished';
 
+// VS Code integration messages
+export const EXPORT_TO_VSCODE = 'exportToVSCode';
+export const VSCODE_EXPORT_SUCCESS = 'vscodeExportSuccess';
+export const VSCODE_EXPORT_ERROR = 'vscodeExportError';
+
 // Message action types
 export const MESSAGE_TYPES = {
   // Content -> Background
@@ -28,6 +33,11 @@ export const MESSAGE_TYPES = {
   CODE_GENERATED,
   TESTS_GENERATED,
   CONNECTION_ESTABLISHED,
+  
+  // VS Code integration
+  EXPORT_TO_VSCODE,
+  VSCODE_EXPORT_SUCCESS,
+  VSCODE_EXPORT_ERROR,
 };
 
 export default MESSAGE_TYPES;

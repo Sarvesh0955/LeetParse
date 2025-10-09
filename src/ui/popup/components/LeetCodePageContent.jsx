@@ -9,6 +9,7 @@ import ActionButtons from './ActionButtons';
 import TestCaseInstructions from './TestCaseInstructions';
 import CodeBlock from './CodeBlock';
 import LoadingIndicator from './LoadingIndicator';
+import VSCodeIntegration from './VSCodeIntegration';
 
 /**
  * Component rendered when user is on a LeetCode problem page
@@ -43,6 +44,13 @@ const LeetCodePageContent = ({
           extractLoading={extractLoading}
           handleParseProblem={handleParseProblem}
           handleExtractTestCasesOnly={handleExtractTestCasesOnly}
+        />
+        <VSCodeIntegration
+          selectedLanguage={selectedLanguage}
+          testCase={testCase}
+          codeSnippet={codeSnippet}
+          parseLoading={parseLoading}
+          extractLoading={extractLoading}
         />
         <Button
           variant="outlined"

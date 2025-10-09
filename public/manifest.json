@@ -18,10 +18,12 @@
   },
   "permissions": [
     "activeTab",
-    "storage"
+    "storage",
+    "scripting"
   ],
   "host_permissions": [
-    "https://leetcode.com/*"
+    "https://leetcode.com/*",
+    "http://localhost:27121/*"
   ],
   "content_scripts": [
     {
