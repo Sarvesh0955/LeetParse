@@ -20,14 +20,14 @@ export async function handleVSCodeExport(message, sender, sendToPopup) {
     if (!problemName || !language) {
       throw new Error('Missing required data for VS Code export');
     }
-
-    // Parse test cases into Competitive Companion format
-    const tests = parseTestCases(testCases || '');
     
     const competitiveCompanionData = {
       name: problemName,
       url: problemUrl || '',
-      tests: tests,
+      tests: [{
+        input: testCases,
+        output: ' '
+      }],
       interactive: false,
       memoryLimit: 256,
       timeLimit: 2000,
@@ -93,21 +93,6 @@ async function sendToCompetitiveCompanion(problemData) {
     console.warn('Competitive Companion connection failed:', error.message);
     return false;
   }
-}
-
-/**
- * Parse test cases string into Competitive Companion format
- * @param {string} testCases - Raw test cases string
- * @returns {Array} - Array of test objects with input/output
- */
-function parseTestCases(testCases) {
-  if (!testCases || testCases.trim() === '') {
-    return [{
-      input: testCases,
-      output: ' '
-    }];
-  }
-
 }
 
 /**

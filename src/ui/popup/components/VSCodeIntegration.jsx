@@ -28,6 +28,11 @@ const VSCodeIntegration = ({
       return;
     }
 
+    if (!testCase && !codeSnippet) {
+      enqueueSnackbar('Please parse the problem first', { variant: 'warning' });
+      return;
+    }
+
     try {
       setExporting(true);
       
@@ -49,15 +54,18 @@ const VSCodeIntegration = ({
         ...problemData // Any additional problem data
       });
 
+      // Stop loading immediately after sending the request
+      setExporting(false);
+
       if (response?.received) {
-        // Listen for the actual result
+        enqueueSnackbar('Request sent to Competitive Companion', { variant: 'success' });
+        
+        // Listen for the actual result (optional - for additional feedback)
         const handleMessage = (message) => {
           if (message.action === VSCODE_EXPORT_SUCCESS) {
-            setExporting(false);
             enqueueSnackbar(message.message, { variant: 'success' });
             chrome.runtime.onMessage.removeListener(handleMessage);
           } else if (message.action === VSCODE_EXPORT_ERROR) {
-            setExporting(false);
             const variant = message.fallback ? 'warning' : 'error';
             enqueueSnackbar(message.message, { variant });
             chrome.runtime.onMessage.removeListener(handleMessage);
@@ -69,11 +77,9 @@ const VSCodeIntegration = ({
         // Timeout after 10 seconds
         setTimeout(() => {
           chrome.runtime.onMessage.removeListener(handleMessage);
-          if (exporting) {
-            setExporting(false);
-            enqueueSnackbar('Export timeout - Competitive Companion may not be running', { variant: 'warning' });
-          }
         }, 10000);
+      } else {
+        enqueueSnackbar('Failed to send request to Competitive Companion', { variant: 'error' });
       }
       
     } catch (error) {
@@ -97,13 +103,15 @@ const VSCodeIntegration = ({
     }
   };
 
-  const isDisabled = parseLoading || extractLoading || exporting || !selectedLanguage;
+  const isDisabled = parseLoading || extractLoading || exporting || !selectedLanguage || (!testCase && !codeSnippet);
 
   return (
     <Tooltip 
       title={
         !selectedLanguage 
           ? "Select a language to enable Competitive Companion export"
+          : (!testCase && !codeSnippet)
+          ? "Parse the problem first to enable Competitive Companion export"
           : "Export parsed problem directly to Competitive Companion"
       }
     >
