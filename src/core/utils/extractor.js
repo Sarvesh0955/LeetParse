@@ -24,6 +24,77 @@ function extractTestCase() {
 }
 
 /**
+ * Extracts sample test outputs from the LeetCode problem page
+ * Targets meta description directly from current DOM
+ * @returns {string[]} Array of expected outputs for each sample test case
+ */
+function extractSampleOutputs() {
+  const outputs = [];
+  
+  try {
+    // Directly target meta description from current DOM
+    const metaDescription = document.querySelector('meta[name="description"]');
+    
+    if (!metaDescription) {
+      console.warn('No meta description found');
+      return outputs;
+    }
+    
+    const description = metaDescription.getAttribute('content') || '';
+    console.log('Meta description content:', description);
+    
+    // Find all "Output:" positions and extract each one individually with cascading delimiters
+    const outputRegex = /Output:/gi;
+    let match;
+    
+    while ((match = outputRegex.exec(description)) !== null) {
+      const startPos = match.index + match[0].length;
+      const remainingText = description.substring(startPos);
+      
+      let output = '';
+      
+      // Try delimiters in order of preference for this specific output
+      const delimiters = [
+        /\s*Explanation:/i,
+        /\s*Example\s*\d*:/i,
+        /\s*Constraints:/i,
+        /\s*(?:Input:|Note:|Follow\s*up:)/i
+      ];
+      
+      let found = false;
+      for (const delimiter of delimiters) {
+        const delimiterMatch = remainingText.match(delimiter);
+        if (delimiterMatch) {
+          output = remainingText.substring(0, delimiterMatch.index).trim();
+          found = true;
+          break;
+        }
+      }
+      
+      // If no delimiter found, take everything until end
+      if (!found) {
+        output = remainingText.trim();
+      }
+      
+      // Clean up the output
+      if (output) {
+        output = output.replace(/\s+/g, ' ').trim(); // normalize whitespace
+        
+        if (output !== '') {
+          outputs.push(output); // Keep all outputs including duplicates
+        }
+      }
+    }
+    
+  } catch (error) {
+    console.error("Error extracting sample outputs from meta description:", error);
+  }
+  
+  console.log("Extracted sample outputs from meta description:", outputs);
+  return outputs;
+}
+
+/**
  * Extracts user's solution code from the browser localStorage
  * @param {string} questionID - The ID of the LeetCode question
  * @param {string} language - The programming language used (default is 'cpp')
@@ -197,13 +268,15 @@ async function fetchProblemDetails(url) {
  *   - inputCode: Original template code
  *   - testCases: Test case data
  *   - problemName: Slug of the problem
+ *   - sampleOutputs: Array of expected outputs for sample test cases
  */
 async function extractData(language = 'cpp', otherTests = false) {
   const problemData = {
     userCode: '',
     inputCode: '',
     testCases: '',
-    problemName: ''
+    problemName: '',
+    sampleOutputs: []
   };
   
   try {
@@ -222,8 +295,13 @@ async function extractData(language = 'cpp', otherTests = false) {
       problemData.userCode = await extractUserCode(apiData.questionId, language) || problemData.inputCode;
     }
     
+    // Extract sample outputs from the HTML content
+    problemData.sampleOutputs = extractSampleOutputs();
+    
     if (otherTests) {
       problemData.testCases = extractTestCase();
+      // For custom tests, we don't have expected outputs, so clear the sample outputs
+      problemData.sampleOutputs = [];
     }
   } catch (error) {
     console.error("Error extracting data:", error);

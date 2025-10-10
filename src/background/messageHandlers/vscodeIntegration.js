@@ -15,19 +15,19 @@ import { VSCODE_EXPORT_SUCCESS, VSCODE_EXPORT_ERROR } from '../../messaging/mess
  */
 export async function handleVSCodeExport(message, sender, sendToPopup) {
   try {
-    const { code, testCases, problemName, language, problemUrl } = message;
+    const { code, testCases, problemName, language, problemUrl, sampleOutputs } = message;
     
     if (!problemName || !language) {
       throw new Error('Missing required data for VS Code export');
     }
     
+    // Format test cases with corresponding outputs for CPH
+    const tests = formatTestCasesWithOutputs(testCases, sampleOutputs);
+    
     const competitiveCompanionData = {
       name: problemName,
       url: problemUrl || '',
-      tests: [{
-        input: testCases,
-        output: ' '
-      }],
+      tests: tests,
       interactive: false,
       memoryLimit: 256,
       timeLimit: 2000,
@@ -36,7 +36,7 @@ export async function handleVSCodeExport(message, sender, sendToPopup) {
       language: mapLanguageToCompetitiveCompanion(language)
     };
 
-    console.log(competitiveCompanionData);
+    console.log('Competitive Companion data with outputs:', competitiveCompanionData);
     
     // Attempt to send to Competitive Companion via local HTTP server
     const success = await sendToCompetitiveCompanion(competitiveCompanionData);
@@ -92,6 +92,36 @@ async function sendToCompetitiveCompanion(problemData) {
   } catch (error) {
     console.warn('Competitive Companion connection failed:', error.message);
     return false;
+  }
+}
+
+/**
+ * Formats test cases with their corresponding sample outputs for CPH
+ * @param {string} testCases - The formatted input test cases
+ * @param {string[]} sampleOutputs - Array of expected outputs
+ * @returns {Array} Array of test objects with input and output
+ */
+function formatTestCasesWithOutputs(testCases, sampleOutputs = []) {
+  try {
+    if (!testCases || testCases.trim() === '') {
+      return [{ input: '', output: ' ' }];
+    }
+    
+    // Combine all sample outputs into a single output string, similar to how inputs are combined
+    let combinedOutput = ' ';
+    if (sampleOutputs && sampleOutputs.length > 0) {
+      combinedOutput = sampleOutputs.join('\n').trim();
+    }
+    
+    // Return single test case with all inputs and combined outputs
+    return [{
+      input: testCases,
+      output: combinedOutput
+    }];
+    
+  } catch (error) {
+    console.error('Error formatting test cases with outputs:', error);
+    return [{ input: testCases || '', output: ' ' }];
   }
 }
 

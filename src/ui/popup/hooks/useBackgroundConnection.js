@@ -9,7 +9,8 @@ export const useBackgroundConnection = ({
   setParseLoading, 
   setExtractLoading, 
   setTestCase, 
-  setCodeSnippet 
+  setCodeSnippet,
+  setSampleOutputs
 }) => {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -29,6 +30,7 @@ export const useBackgroundConnection = ({
           } else {
             setCodeSnippet(message.codeSnippet || '');
             setTestCase(message.testCase || '');
+            setSampleOutputs(message.sampleOutputs || []);
             enqueueSnackbar('Code generated successfully!', { variant: 'success' });
           }
           break;
@@ -65,7 +67,7 @@ export const useBackgroundConnection = ({
         backgroundPort.disconnect();
       }
     };
-  }, [enqueueSnackbar, setParseLoading, setExtractLoading, setTestCase, setCodeSnippet]);
+  }, [enqueueSnackbar, setParseLoading, setExtractLoading, setTestCase, setCodeSnippet, setSampleOutputs]);
 };
 
 export default useBackgroundConnection;

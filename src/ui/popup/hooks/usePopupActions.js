@@ -9,7 +9,8 @@ export const usePopupActions = ({
   setParseLoading, 
   setExtractLoading, 
   setTestCase, 
-  setCodeSnippet 
+  setCodeSnippet,
+  setSampleOutputs
 }) => {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -19,6 +20,7 @@ export const usePopupActions = ({
       setParseLoading(true);
       setTestCase('');
       setCodeSnippet('');
+      setSampleOutputs([]);
       const language = selectedLanguage;
       
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -51,6 +53,7 @@ export const usePopupActions = ({
       setExtractLoading(true);
       setTestCase('');
       setCodeSnippet('');
+      setSampleOutputs([]);
       const language = selectedLanguage;
       
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {

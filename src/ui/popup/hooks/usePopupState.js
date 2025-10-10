@@ -11,6 +11,7 @@ export const usePopupState = () => {
   const [testCase, setTestCase] = useState('');
   const [codeSnippet, setCodeSnippet] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState('cpp');
+  const [sampleOutputs, setSampleOutputs] = useState([]);
   
   const { enqueueSnackbar } = useSnackbar();
 
@@ -41,13 +42,15 @@ export const usePopupState = () => {
     testCase,
     codeSnippet,
     selectedLanguage,
+    sampleOutputs,
     
     // Setters
     setParseLoading,
     setExtractLoading,
     setTestCase,
     setCodeSnippet,
-    setSelectedLanguage
+    setSelectedLanguage,
+    setSampleOutputs
   };
 };
 

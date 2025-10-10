@@ -14,6 +14,7 @@ const VSCodeIntegration = ({
   codeSnippet, 
   parseLoading, 
   extractLoading,
+  sampleOutputs = [],
   problemData = null
 }) => {
   const [exporting, setExporting] = useState(false);
@@ -51,6 +52,7 @@ const VSCodeIntegration = ({
         problemName: problemName,
         language: selectedLanguage,
         problemUrl: currentTab.url,
+        sampleOutputs: sampleOutputs,
         ...problemData // Any additional problem data
       });
 

@@ -169,6 +169,7 @@ function parseTestCasesSpecialClass(data) {
  *   - inputCode: The original code template
  *   - parameters: Array of function details [name, parameters, returnType]
  *   - userCode: The user's solution code if available
+ *   - sampleOutputs: Array of expected outputs for sample test cases
  */
 async function parseData(language = 'cpp', otherTests = false) {
   try {
@@ -191,12 +192,14 @@ async function parseData(language = 'cpp', otherTests = false) {
       inputCode: '',     
       parameters: [],    
       userCode: '',
+      sampleOutputs: [],     // Array of expected outputs for sample test cases
       isClass: false,        // Flag to indicate if this is a class-based problem
       isSpecialClass: false  // Flag to indicate if this is a special class (like data structure)
     };
 
     result.inputCode = data.inputCode;
     result.userCode = data.userCode; 
+    result.sampleOutputs = data.sampleOutputs || [];
     const functionDetails = [];
     
     try {
@@ -248,6 +251,7 @@ async function parseData(language = 'cpp', otherTests = false) {
       inputCode: 'class Solution { void solve() {} }',
       parameters: [['solve', [], '']], 
       userCode: '',
+      sampleOutputs: [],
       isClass: true,
       isSpecialClass: false
     };

@@ -13,11 +13,19 @@ LeetParse is a developer-oriented Chrome extension that streamlines the process 
 ## ✨ Features
 
 - **One-Click Problem Parsing**: Extract all necessary information from LeetCode problem pages with a single click
-- **Automatic C++ Template Generation**: Generate complete, compilable C++ code with:
+- **Automatic Code Template Generation**: Generate complete, compilable code with:
   - Solution function signature automatically extracted from the problem
   - Standard input/output handling code included
-  - Support for standard C++ data structures (vectors, maps, strings, etc.)
+  - Support for standard data structures (vectors, maps, strings, etc.)
   - Support for LeetCode special data structures (ListNode, TreeNode)
+- **Sample Test Output Extraction**: Automatically extract expected outputs from problem examples:
+  - Parse "Output:" values from example blocks in problem descriptions
+  - Send both inputs and expected outputs to CPH (Competitive Programming Helper)
+  - Enable seamless integration with competitive programming workflows
+- **CPH Integration**: One-click export to Competitive Companion for VS Code:
+  - Automatically format test cases with both input and expected output
+  - Support for multiple test cases from sample examples
+  - Direct integration with competitive programming extensions
 - **Theme Support**: Choose between:
   - Light mode
   - Dark mode

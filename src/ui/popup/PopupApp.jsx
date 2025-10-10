@@ -29,11 +29,13 @@ function PopupApp() {
     testCase,
     codeSnippet,
     selectedLanguage,
+    sampleOutputs,
     setParseLoading,
     setExtractLoading,
     setTestCase,
     setCodeSnippet,
-    setSelectedLanguage
+    setSelectedLanguage,
+    setSampleOutputs
   } = usePopupState();
 
   // Background communication
@@ -41,7 +43,8 @@ function PopupApp() {
     setParseLoading,
     setExtractLoading,
     setTestCase,
-    setCodeSnippet
+    setCodeSnippet,
+    setSampleOutputs
   });
 
   // Action handlers
@@ -54,7 +57,8 @@ function PopupApp() {
     setParseLoading,
     setExtractLoading,
     setTestCase,
-    setCodeSnippet
+    setCodeSnippet,
+    setSampleOutputs
   });
 
   return (
@@ -81,6 +85,7 @@ function PopupApp() {
             handleExtractTestCasesOnly={handleExtractTestCasesOnly}
             testCase={testCase}
             codeSnippet={codeSnippet}
+            sampleOutputs={sampleOutputs}
           />
         )}
       </Box>

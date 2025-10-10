@@ -24,7 +24,7 @@ export async function handleParseRequest(message, sender, sendToPopup) {
   
   try {
     // Extract the necessary data for code generation
-    const { userCode, inputCode, testCases } = message.data;
+    const { userCode, inputCode, testCases, sampleOutputs } = message.data;
     
     // Use userCode if available, otherwise fall back to inputCode
     const codeToUse = userCode || inputCode || '';
@@ -34,7 +34,8 @@ export async function handleParseRequest(message, sender, sendToPopup) {
     const messageToSend = {
       action: CODE_GENERATED,
       codeSnippet: generatedCode,
-      testCase: testCasesToUse
+      testCase: testCasesToUse,
+      sampleOutputs: sampleOutputs || []  // Include sample outputs in the response
     };
     sendToPopup(messageToSend, senderTabId);
   } catch (error) {

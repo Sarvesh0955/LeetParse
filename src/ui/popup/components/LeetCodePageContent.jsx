@@ -22,7 +22,8 @@ const LeetCodePageContent = ({
   handleParseProblem,
   handleExtractTestCasesOnly,
   testCase,
-  codeSnippet
+  codeSnippet,
+  sampleOutputs
 }) => {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -51,6 +52,7 @@ const LeetCodePageContent = ({
           codeSnippet={codeSnippet}
           parseLoading={parseLoading}
           extractLoading={extractLoading}
+          sampleOutputs={sampleOutputs}
         />
         <Button
           variant="outlined"
