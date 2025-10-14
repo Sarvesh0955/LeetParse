@@ -1,7 +1,8 @@
 {
   "name": "leetparse",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Chrome extension to parse LeetCode problems",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",

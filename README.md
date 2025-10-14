@@ -4,78 +4,112 @@
    <img src="public/icons/icon2.png" alt="LeetParse Logo" width="128">
 </p>
 
-A powerful Chrome extension built with Vite and React that helps competitive programmers parse LeetCode problems and generate ready-to-use boilerplate code with test cases.
+A powerful Chrome extension that helps competitive programmers parse LeetCode problems and generate ready-to-use boilerplate code with test cases and with VS Code CPH extension support.
 
 ## 📝 Description
 
-LeetParse is a developer-oriented Chrome extension that streamlines the process of solving LeetCode problems in your own development environment. It automatically extracts problem details, generates boilerplate code with proper input/output handling, and formats test cases for easy testing.
+LeetParse is a developer-oriented Chrome extension that streamlines the process of solving LeetCode problems in your preferred development environment. It automatically extracts problem details, generates boilerplate code with proper input/output handling, formats test cases for easy testing, and integrates seamlessly with VS Code through the Competitive Programming Helper (CPH) extension.
 
 ## ✨ Features
 
+### Core Functionality
 - **One-Click Problem Parsing**: Extract all necessary information from LeetCode problem pages with a single click
+- **Multi-Language Support**: Currently supports **C++**, **Java**, and **Python** with extensible architecture for more languages
 - **Automatic Code Template Generation**: Generate complete, compilable code with:
   - Solution function signature automatically extracted from the problem
   - Standard input/output handling code included
   - Support for standard data structures (vectors, maps, strings, etc.)
   - Support for LeetCode special data structures (ListNode, TreeNode)
-- **Sample Test Output Extraction**: Automatically extract expected outputs from problem examples:
+
+### Advanced Features
+- **VS Code Integration**: Seamless integration with VS Code through Competitive Programming Helper (CPH):
+  - One-click export to CPH with formatted test cases
+  - Automatically send both inputs and expected outputs
+  - Direct integration with competitive programming workflows
+- **Sample Test Case Extraction**: Automatically extract expected outputs from problem examples:
   - Parse "Output:" values from example blocks in problem descriptions
-  - Send both inputs and expected outputs to CPH (Competitive Programming Helper)
-  - Enable seamless integration with competitive programming workflows
-- **CPH Integration**: One-click export to Competitive Companion for VS Code:
-  - Automatically format test cases with both input and expected output
   - Support for multiple test cases from sample examples
-  - Direct integration with competitive programming extensions
+  - Intelligent parsing of complex data structures in examples
+
+### User Experience
 - **Theme Support**: Choose between:
   - Light mode
-  - Dark mode
-  - System preference
-- **Complex Data Structure Support**: Automatically handle:
+  - Dark mode  
+  - System preference (automatic)
+- **Template Customization**: Modify code templates to match your coding style and preferences
+- **Settings Persistence**: All preferences saved locally and synced across browser sessions
+
+### Data Structure Support
+- **Complex Data Structure Handling**: Automatically parse and handle:
   - Linked Lists (ListNode)
-  - Binary Trees (TreeNode)
-  - Nested vectors/arrays
+  - Binary Trees (TreeNode)  
+  - Nested arrays/vectors
   - Strings and characters
   - Integer types of various sizes
   - Hash maps and sets
-- **Template Customization**: Modify code templates to match your coding style
-- **Language Selection**: Support for multiple programming languages (extensible architecture)
+  - Custom object types
 
 ## 🏗️ Project Structure
 
 ```
-leetparse/
-├── public/              # Static assets and manifest
-│   ├── icons/          # Extension icons
-│   └── manifest.json   # Chrome extension manifest
+leetcode-parser/
+├── public/                    # Static assets and manifest
+│   ├── manifest.json         # Chrome extension manifest v3
+│   └── icons/               # Extension icons (16px, 48px, 128px)
 │
 ├── src/
-│   ├── background/     # Background service worker
-│   │   ├── index.js
-│   │   └── messageHandlers/  # Message handling modules
+│   ├── background/          # Background service worker (Manifest v3)
+│   │   ├── index.js         # Main background script
+│   │   └── messageHandlers/ # Modular message handling
+│   │       ├── parseRequest.js      # Problem parsing logic
+│   │       ├── settings.js          # Settings management
+│   │       ├── testsRequest.js      # Test case handling
+│   │       └── vscodeIntegration.js # VS Code CPH integration
 │   │
-│   ├── content/        # Content script
-│   │   ├── index.js
-│   │   ├── parser/     # DOM parsing logic
-│   │   └── messenger.js
+│   ├── content/             # Content script for LeetCode pages
+│   │   ├── index.js         # Main content script entry
+│   │   ├── messenger.js     # Content-background communication
+│   │   └── parser/          # DOM parsing logic
+│   │       └── leetcodeParser.js    # LeetCode page parser
 │   │
-│   ├── ui/             # React UI components
-│   │   ├── popup/      # Popup UI
-│   │   ├── options/    # Options page
-│   │   └── common/     # Shared components, hooks, theme
+│   ├── ui/                  # React UI components with Material-UI
+│   │   ├── common/          # Shared UI components and utilities
+│   │   │   ├── hooks/       # Custom React hooks
+│   │   │   └── theme/       # Material-UI theme configuration
+│   │   ├── popup/           # Extension popup interface
+│   │   │   ├── index.jsx    # Popup entry point
+│   │   │   ├── PopupApp.jsx # Main popup component
+│   │   │   ├── components/  # Popup-specific components
+│   │   │   └── hooks/       # Popup-specific hooks
+│   │   └── options/         # Extension options page
+│   │       ├── index.jsx    # Options entry point
+│   │       ├── OptionsApp.jsx # Main options component
+│   │       ├── components/  # Options-specific components
+│   │       └── hooks/       # Options-specific hooks
 │   │
-│   ├── core/           # Pure business logic (browser API-free)
-│   │   ├── codegen/    # Code generation
-│   │   ├── languages/  # Language templates
-│   │   └── utils/      # Parser and extractor utilities
+│   ├── core/                # Pure business logic (browser API-free)
+│   │   ├── defaultSettings.js # Default configuration values
+│   │   ├── codegen/         # Code generation engine
+│   │   ├── languages/       # Language-specific templates and parsers
+│   │   │   ├── index.js     # Language registry
+│   │   │   ├── cpp/         # C++ support
+│   │   │   ├── java/        # Java support
+│   │   │   └── python/      # Python support
+│   │   └── utils/           # Core utilities
+│   │       ├── extractor.js          # Data extraction utilities
+│   │       ├── languageParserFactory.js # Language parser factory
+│   │       └── parser.js             # Generic parsing utilities
 │   │
-│   ├── messaging/      # Message type constants and router
-│   └── utils/          # General utilities
+│   └── messaging/           # Message system
+│       ├── messages.js      # Message type definitions
+│       └── router.js        # Message routing logic
 │
-├── tests/              # Unit tests
-├── popup.html          # Popup entry HTML
-├── options.html        # Options entry HTML
-├── vite.config.js      # Vite build configuration
-└── package.json
+├── tests/                   # Test files (unit tests structure)
+├── popup.html              # Popup HTML entry point
+├── options.html            # Options page HTML entry point
+├── vite.config.js          # Vite build configuration
+├── package.json            # Node.js dependencies and scripts
+└── README.md              # Project documentation
 ```
 
 ## 🚀 Installation
@@ -87,8 +121,8 @@ leetparse/
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/Sarvesh0955/leetparse.git
-   cd leetparse
+   git clone https://github.com/Sarvesh0955/leetcode-parser.git
+   cd leetcode-parser
    ```
 
 2. **Install dependencies:**
@@ -107,77 +141,27 @@ leetparse/
    - Click "Load unpacked" and select the `dist` folder created by the build
    - The extension icon should appear in your browser toolbar
 
-## 🔧 Development
-
-### Development Mode
-Run the development server:
-```bash
-npm run dev
-```
-
-This will start Vite's dev server. Note that for full extension functionality, you'll still need to load the built `dist/` folder as an unpacked extension.
-
-### Build for Production
-```bash
-npm run build
-```
-
-Output will be in the `dist/` directory, ready to be loaded as an unpacked extension.
-
-### Project Architecture
-
-- **Background Script** (`src/background/`): Handles message routing, code generation, and extension lifecycle
-- **Content Script** (`src/content/`): Runs on LeetCode pages to extract problem information
-- **UI Components** (`src/ui/`): React-based popup and options interfaces
-- **Core Logic** (`src/core/`): Pure JavaScript modules for parsing and code generation
-- **Messaging** (`src/messaging/`): Centralized message type definitions for type safety
-
-### Adding New Language Support
-
-To add support for a new programming language:
-
-1. Create a template file in `src/core/languages/` (e.g., `python.template.py`)
-2. Update `src/core/codegen/index.js` to handle the new language
-3. Add language option to the options page UI
-
-### Extending Functionality
-
-The modular structure makes it easy to:
-- Add new message types in `src/messaging/messages.js`
-- Create new message handlers in `src/background/messageHandlers/`
-- Add new UI components in `src/ui/popup/components/` or `src/ui/options/components/`
-- Extend parsing logic in `src/content/parser/`
-
-### Running Tests
-
-Tests are currently scaffolded. To set up:
-
-1. Install test dependencies:
-```bash
-npm install --save-dev jest @babel/preset-env @babel/preset-react
-```
-
-2. Run tests:
-```bash
-npm test
-```
-
-See `tests/README.md` for more details.
-
-## 📦 Build Output
-
-The `dist/` directory contains:
-- `popup.html` & `popup.js` - Popup interface
-- `options.html` & `options.js` - Options page
-- `background.js` - Background service worker
-- `content.js` - Content script
-- `manifest.json` - Extension manifest
-- `icons/` - Extension icons
-
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Here's how you can help:
 
-**Made with ❤️ for competitive programmers and LeetCoders**
+### Ways to Contribute
+- **Add Language Support**: Implement templates for new programming languages
+- **Improve Parsing**: Enhance the LeetCode problem parser for edge cases
+- **UI/UX Improvements**: Enhance the Material-UI interface
+- **Bug Reports**: Report issues with detailed reproduction steps
+- **Feature Requests**: Suggest new functionality
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔗 Links
+
+- **CPH Extension**: [Competitive Programming Helper](https://github.com/Sarvesh0955/cph-leetparse)
+
+---
+
+**Made with ❤️ for competitive programmers **
 
 *Happy coding! 🚀*
