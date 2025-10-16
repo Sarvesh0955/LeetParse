@@ -207,9 +207,52 @@ function extractClassName(inputCode) {
   try {
     if (!inputCode) return '';
     
-    const classNameMatch = inputCode.match(/class\s+(\w+)(?:\([^)]*\))?\s*:/);
-    if (classNameMatch && classNameMatch[1]) {
-      return classNameMatch[1];
+    // Split code into lines and find the first non-commented class definition
+    const lines = inputCode.split('\n');
+    let inMultilineString = false;
+    let multilineStringDelimiter = '';
+    
+    for (const line of lines) {
+      const trimmedLine = line.trim();
+      
+      // Skip empty lines
+      if (!trimmedLine) {
+        continue;
+      }
+      
+      // Handle multiline strings (docstrings)
+      if (!inMultilineString) {
+        // Check if line starts a multiline string
+        if (trimmedLine.startsWith('"""') || trimmedLine.startsWith("'''")) {
+          multilineStringDelimiter = trimmedLine.substring(0, 3);
+          inMultilineString = true;
+          
+          // Check if the multiline string ends on the same line
+          const restOfLine = trimmedLine.substring(3);
+          if (restOfLine.includes(multilineStringDelimiter)) {
+            inMultilineString = false;
+          }
+          continue;
+        }
+      } else {
+        // We're inside a multiline string, check if it ends
+        if (trimmedLine.includes(multilineStringDelimiter)) {
+          inMultilineString = false;
+        }
+        continue;
+      }
+      
+      // Skip commented lines
+      if (trimmedLine.startsWith('#')) {
+        continue;
+      }
+      
+      // We're not in a multiline string and not in a comment
+      // Check if this line contains a class definition
+      const classNameMatch = trimmedLine.match(/^class\s+(\w+)(?:\([^)]*\))?\s*:/);
+      if (classNameMatch && classNameMatch[1]) {
+        return classNameMatch[1];
+      }
     }
     
     return '';
