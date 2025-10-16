@@ -41,10 +41,9 @@ function extractSampleOutputs() {
     }
     
     const description = metaDescription.getAttribute('content') || '';
-    console.log('Meta description content:', description);
     
-    // Find all "Output:" positions and extract each one individually with cascading delimiters
-    const outputRegex = /Output:/gi;
+    // Find all "Output" positions and extract each one individually with cascading delimiters
+    const outputRegex = /Output/gi;
     let match;
     
     while ((match = outputRegex.exec(description)) !== null) {
@@ -55,10 +54,10 @@ function extractSampleOutputs() {
       
       // Try delimiters in order of preference for this specific output
       const delimiters = [
-        /\s*Explanation:/i,
+        /\s*Explanation/i,
         /\s*Example\s*\d*:/i,
-        /\s*Constraints:/i,
-        /\s*(?:Input:|Note:|Follow\s*up:)/i
+        /\s*Constraints/i,
+        /\s*(?:Input|Note|Follow\s*up)/i
       ];
       
       let found = false;
@@ -78,11 +77,9 @@ function extractSampleOutputs() {
       
       // Clean up the output
       if (output) {
+        if(output[0]===':') output = output.substring(1,output.length);
         output = output.replace(/\s+/g, ' ').trim(); // normalize whitespace
-        
-        if (output !== '') {
-          outputs.push(output); // Keep all outputs including duplicates
-        }
+        outputs.push(output); 
       }
     }
     
