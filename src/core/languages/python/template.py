@@ -1,5 +1,6 @@
 from typing import *
 from collections import deque, defaultdict
+import random
 
 # Global input buffer for single word reading
 class InputBuffer:
@@ -12,11 +13,9 @@ class InputBuffer:
             try:
                 line = input().strip()
                 if line:
-                    # Clear buffer and add new words
                     self.buffer = line.split()
                     self.index = 0
                 else:
-                    # Empty line, try again
                     continue
             except EOFError:
                 return None
@@ -26,7 +25,6 @@ class InputBuffer:
         return word
     
     def next_line(self):
-        # Clear any remaining words from current line buffer
         self.buffer = []
         self.index = 0
         try:
@@ -34,7 +32,6 @@ class InputBuffer:
         except EOFError:
             return None
 
-# Global input buffer instance
 _input_buffer = InputBuffer()
 
 # Definition for singly-linked list
@@ -86,18 +83,18 @@ class IO:
         # Array functions
         @staticmethod
         def read_int_array() -> List[int]:
-            n = IO.Input.read_int()  # Read array size first
-            return [IO.Input.read_int() for _ in range(n)]  # Read each element as single word
+            n = IO.Input.read_int()  
+            return [IO.Input.read_int() for _ in range(n)] 
         
         @staticmethod
         def read_float_array() -> List[float]:
-            n = IO.Input.read_int()  # Read array size first
-            return [IO.Input.read_float() for _ in range(n)]  # Read each element as single word
+            n = IO.Input.read_int()  
+            return [IO.Input.read_float() for _ in range(n)]  
         
         @staticmethod
         def read_string_array() -> List[str]:
-            n = IO.Input.read_int()  # Read array size first
-            return [IO.Input.read_string() for _ in range(n)]  # Each string on new line
+            n = IO.Input.read_int() 
+            return [IO.Input.read_string() for _ in range(n)]  
         
         @staticmethod
         def read_char_array() -> List[str]:
@@ -106,20 +103,20 @@ class IO:
         # 2D Array functions
         @staticmethod
         def read_int_2d_array() -> List[List[int]]:
-            m = IO.Input.read_int()  # number of rows
+            m = IO.Input.read_int()  
             result = []
             for _ in range(m):
-                n = IO.Input.read_int()  # number of elements in this row
-                row = [IO.Input.read_int() for _ in range(n)]  # read each element as single word
+                n = IO.Input.read_int()  
+                row = [IO.Input.read_int() for _ in range(n)] 
                 result.append(row)
             return result
         
         @staticmethod
         def read_char_2d_array() -> List[List[str]]:
-            m = IO.Input.read_int()  # number of rows
+            m = IO.Input.read_int() 
             result = []
             for _ in range(m):
-                row_str = IO.Input.read_string()  # read full line for char array
+                row_str = IO.Input.read_string()  
                 result.append(list(row_str))
             return result
         
@@ -197,14 +194,12 @@ class IO:
             while queue and i < len(values):
                 node = queue.popleft()
                 
-                # Left child
                 if i < len(values):
                     if values[i] is not None:
                         node.left = TreeNode(values[i])
                         queue.append(node.left)
                     i += 1
                 
-                # Right child
                 if i < len(values):
                     if values[i] is not None:
                         node.right = TreeNode(values[i])
@@ -256,7 +251,7 @@ class IO:
             for i, val in enumerate(arr):
                 print(val, end="")
                 if i < len(arr) - 1:
-                    print(", ", end="")
+                    print(",", end="")
             print("]", end="")
         
         @staticmethod
@@ -265,7 +260,7 @@ class IO:
             for i, val in enumerate(arr):
                 print(val, end="")
                 if i < len(arr) - 1:
-                    print(", ", end="")
+                    print(",", end="")
             print("]", end="")
         
         @staticmethod
@@ -274,7 +269,7 @@ class IO:
             for i, val in enumerate(arr):
                 print(f'"{val}"', end="")
                 if i < len(arr) - 1:
-                    print(", ", end="")
+                    print(",", end="")
             print("]", end="")
         
         @staticmethod
@@ -283,7 +278,7 @@ class IO:
             for i, val in enumerate(arr):
                 print(f"'{val}'", end="")
                 if i < len(arr) - 1:
-                    print(", ", end="")
+                    print(",", end="")
             print("]", end="")
         
         # 2D Array functions
@@ -293,7 +288,7 @@ class IO:
             for i, row in enumerate(arr):
                 IO.Output.write_int_array(row)
                 if i < len(arr) - 1:
-                    print(", ", end="")
+                    print(",", end="")
             print("]", end="")
         
         @staticmethod
@@ -302,7 +297,7 @@ class IO:
             for i, row in enumerate(arr):
                 IO.Output.write_char_array(row)
                 if i < len(arr) - 1:
-                    print(", ", end="")
+                    print(",", end="")
             print("]", end="")
         
         # Set and Dictionary functions
@@ -313,7 +308,7 @@ class IO:
             for i, val in enumerate(items):
                 print(val, end="")
                 if i < len(items) - 1:
-                    print(", ", end="")
+                    print(",", end="")
             print("}", end="")
         
         @staticmethod
@@ -323,7 +318,7 @@ class IO:
             for i, (key, val) in enumerate(items):
                 print(f"{key}: {val}", end="")
                 if i < len(items) - 1:
-                    print(", ", end="")
+                    print(",", end="")
             print("}", end="")
         
         # Linked List

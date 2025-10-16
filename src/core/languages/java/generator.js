@@ -11,51 +11,51 @@ export class JavaCodeGenerator {
   /**
    * Maps Java types to appropriate input method calls
    * @param {string} paramType - The parameter type from function signature
-   * @returns {object} - Object with inputMethod and declaration
+   * @returns {object} - Object with inputMethod, declaration, and needsNextLine
    */
   getInputMethodForType(paramType) {
     const type = paramType.trim();
     
     // Handle 2D arrays first (must come before single arrays)
     if (type.includes('[][]')) {
-      if (type.includes('int[][]')) return { inputMethod: 'IO.Input.readInt2DArray()', declaration: `int[][] ` };
-      if (type.includes('char[][]')) return { inputMethod: 'IO.Input.readChar2DArray()', declaration: `char[][] ` };
-      return { inputMethod: 'IO.Input.readInt2DArray()', declaration: `int[][] ` }; // default fallback
+      if (type.includes('int[][]')) return { inputMethod: 'IO.Input.readInt2DArray()', declaration: `int[][] `, needsNextLine: false };
+      if (type.includes('char[][]')) return { inputMethod: 'IO.Input.readChar2DArray()', declaration: `char[][] `, needsNextLine: false };
+      return { inputMethod: 'IO.Input.readInt2DArray()', declaration: `int[][] `, needsNextLine: false }; // default fallback
     }
     
     // Handle single arrays
     if (type.includes('[]')) {
-      if (type.includes('int[]')) return { inputMethod: 'IO.Input.readIntArray()', declaration: `int[] ` };
-      if (type.includes('long[]')) return { inputMethod: 'IO.Input.readLongArray()', declaration: `long[] ` };
-      if (type.includes('double[]')) return { inputMethod: 'IO.Input.readDoubleArray()', declaration: `double[] ` };
-      if (type.includes('String[]')) return { inputMethod: 'IO.Input.readStringArray()', declaration: `String[] ` };
-      if (type.includes('char[]')) return { inputMethod: 'IO.Input.readCharArray()', declaration: `char[] ` };
-      return { inputMethod: 'IO.Input.readIntArray()', declaration: `int[] ` }; // default fallback
+      if (type.includes('int[]')) return { inputMethod: 'IO.Input.readIntArray()', declaration: `int[] `, needsNextLine: false };
+      if (type.includes('long[]')) return { inputMethod: 'IO.Input.readLongArray()', declaration: `long[] `, needsNextLine: false };
+      if (type.includes('double[]')) return { inputMethod: 'IO.Input.readDoubleArray()', declaration: `double[] `, needsNextLine: false };
+      if (type.includes('String[]')) return { inputMethod: 'IO.Input.readStringArray()', declaration: `String[] `, needsNextLine: false };
+      if (type.includes('char[]')) return { inputMethod: 'IO.Input.readCharArray()', declaration: `char[] `, needsNextLine: false };
+      return { inputMethod: 'IO.Input.readIntArray()', declaration: `int[] `, needsNextLine: false }; // default fallback
     }
     
     // Handle generics and collections (2D lists first, then single lists)
-    if (type.includes('List<List<Integer>>')) return { inputMethod: 'IO.Input.readIntListList()', declaration: `List<List<Integer>> ` };
-    if (type.includes('List<List<String>>')) return { inputMethod: 'IO.Input.readStringListList()', declaration: `List<List<String>> ` };
-    if (type.includes('List<Integer>')) return { inputMethod: 'IO.Input.readIntList()', declaration: `List<Integer> ` };
-    if (type.includes('List<String>')) return { inputMethod: 'IO.Input.readStringList()', declaration: `List<String> ` };
-    if (type.includes('Set<Integer>')) return { inputMethod: 'IO.Input.readIntSet()', declaration: `Set<Integer> ` };
-    if (type.includes('Map<Integer, Integer>')) return { inputMethod: 'IO.Input.readIntIntMap()', declaration: `Map<Integer, Integer> ` };
+    if (type.includes('List<List<Integer>>')) return { inputMethod: 'IO.Input.readIntListList()', declaration: `List<List<Integer>> `, needsNextLine: false };
+    if (type.includes('List<List<String>>')) return { inputMethod: 'IO.Input.readStringListList()', declaration: `List<List<String>> `, needsNextLine: false };
+    if (type.includes('List<Integer>')) return { inputMethod: 'IO.Input.readIntList()', declaration: `List<Integer> `, needsNextLine: false };
+    if (type.includes('List<String>')) return { inputMethod: 'IO.Input.readStringList()', declaration: `List<String> `, needsNextLine: false };
+    if (type.includes('Set<Integer>')) return { inputMethod: 'IO.Input.readIntSet()', declaration: `Set<Integer> `, needsNextLine: false };
+    if (type.includes('Map<Integer, Integer>')) return { inputMethod: 'IO.Input.readIntIntMap()', declaration: `Map<Integer, Integer> `, needsNextLine: false };
     
     // Handle tree and linked list structures
-    if (type.includes('TreeNode')) return { inputMethod: 'IO.Input.readTreeNode()', declaration: `TreeNode ` };
-    if (type.includes('ListNode')) return { inputMethod: 'IO.Input.readListNode()', declaration: `ListNode ` };
+    if (type.includes('TreeNode')) return { inputMethod: 'IO.Input.readTreeNode()', declaration: `TreeNode `, needsNextLine: false };
+    if (type.includes('ListNode')) return { inputMethod: 'IO.Input.readListNode()', declaration: `ListNode `, needsNextLine: false };
     
-    // Handle primitive types
-    if (type.includes('int')) return { inputMethod: 'IO.Input.readInt()', declaration: `int ` };
-    if (type.includes('long')) return { inputMethod: 'IO.Input.readLong()', declaration: `long ` };
-    if (type.includes('double')) return { inputMethod: 'IO.Input.readDouble()', declaration: `double ` };
-    if (type.includes('float')) return { inputMethod: 'IO.Input.readFloat()', declaration: `float ` };
-    if (type.includes('boolean')) return { inputMethod: 'IO.Input.readBoolean()', declaration: `boolean ` };
-    if (type.includes('char')) return { inputMethod: 'IO.Input.readChar()', declaration: `char ` };
-    if (type.includes('String')) return { inputMethod: 'IO.Input.readString()', declaration: `String ` };
+    // Handle primitive types (these need nextLine() to consume the newline)
+    if (type.includes('int')) return { inputMethod: 'IO.Input.readInt()', declaration: `int `, needsNextLine: true };
+    if (type.includes('long')) return { inputMethod: 'IO.Input.readLong()', declaration: `long `, needsNextLine: true };
+    if (type.includes('double')) return { inputMethod: 'IO.Input.readDouble()', declaration: `double `, needsNextLine: true };
+    if (type.includes('float')) return { inputMethod: 'IO.Input.readFloat()', declaration: `float `, needsNextLine: true };
+    if (type.includes('boolean')) return { inputMethod: 'IO.Input.readBoolean()', declaration: `boolean `, needsNextLine: true };
+    if (type.includes('char')) return { inputMethod: 'IO.Input.readChar()', declaration: `char `, needsNextLine: true };
+    if (type.includes('String')) return { inputMethod: 'IO.Input.readString()', declaration: `String `, needsNextLine: false };
     
     // Default fallback
-    return { inputMethod: 'IO.Input.readInt()', declaration: `int ` };
+    return { inputMethod: 'IO.Input.readInt()', declaration: `int `, needsNextLine: true };
   }
 
   /**
@@ -79,6 +79,9 @@ export class JavaCodeGenerator {
           const inputInfo = this.getInputMethodForType(paramType);
           
           inputStatements += `            ${inputInfo.declaration}${paramName} = ${inputInfo.inputMethod};\n`;
+          if (inputInfo.needsNextLine) {
+            inputStatements += `            IO.Input.consumeNewline();\n`;
+          }
           solution += `${paramName}, `;
         }
       });
@@ -139,6 +142,9 @@ export class JavaCodeGenerator {
             const [paramType, paramName] = param;
             const inputInfo = this.getInputMethodForType(paramType);
             inputStatements += `            ${inputInfo.declaration}${paramName} = ${inputInfo.inputMethod};\n`;
+            if (inputInfo.needsNextLine) {
+              inputStatements += `            IO.Input.consumeNewline();\n`;
+            }
             constructorArgs += `${paramName}, `;
           }
         });
@@ -177,6 +183,9 @@ export class JavaCodeGenerator {
                 const [paramType, paramName] = param;
                 const inputInfo = this.getInputMethodForType(paramType);
                 paramDeclarations += `                    ${inputInfo.declaration}${paramName} = ${inputInfo.inputMethod};\n`;
+                if (inputInfo.needsNextLine) {
+                  paramDeclarations += `                    IO.Input.consumeNewline();\n`;
+                }
                 paramList += `${paramName}, `;
               }
             });
@@ -229,6 +238,9 @@ export class JavaCodeGenerator {
             const [paramType, paramName] = param;
             const inputInfo = this.getInputMethodForType(paramType);
             inputStatements += `            ${inputInfo.declaration}${paramName} = ${inputInfo.inputMethod};\n`;
+            if (inputInfo.needsNextLine) {
+              inputStatements += `            IO.Input.consumeNewline();\n`;
+            }
             functionCall += `${paramName}, `;
           }
         });

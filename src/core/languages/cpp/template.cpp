@@ -259,7 +259,7 @@ namespace IO {
             int n = x.size();
             for (int i = 0; i < n; i++) {
                 write(x[i]);
-                if (i < n - 1) cout << ", ";
+                if (i < n - 1) cout << ",";
             }
             cout << "]";
         }
@@ -331,7 +331,6 @@ namespace IO {
         }
     } // namespace Output
     
-    // Convenience wrapper functions to match the original interface
     template <typename T>
     void input(T& x) {
         Input::read(x);

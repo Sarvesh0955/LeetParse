@@ -38,13 +38,12 @@ class IO {
         public static long readLong() { return scanner.nextLong(); }
         public static float readFloat() { return scanner.nextFloat(); }
         public static double readDouble() { return scanner.nextDouble(); }
-        
-        public static String readString() { 
-            scanner.nextLine(); // consume any remaining newline
-            return scanner.nextLine(); 
-        }
+        public static String readString() { return scanner.nextLine(); }
         
         public static String readWord() { return scanner.next(); }
+        
+        // Utility method to consume newline after primitive inputs
+        public static void consumeNewline() { scanner.nextLine(); }
         
         // Arrays
         public static int[] readIntArray() {
@@ -77,7 +76,6 @@ class IO {
         public static String[] readStringArray() {
             int n = readInt();
             String[] arr = new String[n];
-            scanner.nextLine(); // consume newline
             for (int i = 0; i < n; i++) {
                 arr[i] = scanner.nextLine();
             }
@@ -90,10 +88,10 @@ class IO {
         
         // 2D Arrays
         public static int[][] readInt2DArray() {
-            int m = readInt(); // number of rows
+            int m = readInt();
             int[][] arr = new int[m][];
             for (int i = 0; i < m; i++) {
-                int n = readInt(); // number of elements in this row
+                int n = readInt();
                 arr[i] = new int[n];
                 for (int j = 0; j < n; j++) {
                     arr[i][j] = readInt();
@@ -103,40 +101,13 @@ class IO {
         }
         
         public static char[][] readChar2DArray() {
-            int m = readInt(); // number of rows
+            int m = readInt();
             char[][] arr = new char[m][];
-            scanner.nextLine(); // consume newline
+            scanner.nextLine(); 
             for (int i = 0; i < m; i++) {
                 String row = scanner.nextLine();
                 arr[i] = new char[row.length()];
                 for (int j = 0; j < row.length(); j++) {
-                    arr[i][j] = row.charAt(j);
-                }
-            }
-            return arr;
-        }
-        
-        // Fixed-size 2D Arrays (for cases where all rows have same length)
-        public static int[][] readFixedInt2DArray() {
-            int m = readInt(); // number of rows
-            int n = readInt(); // number of columns (fixed for all rows)
-            int[][] arr = new int[m][n];
-            for (int i = 0; i < m; i++) {
-                for (int j = 0; j < n; j++) {
-                    arr[i][j] = readInt();
-                }
-            }
-            return arr;
-        }
-        
-        public static char[][] readFixedChar2DArray() {
-            int m = readInt(); // number of rows
-            int n = readInt(); // number of columns (fixed for all rows)
-            char[][] arr = new char[m][n];
-            scanner.nextLine(); // consume newline
-            for (int i = 0; i < m; i++) {
-                String row = scanner.nextLine();
-                for (int j = 0; j < Math.min(n, row.length()); j++) {
                     arr[i][j] = row.charAt(j);
                 }
             }
@@ -165,10 +136,12 @@ class IO {
         
         // 2D Lists (variable-length rows)
         public static List<List<Integer>> readIntListList() {
-            int m = readInt(); // number of rows
+            int m = readInt(); 
+            IO.Input.consumeNewline();
             List<List<Integer>> result = new ArrayList<>();
             for (int i = 0; i < m; i++) {
-                int n = readInt(); // number of elements in this row
+                int n = readInt(); 
+                IO.Input.consumeNewline();
                 List<Integer> row = new ArrayList<>();
                 for (int j = 0; j < n; j++) {
                     row.add(readInt());
@@ -179,11 +152,12 @@ class IO {
         }
         
         public static List<List<String>> readStringListList() {
-            int m = readInt(); // number of rows
+            int m = readInt(); 
+            IO.Input.consumeNewline();
             List<List<String>> result = new ArrayList<>();
-            scanner.nextLine(); // consume newline
             for (int i = 0; i < m; i++) {
-                int n = readInt(); // number of elements in this row
+                int n = readInt();
+                IO.Input.consumeNewline();
                 List<String> row = new ArrayList<>();
                 for (int j = 0; j < n; j++) {
                     row.add(scanner.next());
@@ -285,7 +259,7 @@ class IO {
             System.out.print("[");
             for (int i = 0; i < arr.length; i++) {
                 System.out.print(arr[i]);
-                if (i < arr.length - 1) System.out.print(", ");
+                if (i < arr.length - 1) System.out.print(",");
             }
             System.out.print("]");
         }
@@ -294,7 +268,7 @@ class IO {
             System.out.print("[");
             for (int i = 0; i < arr.length; i++) {
                 System.out.print(arr[i]);
-                if (i < arr.length - 1) System.out.print(", ");
+                if (i < arr.length - 1) System.out.print(",");
             }
             System.out.print("]");
         }
@@ -303,7 +277,7 @@ class IO {
             System.out.print("[");
             for (int i = 0; i < arr.length; i++) {
                 System.out.print(arr[i]);
-                if (i < arr.length - 1) System.out.print(", ");
+                if (i < arr.length - 1) System.out.print(",");
             }
             System.out.print("]");
         }
@@ -312,7 +286,7 @@ class IO {
             System.out.print("[");
             for (int i = 0; i < arr.length; i++) {
                 System.out.print("\"" + arr[i] + "\"");
-                if (i < arr.length - 1) System.out.print(", ");
+                if (i < arr.length - 1) System.out.print(",");
             }
             System.out.print("]");
         }
@@ -321,7 +295,7 @@ class IO {
             System.out.print("[");
             for (int i = 0; i < arr.length; i++) {
                 System.out.print("'" + arr[i] + "'");
-                if (i < arr.length - 1) System.out.print(", ");
+                if (i < arr.length - 1) System.out.print(",");
             }
             System.out.print("]");
         }
@@ -331,7 +305,7 @@ class IO {
             System.out.print("[");
             for (int i = 0; i < arr.length; i++) {
                 write(arr[i]);
-                if (i < arr.length - 1) System.out.print(", ");
+                if (i < arr.length - 1) System.out.print(",");
             }
             System.out.print("]");
         }
@@ -340,7 +314,7 @@ class IO {
             System.out.print("[");
             for (int i = 0; i < arr.length; i++) {
                 write(arr[i]);
-                if (i < arr.length - 1) System.out.print(", ");
+                if (i < arr.length - 1) System.out.print(",");
             }
             System.out.print("]");
         }
@@ -350,7 +324,7 @@ class IO {
             System.out.print("[");
             for (int i = 0; i < list.size(); i++) {
                 System.out.print(list.get(i));
-                if (i < list.size() - 1) System.out.print(", ");
+                if (i < list.size() - 1) System.out.print(",");
             }
             System.out.print("]");
         }
@@ -360,7 +334,7 @@ class IO {
             Iterator<?> it = set.iterator();
             while (it.hasNext()) {
                 System.out.print(it.next());
-                if (it.hasNext()) System.out.print(", ");
+                if (it.hasNext()) System.out.print(",");
             }
             System.out.print("}");
         }
@@ -371,7 +345,7 @@ class IO {
             while (it.hasNext()) {
                 Map.Entry<?, ?> entry = (Map.Entry<?, ?>) it.next();
                 System.out.print(entry.getKey() + ": " + entry.getValue());
-                if (it.hasNext()) System.out.print(", ");
+                if (it.hasNext()) System.out.print(",");
             }
             System.out.print("}");
         }
@@ -404,7 +378,7 @@ class IO {
                 for (int i = 0; i < levelSize; i++) {
                     TreeNode node = queue.poll();
                     
-                    if (!first) System.out.print(", ");
+                    if (!first) System.out.print(",");
                     first = false;
                     
                     if (node != null) {
@@ -455,9 +429,10 @@ class IO {
 
 {{Solution Class}}
 
-public class Main {
+class Main {
     public static void main(String[] args) {
         int t = IO.Input.readInt();
+        IO.Input.consumeNewline();
         while (t-- > 0) {
 {{Input Statements}}
         }

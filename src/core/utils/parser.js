@@ -241,7 +241,7 @@ async function parseData(language = 'cpp', otherTests = false) {
       result.isClass = true;
       result.isSpecialClass = false;
     }
-
+    result.testCases += '\n';
     return result;
   } catch (error) {
     console.error('Critical error in parseData:', error);

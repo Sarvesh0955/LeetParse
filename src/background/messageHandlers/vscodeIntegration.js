@@ -6,6 +6,38 @@
 import { VSCODE_EXPORT_SUCCESS, VSCODE_EXPORT_ERROR } from '../../messaging/messages.js';
 
 /**
+ * Extracts problem slug from a LeetCode URL
+ * @param {string} url - The LeetCode problem URL
+ * @returns {string} The extracted problem slug (e.g., "two-sum")
+ */
+function extractProblemSlugFromUrl(url) {
+  try {
+    const match = url.match(/\/problems\/([^\/]+)/);
+    return match ? match[1] : '';
+  } catch (error) {
+    console.error("Error extracting problem slug:", error);
+    return '';
+  }
+}
+
+/**
+ * Converts problem slug to a valid Java class name
+ * @param {string} problemSlug - The problem slug (e.g., "two-sum", "add-two-numbers")
+ * @returns {string} - Valid Java class name (e.g., "two_sum", "add_two_numbers")
+ */
+function formatClassNameFromSlug(problemSlug) {
+  if (!problemSlug || typeof problemSlug !== 'string') {
+    return 'Main';
+  }
+  
+  // Replace hyphens and spaces with underscores, then ensure it's a valid Java identifier
+  return problemSlug
+    .replace(/[-\s]+/g, '_')
+    .replace(/[^a-zA-Z0-9_]/g, '')
+    .replace(/^(\d)/, '_$1'); // If it starts with a number, prefix with underscore
+}
+
+/**
  * Handles VS Code export requests from popup
  * Attempts to send parsed problem data to Competitive Companion extension
  * 
@@ -15,10 +47,27 @@ import { VSCODE_EXPORT_SUCCESS, VSCODE_EXPORT_ERROR } from '../../messaging/mess
  */
 export async function handleVSCodeExport(message, sender, sendToPopup) {
   try {
-    const { code, testCases, problemName, language, problemUrl, sampleOutputs } = message;
+    const { code, testCases, problemName, language, problemUrl, sampleOutputs, ...problemData } = message;
     
     if (!problemName || !language) {
       throw new Error('Missing required data for VS Code export');
+    }
+    
+    // For Java, regenerate code with custom class name based on problem URL slug
+    let codeForVSCode = code;
+    if (language === 'java' && problemUrl) {
+      try {
+        // Extract problem slug from URL
+        const problemSlug = extractProblemSlugFromUrl(problemUrl);
+        if (problemSlug) {
+          // Replace class name in existing code
+          const className = formatClassNameFromSlug(problemSlug);
+          codeForVSCode = code.replace(/class Main/g, `class ${className}`);
+        }
+      } catch (error) {
+        console.warn('Failed to update class name for VS Code, using original code:', error);
+        // Fall back to original code if class name update fails
+      }
     }
     
     // Format test cases with corresponding outputs for CPH
@@ -32,7 +81,7 @@ export async function handleVSCodeExport(message, sender, sendToPopup) {
       memoryLimit: 256,
       timeLimit: 2000,
       group: "LeetCode",
-      parsedCode: code || '',
+      parsedCode: codeForVSCode || '',
       language: mapLanguageToCompetitiveCompanion(language)
     };
 
