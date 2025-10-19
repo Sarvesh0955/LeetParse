@@ -323,7 +323,7 @@ class IO {
         public static void write(List<?> list) {
             System.out.print("[");
             for (int i = 0; i < list.size(); i++) {
-                System.out.print(list.get(i));
+                IO.output(list.get(i));
                 if (i < list.size() - 1) System.out.print(",");
             }
             System.out.print("]");
@@ -333,7 +333,7 @@ class IO {
             System.out.print("{");
             Iterator<?> it = set.iterator();
             while (it.hasNext()) {
-                System.out.print(it.next());
+                IO.output(it.next());
                 if (it.hasNext()) System.out.print(",");
             }
             System.out.print("}");

@@ -1,6 +1,14 @@
 from typing import *
-from collections import deque, defaultdict
+import collections
+from collections import deque, defaultdict, Counter, OrderedDict
 import random
+import heapq
+import bisect
+import itertools
+from functools import lru_cache, reduce
+from math import inf, gcd, lcm, sqrt, ceil, floor, log, log2, log10
+import re
+import string
 
 # Global input buffer for single word reading
 class InputBuffer:
@@ -379,6 +387,16 @@ class IO:
             
             print("]", end="")
         
+        # List of TreeNodes
+        @staticmethod
+        def write_tree_node_array(arr: List[Optional[TreeNode]]) -> None:
+            print("[", end="")
+            for i, tree in enumerate(arr):
+                IO.Output.write_tree_node(tree)
+                if i < len(arr) - 1:
+                    print(",", end="")
+            print("]", end="")
+        
         # Tuple functions
         @staticmethod
         def write_tuple(t: tuple) -> None:
@@ -425,6 +443,8 @@ class IO:
                     IO.Output.write_char_array(x)
                 else:
                     IO.Output.write_string_array(x)
+            elif x and isinstance(x[0], TreeNode):
+                IO.Output.write_tree_node_array(x)
             else:
                 print(x, end="")
         elif isinstance(x, set):

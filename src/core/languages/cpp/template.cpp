@@ -1,7 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-// Definition for singly-linked list
 struct ListNode {
     int val;
     ListNode *next;
@@ -10,7 +9,6 @@ struct ListNode {
     ListNode(int x, ListNode *next) : val(x), next(next) {}
 };
 
-// Definition for binary tree
 struct TreeNode {
     int val;
     TreeNode *left;
@@ -232,7 +230,7 @@ namespace IO {
                 for (int i = 0; i < levelSize; i++) {
                     TreeNode* node = q.front();
                     q.pop();
-                    if (!first) cout << ", ";
+                    if (!first) cout << ",";
                     first = false;
                     if (node) {
                         cout << node->val;
