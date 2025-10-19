@@ -70,7 +70,7 @@ export class CppCodeGenerator {
       inputStatements += `        input(operation);\n`;
       inputStatements += `        int params;\n`;
       inputStatements += `        input(params);\n`;
-      inputStatements += `        cout << "null ";\n`;
+      inputStatements += `        cout << "[null, ";\n`;
 
       const [className, constructorParams] = data.parameters[0];
       if (!className) {
@@ -139,14 +139,17 @@ export class CppCodeGenerator {
             inputStatements += `                obj->${methodName}(${paramList});\n`;
             inputStatements += `                cout << "null";\n`;
           }
-          
-          inputStatements += `                cout << " ";\n`;
+
+          inputStatements += `                if(op < operations - 2) {\n`;
+          inputStatements += `                    cout << ", ";\n`;
+          inputStatements += `                }\n`;
           inputStatements += `                continue;\n`;
           inputStatements += `            }\n`;
         }
       }
       
       inputStatements += `        }\n`;
+      inputStatements += `        cout << "]";\n`;
       inputStatements += `        cout << endl;\n`;
     }
     

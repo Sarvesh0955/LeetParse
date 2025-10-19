@@ -119,7 +119,7 @@ export class PythonCodeGenerator {
       inputStatements += `        operations = IO.Input.read_int()\n`;
       inputStatements += `        operation = IO.Input.read_string()\n`;
       inputStatements += `        params = IO.Input.read_int()\n`;
-      inputStatements += `        print("null", end=" ")\n`;
+      inputStatements += `        print("[null,", end=" ")\n`;
 
       const [className, constructorParams] = data.parameters[0];
       if (!className) {
@@ -180,13 +180,15 @@ export class PythonCodeGenerator {
             inputStatements += `                obj.${methodName}(${methodParamList.join(', ')})\n`;
             inputStatements += `                print("null", end="")\n`;
           }
-          
-          inputStatements += `                print(end=" ")\n`;
+          inputStatements += `                if _ < operations - 2:\n`;
+          inputStatements += `                    print(",", end=" ")\n`;
           inputStatements += `                continue\n`;
         }
       }
-      
+
+      inputStatements += `        print("]")\n`;
       inputStatements += `        print()\n`;
+
     }
     
     return inputStatements;

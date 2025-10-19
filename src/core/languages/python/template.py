@@ -425,7 +425,6 @@ class IO:
             IO.Output.write_tuple(x)
         else:
             print(x, end="")
-        print(" ", end="")
 
 # Convenience functions for backward compatibility
 def input_int() -> int:

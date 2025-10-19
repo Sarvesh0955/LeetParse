@@ -126,7 +126,7 @@ export class JavaCodeGenerator {
       inputStatements += `            int operations = IO.Input.readInt();\n`;
       inputStatements += `            String operation = IO.Input.readWord();\n`;
       inputStatements += `            int params = IO.Input.readInt();\n`;
-      inputStatements += `            System.out.print("null ");\n`;
+      inputStatements += `            System.out.print("[null, ");\n`;
 
       const [className, constructorParams] = data.parameters[0];
       if (!className) {
@@ -201,13 +201,16 @@ export class JavaCodeGenerator {
             inputStatements += `                    System.out.print("null");\n`;
           }
           
-          inputStatements += `                    System.out.print(" ");\n`;
+          inputStatements += `                    if(op < operations - 2) {\n`;
+          inputStatements += `                        System.out.print(", ");\n`;
+          inputStatements += `                    }\n`;
           inputStatements += `                    continue;\n`;
           inputStatements += `                }\n`;
         }
       }
       
       inputStatements += `            }\n`;
+      inputStatements += `            System.out.print("]");\n`;
       inputStatements += `            System.out.println();\n`;
     }
     

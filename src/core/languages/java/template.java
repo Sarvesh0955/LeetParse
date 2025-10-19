@@ -421,7 +421,6 @@ class IO {
         else if (x instanceof ListNode) Output.write((ListNode) x);
         else if (x instanceof TreeNode) Output.write((TreeNode) x);
         else System.out.print(x);
-        System.out.print(" ");
     }
 }
 

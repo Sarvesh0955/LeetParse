@@ -339,7 +339,6 @@ namespace IO {
     template <typename T>
     void output(T x) {
         Output::write(x);
-        cout << " ";
     }
 } 
 
