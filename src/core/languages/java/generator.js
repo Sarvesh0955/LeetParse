@@ -124,8 +124,10 @@ export class JavaCodeGenerator {
     
     if (data.parameters[0] && data.parameters[0].length === 3) {
       inputStatements += `            int operations = IO.Input.readInt();\n`;
+      inputStatements += `            IO.Input.consumeNewline();\n`;
       inputStatements += `            String operation = IO.Input.readWord();\n`;
       inputStatements += `            int params = IO.Input.readInt();\n`;
+      inputStatements += `            IO.Input.consumeNewline();\n`;
       inputStatements += `            System.out.print("[null, ");\n`;
 
       const [className, constructorParams] = data.parameters[0];
@@ -156,6 +158,7 @@ export class JavaCodeGenerator {
       inputStatements += `            for (int op = 0; op < operations - 1; op++) {\n`;
       inputStatements += `                operation = IO.Input.readWord();\n`;
       inputStatements += `                params = IO.Input.readInt();\n`;
+      inputStatements += `                IO.Input.consumeNewline();\n`;
       
       // Handle constructor calls
       if (!data.problemClass) {

@@ -200,8 +200,8 @@ namespace IO {
         void write(float x) { cout << x; }
         void write(double x) { cout << x; }
         void write(long double x) { cout << x; }
-        void write(string x) { cout << x; }
-        void write(const char* x) { cout << x; }
+        void write(string x) { cout << "\"" << x << "\""; }
+        void write(const char* x) { cout << "\"" << x << "\""; }
         
         // Linked list
         void write(ListNode* head) {

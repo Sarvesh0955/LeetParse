@@ -242,7 +242,7 @@ class IO:
         
         @staticmethod
         def write_string(x: str) -> None:
-            print(x, end="")
+            print(f'"{x}"', end="")
         
         @staticmethod
         def write_char(x: str) -> None:

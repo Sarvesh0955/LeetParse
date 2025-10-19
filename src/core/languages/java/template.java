@@ -252,7 +252,7 @@ class IO {
         public static void write(long x) { System.out.print(x); }
         public static void write(float x) { System.out.print(x); }
         public static void write(double x) { System.out.print(x); }
-        public static void write(String x) { System.out.print(x); }
+        public static void write(String x) { System.out.print("\"" + x + "\""); }
         
         // Arrays
         public static void write(int[] arr) {
