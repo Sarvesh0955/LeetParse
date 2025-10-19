@@ -153,45 +153,7 @@ export class CppCodeGenerator {
     return inputStatements;
   }
 
-  /**
-   * Generates the main function input code for regular function problems
-   * @param {Object} data - The parsed problem data
-   * @returns {string} - Generated input handling code
-   */
-  generateMainInputCode(data) {
-    if (!data || !data.parameters) {
-      console.error("Invalid data structure for main input code");
-      return '';
-    }
-    
-    let inputStatements = '';
-    let outputStatement = '';
-    let functionCall = '';
-    
-    if (Array.isArray(data.parameters) && data.parameters.length > 0) {
-      const [functionName, params, returnType] = data.parameters;
-      
-      if (params && Array.isArray(params)) {
-        params.forEach(param => {
-          if (Array.isArray(param) && param.length >= 2) {
-            const [paramType, paramName] = param;
-            inputStatements += `        ${paramType};\n`;
-            inputStatements += `        input(${paramName});\n`;
-            functionCall += `${paramName}, `;
-          }
-        });
-        functionCall = functionCall.slice(0, -2); // Remove last comma and space
-      }
-      
-      if (returnType && returnType !== 'void') {
-        outputStatement = `        output(${functionName}(${functionCall}));\n`;
-      } else {
-        outputStatement = `        ${functionName}(${functionCall});\n`;
-      }
-    }
-    
-    return inputStatements + outputStatement + '        cout << endl;\n';
-  }
+
 
   /**
    * Main method to generate complete C++ code
@@ -211,14 +173,10 @@ export class CppCodeGenerator {
     
     // Generate appropriate input handling based on problem type
     let inputCode = '';
-    if (data.isClass) {
-      if (data.isSpecialClass) {
-        inputCode = this.generateSpecialClassInputCode(data);
-      } else {
-        inputCode = this.generateSolutionClassInputCode(data);
-      }
+    if (data.isSpecialClass) {
+      inputCode = this.generateSpecialClassInputCode(data);
     } else {
-      inputCode = this.generateMainInputCode(data);
+      inputCode = this.generateSolutionClassInputCode(data);
     }
     
     // Replace input statements placeholder

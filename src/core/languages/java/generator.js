@@ -215,49 +215,6 @@ export class JavaCodeGenerator {
   }
 
   /**
-   * Generates the main function input code for regular function problems
-   * @param {Object} data - The parsed problem data
-   * @returns {string} - Generated input handling code
-   */
-  generateMainInputCode(data) {
-    if (!data?.parameters) {
-      console.error("Invalid data structure for main input code:", data);
-      return '';
-    }
-    
-    let inputStatements = '';
-    let outputStatement = '';
-    let functionCall = '';
-    
-    if (Array.isArray(data.parameters) && data.parameters.length > 0) {
-      const [functionName, params, returnType] = data.parameters[0];
-      
-      if (params && Array.isArray(params)) {
-        params.forEach(param => {
-          if (Array.isArray(param) && param.length >= 2) {
-            const [paramType, paramName] = param;
-            const inputInfo = this.getInputMethodForType(paramType);
-            inputStatements += `            ${inputInfo.declaration}${paramName} = ${inputInfo.inputMethod};\n`;
-            if (inputInfo.needsNextLine) {
-              inputStatements += `            IO.Input.consumeNewline();\n`;
-            }
-            functionCall += `${paramName}, `;
-          }
-        });
-        functionCall = functionCall.slice(0, -2); // Remove last comma and space
-      }
-      
-      if (returnType && returnType !== 'void') {
-        outputStatement = `            IO.output(${functionName}(${functionCall}));\n`;
-      } else {
-        outputStatement = `            ${functionName}(${functionCall});\n            System.out.print("null");\n`;
-      }
-    }
-    
-    return inputStatements + outputStatement + '            System.out.println();\n';
-  }
-
-  /**
    * Main method to generate complete Java code
    * @param {Object} data - The parsed problem data
    * @param {string} testCases - Test case data
@@ -272,14 +229,10 @@ export class JavaCodeGenerator {
     
     // Generate appropriate input handling based on problem type
     let inputCode = '';
-    if (data.isClass) {
-      if (data.isSpecialClass) {
-        inputCode = this.generateSpecialClassInputCode(data);
-      } else {
-        inputCode = this.generateSolutionClassInputCode(data);
-      }
+    if (data.isSpecialClass) {
+      inputCode = this.generateSpecialClassInputCode(data);
     } else {
-      inputCode = this.generateMainInputCode(data);
+      inputCode = this.generateSolutionClassInputCode(data);
     }
     
     // Replace input statements placeholder

@@ -192,9 +192,8 @@ async function parseData(language = 'cpp', otherTests = false) {
       inputCode: '',     
       parameters: [],    
       userCode: '',
-      sampleOutputs: [],     // Array of expected outputs for sample test cases
-      isClass: false,        // Flag to indicate if this is a class-based problem
-      isSpecialClass: false  // Flag to indicate if this is a special class (like data structure)
+      sampleOutputs: [],     
+      isSpecialClass: false  
     };
 
     result.inputCode = data.inputCode;
@@ -223,14 +222,12 @@ async function parseData(language = 'cpp', otherTests = false) {
         // Multiple functions indicate a special class (like data structure)
         result.problemClass = parser.extractClassName(data.inputCode);
         result.testCases = parseTestCasesSpecialClass(data).trim();
-        result.isClass = true;
         result.isSpecialClass = true;
       }
       else {
         // Single function indicates a regular Solution class
         result.problemClass = parser.extractClassName(data.inputCode);
         result.testCases = parseTestCase(data,result.parameters[0][1].length).trim();
-        result.isClass = true;
         result.isSpecialClass = false;
       }
     } catch (processingError) {
@@ -238,7 +235,6 @@ async function parseData(language = 'cpp', otherTests = false) {
       result.problemClass = 'Solution';
       result.parameters = functionDetails.length > 0 ? functionDetails : [['solve', [], '']];
       result.testCases = data.testCases ? '1\n0' : '';
-      result.isClass = true;
       result.isSpecialClass = false;
     }
     result.testCases += '\n';
@@ -252,7 +248,6 @@ async function parseData(language = 'cpp', otherTests = false) {
       parameters: [['solve', [], '']], 
       userCode: '',
       sampleOutputs: [],
-      isClass: true,
       isSpecialClass: false
     };
   }
