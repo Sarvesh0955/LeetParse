@@ -190,7 +190,7 @@ namespace IO {
     namespace Output {
         // Basic types
         void write(bool x) { cout << (x ? "True" : "False"); }
-        void write(char x) { cout << x; }
+        void write(char x) { cout << "\"" << x << "\""; }
         void write(int x) { cout << x; }
         void write(unsigned int x) { cout << x; }
         void write(long int x) { cout << x; }

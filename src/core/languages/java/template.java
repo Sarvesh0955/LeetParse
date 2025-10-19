@@ -247,7 +247,7 @@ class IO {
     public static class Output {
         // Basic types
         public static void write(boolean x) { System.out.print(x ? "true" : "false"); }
-        public static void write(char x) { System.out.print(x); }
+        public static void write(char x) { System.out.print("\"" + x + "\""); }
         public static void write(int x) { System.out.print(x); }
         public static void write(long x) { System.out.print(x); }
         public static void write(float x) { System.out.print(x); }

@@ -120,8 +120,12 @@ class IO:
             m = IO.Input.read_int() 
             result = []
             for _ in range(m):
-                row_str = IO.Input.read_string()  
-                result.append(list(row_str))
+                n = IO.Input.read_int()  
+                row = []
+                for __ in range(n):
+                    val = IO.Input.read_char()
+                    row.append(val)
+                result.append(row)
             return result
         
         # Set and Dictionary functions
@@ -246,7 +250,7 @@ class IO:
         
         @staticmethod
         def write_char(x: str) -> None:
-            print(x, end="")
+            print(f'"{x}"', end="")
         
         # Array functions
         @staticmethod
@@ -280,7 +284,7 @@ class IO:
         def write_char_array(arr: List[str]) -> None:
             print("[", end="")
             for i, val in enumerate(arr):
-                print(f"'{val}'", end="")
+                print(f'"{val}"', end="")
                 if i < len(arr) - 1:
                     print(",", end="")
             print("]", end="")
