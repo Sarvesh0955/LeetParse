@@ -105,10 +105,10 @@ class IO {
             char[][] arr = new char[m][];
             scanner.nextLine(); 
             for (int i = 0; i < m; i++) {
-                String row = scanner.nextLine();
-                arr[i] = new char[row.length()];
-                for (int j = 0; j < row.length(); j++) {
-                    arr[i][j] = row.charAt(j);
+                int n = readInt();
+                arr[i] = new char[n];
+                for (int j = 0; j < n; j++) {
+                    arr[i][j] = readChar();
                 }
             }
             return arr;
@@ -294,7 +294,7 @@ class IO {
         public static void write(char[] arr) {
             System.out.print("[");
             for (int i = 0; i < arr.length; i++) {
-                System.out.print("'" + arr[i] + "'");
+                System.out.print("\"" + arr[i] + "\"");
                 if (i < arr.length - 1) System.out.print(",");
             }
             System.out.print("]");
