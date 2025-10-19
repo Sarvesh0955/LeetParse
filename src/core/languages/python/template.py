@@ -328,12 +328,16 @@ class IO:
         # Linked List
         @staticmethod
         def write_list_node(head: Optional[ListNode]) -> None:
+            print("[", end="")
+            first = True
             current = head
             while current:
+                if not first:
+                    print(",", end="")
+                first = False
                 print(current.val, end="")
-                if current.next:
-                    print(" -> ", end="")
                 current = current.next
+            print("]", end="")
         
         # Binary Tree (level-order output)
         @staticmethod

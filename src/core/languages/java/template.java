@@ -352,11 +352,15 @@ class IO {
         
         // Linked List
         public static void write(ListNode head) {
+            System.out.print("[");
+            boolean first = true;
             while (head != null) {
+                if (!first) System.out.print(",");
+                first = false;
                 System.out.print(head.val);
-                if (head.next != null) System.out.print(" -> ");
                 head = head.next;
             }
+            System.out.print("]");
         }
         
         // Binary Tree (level-order output)

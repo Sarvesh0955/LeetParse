@@ -205,11 +205,15 @@ namespace IO {
         
         // Linked list
         void write(ListNode* head) {
+            cout << "[";
+            bool first = true;
             while (head) {
+                if (!first) cout << ",";
+                first = false;
                 cout << head->val;
-                if (head->next) cout << " -> ";
                 head = head->next;
             }
+            cout << "]";
         }
         
         // Binary tree (level-order output)
