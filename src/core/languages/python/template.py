@@ -80,6 +80,10 @@ class IO:
             word = _input_buffer.next_word()
             return word[0] if word else ''
         
+        @staticmethod
+        def consume_newline() -> None:
+            _input_buffer.next_line()
+        
         # Array functions
         @staticmethod
         def read_int_array() -> List[int]:
@@ -383,7 +387,9 @@ class IO:
         """
         Generic output function that determines the type and calls appropriate write function
         """
-        if isinstance(x, bool):
+        if x is None:
+            print("null", end="")
+        elif isinstance(x, bool):
             IO.Output.write_bool(x)
         elif isinstance(x, int):
             IO.Output.write_int(x)
@@ -445,6 +451,9 @@ def input_word() -> str:
 
 def input_line() -> str:
     return _input_buffer.next_line()
+
+def consume_newline() -> None:
+    return IO.Input.consume_newline()
 
 {{user template}}
 

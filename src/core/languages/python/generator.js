@@ -119,6 +119,8 @@ export class PythonCodeGenerator {
       inputStatements += `        operations = IO.Input.read_int()\n`;
       inputStatements += `        operation = IO.Input.read_string()\n`;
       inputStatements += `        params = IO.Input.read_int()\n`;
+      inputStatements += `        if params == 0:\n`;
+      inputStatements += `            IO.Input.consume_newline()\n`;
       inputStatements += `        print("[null,", end=" ")\n`;
 
       const [className, constructorParams] = data.parameters[0];
@@ -144,6 +146,8 @@ export class PythonCodeGenerator {
       inputStatements += `        for _ in range(operations - 1):\n`;
       inputStatements += `            operation = IO.Input.read_string()\n`;
       inputStatements += `            params = IO.Input.read_int()\n`;
+      inputStatements += `            if params == 0:\n`;
+      inputStatements += `                IO.Input.consume_newline()\n`;
       
       const problemClassName = data.problemClass || className;
       inputStatements += `            if operation == "${problemClassName}":\n`;
