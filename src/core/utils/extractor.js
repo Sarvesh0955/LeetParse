@@ -43,7 +43,7 @@ function extractSampleOutputs() {
     const description = metaDescription.getAttribute('content') || '';
     
     // Find all "Output" positions and extract each one individually with cascading delimiters
-    const outputRegex = /Output/gi;
+    const outputRegex = /Output/g;
     let match;
     
     while ((match = outputRegex.exec(description)) !== null) {

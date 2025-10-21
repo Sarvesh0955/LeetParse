@@ -26,10 +26,7 @@ class TreeNode {
 
 class IO {
     private static Scanner scanner = new Scanner(System.in);
-    
-    /**
-     * Input functions for various data types
-     */
+
     public static class Input {
         // Basic types
         public static boolean readBoolean() { return scanner.nextBoolean(); }
@@ -39,7 +36,6 @@ class IO {
         public static float readFloat() { return scanner.nextFloat(); }
         public static double readDouble() { return scanner.nextDouble(); }
         public static String readString() { return scanner.nextLine(); }
-        
         public static String readWord() { return scanner.next(); }
         
         // Utility method to consume newline after primitive inputs
@@ -48,105 +44,108 @@ class IO {
         // Arrays
         public static int[] readIntArray() {
             int n = readInt();
+            consumeNewline();
             int[] arr = new int[n];
             for (int i = 0; i < n; i++) {
                 arr[i] = readInt();
             }
+            consumeNewline();
             return arr;
         }
         
         public static long[] readLongArray() {
             int n = readInt();
+            consumeNewline();
             long[] arr = new long[n];
             for (int i = 0; i < n; i++) {
                 arr[i] = readLong();
             }
+            consumeNewline();
             return arr;
         }
         
         public static double[] readDoubleArray() {
             int n = readInt();
+            consumeNewline();
             double[] arr = new double[n];
             for (int i = 0; i < n; i++) {
                 arr[i] = readDouble();
             }
+            consumeNewline();
             return arr;
         }
         
         public static String[] readStringArray() {
             int n = readInt();
+            consumeNewline();
             String[] arr = new String[n];
             for (int i = 0; i < n; i++) {
-                arr[i] = scanner.nextLine();
+                arr[i] = readString();
             }
             return arr;
         }
         
         public static char[] readCharArray() {
-            return readWord().toCharArray();
+            int n = readInt();
+            consumeNewline();
+            char[] arr = new char[n];
+            for (int i = 0; i < n; i++) {
+                arr[i] = readChar();
+            }
+            consumeNewline();
+            return arr;
         }
         
         // 2D Arrays
         public static int[][] readInt2DArray() {
             int m = readInt();
+            consumeNewline();
             int[][] arr = new int[m][];
             for (int i = 0; i < m; i++) {
-                int n = readInt();
-                arr[i] = new int[n];
-                for (int j = 0; j < n; j++) {
-                    arr[i][j] = readInt();
-                }
+                arr[i] = readIntArray();
             }
             return arr;
         }
         
         public static char[][] readChar2DArray() {
             int m = readInt();
+            consumeNewline();
             char[][] arr = new char[m][];
-            scanner.nextLine(); 
             for (int i = 0; i < m; i++) {
-                int n = readInt();
-                arr[i] = new char[n];
-                for (int j = 0; j < n; j++) {
-                    arr[i][j] = readChar();
-                }
+                arr[i] = readCharArray();
             }
             return arr;
         }
-        
+
         // Collections
         public static List<Integer> readIntList() {
             int n = readInt();
+            consumeNewline();
             List<Integer> list = new ArrayList<>();
             for (int i = 0; i < n; i++) {
                 list.add(readInt());
             }
+            consumeNewline();
             return list;
         }
         
         public static List<String> readStringList() {
             int n = readInt();
             List<String> list = new ArrayList<>();
-            scanner.nextLine(); // consume newline
+            consumeNewline();
             for (int i = 0; i < n; i++) {
-                list.add(scanner.nextLine());
+                list.add(readString());
             }
             return list;
         }
         
-        // 2D Lists (variable-length rows)
+        // 2D Lists 
         public static List<List<Integer>> readIntListList() {
             int m = readInt(); 
             IO.Input.consumeNewline();
             List<List<Integer>> result = new ArrayList<>();
             for (int i = 0; i < m; i++) {
-                int n = readInt(); 
-                IO.Input.consumeNewline();
-                List<Integer> row = new ArrayList<>();
-                for (int j = 0; j < n; j++) {
-                    row.add(readInt());
-                }
-                result.add(row);
+                result.add(readIntList());
             }
             return result;
         }
@@ -156,40 +155,15 @@ class IO {
             IO.Input.consumeNewline();
             List<List<String>> result = new ArrayList<>();
             for (int i = 0; i < m; i++) {
-                int n = readInt();
-                IO.Input.consumeNewline();
-                List<String> row = new ArrayList<>();
-                for (int j = 0; j < n; j++) {
-                    row.add(scanner.next());
-                }
-                result.add(row);
+                result.add(readStringList());
             }
             return result;
-        }
-        
-        public static Set<Integer> readIntSet() {
-            int n = readInt();
-            Set<Integer> set = new HashSet<>();
-            for (int i = 0; i < n; i++) {
-                set.add(readInt());
-            }
-            return set;
-        }
-        
-        public static Map<Integer, Integer> readIntIntMap() {
-            int n = readInt();
-            Map<Integer, Integer> map = new HashMap<>();
-            for (int i = 0; i < n; i++) {
-                int key = readInt();
-                int value = readInt();
-                map.put(key, value);
-            }
-            return map;
         }
         
         // Linked List
         public static ListNode readListNode() {
             int n = readInt();
+            consumeNewline();
             if (n == 0) return null;
             
             ListNode head = new ListNode(readInt());
@@ -204,6 +178,7 @@ class IO {
         // Binary Tree (level-order traversal format)
         public static TreeNode readTreeNode() {
             int n = readInt();
+            consumeNewline();
             if (n == 0) return null;
             
             String[] values = new String[n];
@@ -220,7 +195,6 @@ class IO {
             int i = 1;
             while (!queue.isEmpty() && i < n) {
                 TreeNode node = queue.poll();
-                
                 if (i < n) {
                     if (!values[i].equals("null")) {
                         node.left = new TreeNode(Integer.parseInt(values[i]));
@@ -228,7 +202,6 @@ class IO {
                     }
                     i++;
                 }
-                
                 if (i < n) {
                     if (!values[i].equals("null")) {
                         node.right = new TreeNode(Integer.parseInt(values[i]));
@@ -241,9 +214,6 @@ class IO {
         }
     }
     
-    /**
-     * Output functions for various data types
-     */
     public static class Output {
         // Basic types
         public static void write(boolean x) { System.out.print(x ? "true" : "false"); }
@@ -258,7 +228,7 @@ class IO {
         public static void write(int[] arr) {
             System.out.print("[");
             for (int i = 0; i < arr.length; i++) {
-                System.out.print(arr[i]);
+                output(arr[i]);
                 if (i < arr.length - 1) System.out.print(",");
             }
             System.out.print("]");
@@ -267,7 +237,7 @@ class IO {
         public static void write(long[] arr) {
             System.out.print("[");
             for (int i = 0; i < arr.length; i++) {
-                System.out.print(arr[i]);
+                output(arr[i]);
                 if (i < arr.length - 1) System.out.print(",");
             }
             System.out.print("]");
@@ -276,7 +246,7 @@ class IO {
         public static void write(double[] arr) {
             System.out.print("[");
             for (int i = 0; i < arr.length; i++) {
-                System.out.print(arr[i]);
+                output(arr[i]);
                 if (i < arr.length - 1) System.out.print(",");
             }
             System.out.print("]");
@@ -285,7 +255,7 @@ class IO {
         public static void write(String[] arr) {
             System.out.print("[");
             for (int i = 0; i < arr.length; i++) {
-                System.out.print("\"" + arr[i] + "\"");
+                output(arr[i]);
                 if (i < arr.length - 1) System.out.print(",");
             }
             System.out.print("]");
@@ -294,7 +264,7 @@ class IO {
         public static void write(char[] arr) {
             System.out.print("[");
             for (int i = 0; i < arr.length; i++) {
-                System.out.print("\"" + arr[i] + "\"");
+                output(arr[i]);
                 if (i < arr.length - 1) System.out.print(",");
             }
             System.out.print("]");
@@ -304,7 +274,7 @@ class IO {
         public static void write(int[][] arr) {
             System.out.print("[");
             for (int i = 0; i < arr.length; i++) {
-                write(arr[i]);
+                output(arr[i]);
                 if (i < arr.length - 1) System.out.print(",");
             }
             System.out.print("]");
@@ -313,7 +283,7 @@ class IO {
         public static void write(char[][] arr) {
             System.out.print("[");
             for (int i = 0; i < arr.length; i++) {
-                write(arr[i]);
+                output(arr[i]);
                 if (i < arr.length - 1) System.out.print(",");
             }
             System.out.print("]");
@@ -323,31 +293,10 @@ class IO {
         public static void write(List<?> list) {
             System.out.print("[");
             for (int i = 0; i < list.size(); i++) {
-                IO.output(list.get(i));
+                output(list.get(i));
                 if (i < list.size() - 1) System.out.print(",");
             }
             System.out.print("]");
-        }
-        
-        public static void write(Set<?> set) {
-            System.out.print("{");
-            Iterator<?> it = set.iterator();
-            while (it.hasNext()) {
-                IO.output(it.next());
-                if (it.hasNext()) System.out.print(",");
-            }
-            System.out.print("}");
-        }
-        
-        public static void write(Map<?, ?> map) {
-            System.out.print("{");
-            Iterator<?> it = map.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry<?, ?> entry = (Map.Entry<?, ?>) it.next();
-                System.out.print(entry.getKey() + ": " + entry.getValue());
-                if (it.hasNext()) System.out.print(",");
-            }
-            System.out.print("}");
         }
         
         // Linked List
@@ -357,7 +306,7 @@ class IO {
             while (head != null) {
                 if (!first) System.out.print(",");
                 first = false;
-                System.out.print(head.val);
+                output(head.val);
                 head = head.next;
             }
             System.out.print("]");
@@ -386,7 +335,7 @@ class IO {
                     first = false;
                     
                     if (node != null) {
-                        System.out.print(node.val);
+                        output(node.val);
                         queue.offer(node.left);
                         queue.offer(node.right);
                         if (node.left != null || node.right != null) {
@@ -420,8 +369,6 @@ class IO {
         else if (x instanceof int[][]) Output.write((int[][]) x);
         else if (x instanceof char[][]) Output.write((char[][]) x);
         else if (x instanceof List) Output.write((List<?>) x);
-        else if (x instanceof Set) Output.write((Set<?>) x);
-        else if (x instanceof Map) Output.write((Map<?, ?>) x);
         else if (x instanceof ListNode) Output.write((ListNode) x);
         else if (x instanceof TreeNode) Output.write((TreeNode) x);
         else System.out.print(x);

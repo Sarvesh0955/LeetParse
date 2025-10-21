@@ -19,10 +19,6 @@ struct TreeNode {
 };
 
 namespace IO {
-    /**
-     * Input functions for various data types
-     * Each function handles reading from stdin for a specific type
-     */
     namespace Input {
         // Basic types
         void read(bool& x) { cin >> x; }
@@ -39,7 +35,7 @@ namespace IO {
         
         // String with whitespace handling
         void read(string& x) { 
-            cin >> ws; // Consume leading whitespace
+            cin >> ws; 
             getline(cin, x); 
         }
         
@@ -102,13 +98,8 @@ namespace IO {
                 }
             }
         }
-        // Forward declarations for template specializations
+
         template <typename T> void read(vector<T>& x);
-        template <typename F, typename S> void read(pair<F, S>& x);
-        template <typename K, typename V> void read(map<K, V>& x);
-        template <typename K, typename V> void read(unordered_map<K, V>& x);
-        template <typename T> void read(set<T>& x);
-        template <typename T> void read(unordered_set<T>& x);
         
         // Vector
         template <typename T>
@@ -120,71 +111,8 @@ namespace IO {
                 read(x[i]);
             }
         }
-        
-        // Pair
-        template <typename F, typename S>
-        void read(pair<F, S>& x) {
-            read(x.first);
-            read(x.second);
-        }
-        
-        // Map
-        template <typename K, typename V>
-        void read(map<K, V>& x) {
-            int n;
-            cin >> n;
-            for (int i = 0; i < n; i++) {
-                K key;
-                V value;
-                read(key);
-                read(value);
-                x[key] = value;
-            }
-        }
-        
-        // Unordered Map
-        template <typename K, typename V>
-        void read(unordered_map<K, V>& x) {
-            int n;
-            cin >> n;
-            for (int i = 0; i < n; i++) {
-                K key;
-                V value;
-                read(key);
-                read(value);
-                x[key] = value;
-            }
-        }
-        
-        // Set
-        template <typename T>
-        void read(set<T>& x) {
-            int n;
-            cin >> n;
-            for (int i = 0; i < n; i++) {
-                T value;
-                read(value);
-                x.insert(value);
-            }
-        }
-        
-        // Unordered Set
-        template <typename T>
-        void read(unordered_set<T>& x) {
-            int n;
-            cin >> n;
-            for (int i = 0; i < n; i++) {
-                T value;
-                read(value);
-                x.insert(value);
-            }
-        }
     } // namespace Input
     
-    /**
-     * Output functions for various data types
-     * Each function handles printing to stdout for a specific type
-     */
     namespace Output {
         // Basic types
         void write(bool x) { cout << (x ? "True" : "False"); }
@@ -246,13 +174,7 @@ namespace IO {
             cout << "]";
         }
         
-        // Forward declarations for template specializations
         template <typename T> void write(const vector<T>& x);
-        template <typename F, typename S> void write(const pair<F, S>& x);
-        template <typename K, typename V> void write(const map<K, V>& x);
-        template <typename K, typename V> void write(const unordered_map<K, V>& x);
-        template <typename T> void write(const set<T>& x);
-        template <typename T> void write(const unordered_set<T>& x);
         
         // Vector
         template <typename T>
@@ -264,72 +186,6 @@ namespace IO {
                 if (i < n - 1) cout << ",";
             }
             cout << "]";
-        }
-        
-        // Pair
-        template <typename F, typename S>
-        void write(const pair<F, S>& x) {
-            cout << "(";
-            write(x.first);
-            cout << ", ";
-            write(x.second);
-            cout << ")";
-        }
-        
-        // Map
-        template <typename K, typename V>
-        void write(const map<K, V>& x) {
-            cout << "{";
-            bool first = true;
-            for (const auto& [k, v] : x) {
-                if (!first) cout << ", ";
-                first = false;
-                write(k);
-                cout << ": ";
-                write(v);
-            }
-            cout << "}";
-        }
-        
-        // Unordered map
-        template <typename K, typename V>
-        void write(const unordered_map<K, V>& x) {
-            cout << "{";
-            bool first = true;
-            for (const auto& [k, v] : x) {
-                if (!first) cout << ", ";
-                first = false;
-                write(k);
-                cout << ": ";
-                write(v);
-            }
-            cout << "}";
-        }
-        
-        // Set
-        template <typename T>
-        void write(const set<T>& x) {
-            cout << "{";
-            bool first = true;
-            for (const auto& elem : x) {
-                if (!first) cout << ", ";
-                first = false;
-                write(elem);
-            }
-            cout << "}";
-        }
-        
-        // Unordered set
-        template <typename T>
-        void write(const unordered_set<T>& x) {
-            cout << "{";
-            bool first = true;
-            for (const auto& elem : x) {
-                if (!first) cout << ", ";
-                first = false;
-                write(elem);
-            }
-            cout << "}";
         }
     } // namespace Output
     

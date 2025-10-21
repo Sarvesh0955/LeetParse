@@ -56,18 +56,11 @@ class TreeNode:
         self.right = right
 
 class IO:
-    """
-    Input/Output utility class for LeetCode problems
-    Handles reading from stdin and writing to stdout for various data types
-    """
-    
     class Input:
-        """Input functions for various data types"""
-        
         @staticmethod
         def read_bool() -> bool:
             word = _input_buffer.next_word()
-            return word.lower() in ['true', '1', 'yes'] if word else False
+            return word.lower() in ['true'] if word else False
         
         @staticmethod
         def read_int() -> int:
@@ -96,75 +89,52 @@ class IO:
         @staticmethod
         def read_int_array() -> List[int]:
             n = IO.Input.read_int()  
+            if n == 0:
+                IO.Input.consume_newline()
             return [IO.Input.read_int() for _ in range(n)] 
         
         @staticmethod
         def read_float_array() -> List[float]:
             n = IO.Input.read_int()  
+            if n == 0:
+                IO.Input.consume_newline()
             return [IO.Input.read_float() for _ in range(n)]  
         
         @staticmethod
         def read_string_array() -> List[str]:
             n = IO.Input.read_int() 
+            if n == 0:
+                IO.Input.consume_newline()
             return [IO.Input.read_string() for _ in range(n)]  
         
         @staticmethod
         def read_char_array() -> List[str]:
-            return list(IO.Input.read_string())
+            n = IO.Input.read_int() 
+            if n == 0:
+                IO.Input.consume_newline()
+            return [IO.Input.read_char() for _ in range(n)]  
         
         # 2D Array functions
         @staticmethod
         def read_int_2d_array() -> List[List[int]]:
             m = IO.Input.read_int()  
+            if m == 0:
+                IO.Input.consume_newline()
             result = []
             for _ in range(m):
-                n = IO.Input.read_int()  
-                row = [IO.Input.read_int() for _ in range(n)] 
+                row = IO.Input.read_int_array()
                 result.append(row)
             return result
         
         @staticmethod
         def read_char_2d_array() -> List[List[str]]:
             m = IO.Input.read_int() 
+            if m == 0:
+                IO.Input.consume_newline()
             result = []
             for _ in range(m):
-                n = IO.Input.read_int()  
-                row = []
-                for __ in range(n):
-                    val = IO.Input.read_char()
-                    row.append(val)
+                row = IO.Input.read_char_array()
                 result.append(row)
-            return result
-        
-        # Set and Dictionary functions
-        @staticmethod
-        def read_int_set() -> Set[int]:
-            n = IO.Input.read_int()
-            return {IO.Input.read_int() for _ in range(n)}
-        
-        @staticmethod
-        def read_string_set() -> Set[str]:
-            n = IO.Input.read_int()
-            return {_input_buffer.next_word() for _ in range(n)}
-        
-        @staticmethod
-        def read_int_int_dict() -> Dict[int, int]:
-            n = IO.Input.read_int()
-            result = {}
-            for _ in range(n):
-                key = IO.Input.read_int()
-                value = IO.Input.read_int()
-                result[key] = value
-            return result
-        
-        @staticmethod
-        def read_string_int_dict() -> Dict[str, int]:
-            n = IO.Input.read_int()
-            result = {}
-            for _ in range(n):
-                key = _input_buffer.next_word()
-                value = IO.Input.read_int()
-                result[key] = value
             return result
         
         # Linked List
@@ -224,22 +194,7 @@ class IO:
             
             return root
         
-        # Tuple functions
-        @staticmethod
-        def read_int_pair() -> Tuple[int, int]:
-            first = IO.Input.read_int()
-            second = IO.Input.read_int()
-            return (first, second)
-        
-        @staticmethod
-        def read_string_pair() -> Tuple[str, str]:
-            first = _input_buffer.next_word()
-            second = _input_buffer.next_word()
-            return (first, second)
-    
     class Output:
-        """Output functions for various data types"""
-        
         @staticmethod
         def write_bool(x: bool) -> None:
             print("true" if x else "false", end="")
@@ -316,27 +271,6 @@ class IO:
                     print(",", end="")
             print("]", end="")
         
-        # Set and Dictionary functions
-        @staticmethod
-        def write_set(s: Set) -> None:
-            print("{", end="")
-            items = list(s)
-            for i, val in enumerate(items):
-                print(val, end="")
-                if i < len(items) - 1:
-                    print(",", end="")
-            print("}", end="")
-        
-        @staticmethod
-        def write_dict(d: Dict) -> None:
-            print("{", end="")
-            items = list(d.items())
-            for i, (key, val) in enumerate(items):
-                print(f"{key}: {val}", end="")
-                if i < len(items) - 1:
-                    print(",", end="")
-            print("}", end="")
-        
         # Linked List
         @staticmethod
         def write_list_node(head: Optional[ListNode]) -> None:
@@ -396,23 +330,10 @@ class IO:
                 if i < len(arr) - 1:
                     print(",", end="")
             print("]", end="")
-        
-        # Tuple functions
-        @staticmethod
-        def write_tuple(t: tuple) -> None:
-            print("(", end="")
-            for i, val in enumerate(t):
-                print(val, end="")
-                if i < len(t) - 1:
-                    print(", ", end="")
-            print(")", end="")
     
     # Convenience wrapper functions
     @staticmethod
     def output(x) -> None:
-        """
-        Generic output function that determines the type and calls appropriate write function
-        """
         if x is None:
             print("null", end="")
         elif isinstance(x, bool):
@@ -447,41 +368,12 @@ class IO:
                 IO.Output.write_tree_node_array(x)
             else:
                 print(x, end="")
-        elif isinstance(x, set):
-            IO.Output.write_set(x)
-        elif isinstance(x, dict):
-            IO.Output.write_dict(x)
         elif isinstance(x, ListNode):
             IO.Output.write_list_node(x)
         elif isinstance(x, TreeNode):
             IO.Output.write_tree_node(x)
-        elif isinstance(x, tuple):
-            IO.Output.write_tuple(x)
         else:
             print(x, end="")
-
-# Convenience functions for backward compatibility
-def input_int() -> int:
-    return IO.Input.read_int()
-
-def input_string() -> str:
-    return IO.Input.read_string()
-
-def input_array() -> List[int]:
-    return IO.Input.read_int_array()
-
-def output(x) -> None:
-    IO.output(x)
-
-# Additional convenience functions for single word reading
-def input_word() -> str:
-    return _input_buffer.next_word()
-
-def input_line() -> str:
-    return _input_buffer.next_line()
-
-def consume_newline() -> None:
-    return IO.Input.consume_newline()
 
 {{user template}}
 
