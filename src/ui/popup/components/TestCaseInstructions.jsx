@@ -33,7 +33,7 @@ const TestCaseInstructions = () => {
       }}
     >
       <Typography variant="subtitle1" fontWeight="medium" mb={1.5}>
-        How to Add Your Own Test Cases
+        How to Use LeetParse
       </Typography>
       
       <Accordion 
@@ -58,12 +58,44 @@ const TestCaseInstructions = () => {
           }}
         >
           <Typography variant="body2" sx={{ width: '100%', flexShrink: 0 }}>
-            Using the Editor
+            Parse with Sample Tests
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography variant="body2" color="text.secondary">
-            You can directly edit the test cases in the provided editor after parsing the problem. Just click on the test case box to modify it.
+            Click "Parse with sample tests" to automatically extract the problem and generate code template with example test cases from the problem description.
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+
+      <Accordion 
+        expanded={expanded === 'panel2'} 
+        onChange={handleChange('panel2')}
+        sx={{ 
+          bgcolor: 'background.default',
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 1,
+          mb: 1
+        }}
+      >
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2bh-content"
+          id="panel2bh-header"
+          sx={{ 
+            bgcolor: 'background.paper',
+            borderBottom: '1px solid',
+            borderColor: 'divider',
+          }}
+        >
+          <Typography variant="body2" sx={{ width: '100%', flexShrink: 0 }}>
+            Extract Custom Test Cases
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography variant="body2" color="text.secondary">
+            Add custom test cases in LeetCode's test case section, then click "Extract test cases only" to parse and format them for your IDE.
           </Typography>
         </AccordionDetails>
       </Accordion>
@@ -90,7 +122,7 @@ const TestCaseInstructions = () => {
           }}
         >
           <Typography variant="body2" sx={{ width: '100%', flexShrink: 0 }}>
-            Custom Test case Input Guidelines
+            Custom Test Case Input Format
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -115,11 +147,11 @@ const TestCaseInstructions = () => {
                 For nested arrays, specify the dimension before each line:
               </Typography>
               <Box component="pre" sx={{ mt: 0.5, p: 1, bgcolor: 'background.code', borderRadius: 1, fontSize: '0.75rem' }}>
-                <code>2
-                    2
-                    1 2
-                    2
-                    3 4</code>
+                <code>{`2
+2
+1 2
+2
+3 4`}</code>
               </Box>
               <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
                 This represents a 2D vector: [[1,2], [3,4]]
@@ -134,8 +166,8 @@ const TestCaseInstructions = () => {
                 Enter as normal arrays, with the first number indicating the length:
               </Typography>
               <Box component="pre" sx={{ mt: 0.5, p: 1, bgcolor: 'background.code', borderRadius: 1, fontSize: '0.75rem' }}>
-                <code>3
-1 2 3</code>
+                <code>{`3
+1 2 3`}</code>
               </Box>
               <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
                 This creates the linked list: 1 → 2 → 3
@@ -150,8 +182,8 @@ const TestCaseInstructions = () => {
                 Enter in level-order traversal format, with the first number indicating the number of nodes:
               </Typography>
               <Box component="pre" sx={{ mt: 0.5, p: 1, bgcolor: 'background.code', borderRadius: 1, fontSize: '0.75rem' }}>
-                <code>7
-1 2 3 null 4 5 null</code>
+                <code>{`7
+1 2 3 null 4 5 null`}</code>
               </Box>
               <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
                 This creates a binary tree with root 1, left child 2, right child 3, etc.

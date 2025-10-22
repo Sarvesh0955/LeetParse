@@ -20,7 +20,7 @@ const AboutLeetParse = () => {
         About LeetParse
       </Typography>
       <Typography variant="body2" color="text.secondary" paragraph>
-        This extension helps you solve LeetCode problems in your preferred development environment by:
+        A powerful Chrome extension that streamlines competitive programming by parsing LeetCode problems and generating ready-to-use code templates with test cases:
       </Typography>
       
       <Stack spacing={1.5}>
@@ -43,7 +43,7 @@ const AboutLeetParse = () => {
             1
           </Box>
           <Typography variant="body2">
-            Automatically extracting problem details and generating Snippet code
+            <strong>One-Click Problem Parsing:</strong> Extract problem details and generate complete code templates with sample test cases
           </Typography>
         </Box>
         
@@ -66,7 +66,7 @@ const AboutLeetParse = () => {
             2
           </Box>
           <Typography variant="body2">
-            Formatting test cases for immediate testing in your IDE
+            <strong>Custom Test Case Extraction:</strong> Parse and format your custom test cases from LeetCode's test section
           </Typography>
         </Box>
         
@@ -89,7 +89,53 @@ const AboutLeetParse = () => {
             3
           </Box>
           <Typography variant="body2">
-            Supporting complex data structures like linked lists and binary trees
+            <strong>Multi-Language Support:</strong> Generate templates for C++, Java, and Python with proper I/O handling
+          </Typography>
+        </Box>
+        
+        <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+          <Box 
+            sx={{ 
+              width: 24, 
+              height: 24, 
+              borderRadius: 1, 
+              bgcolor: 'primary.light',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'background.paper',
+              fontSize: '0.75rem',
+              fontWeight: 'bold',
+              mt: 0.5
+            }} 
+          >
+            4
+          </Box>
+          <Typography variant="body2">
+            <strong>VS Code Integration:</strong> Seamlessly export to VS Code with Competitive Programming Helper (CPH) extension
+          </Typography>
+        </Box>
+        
+        <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+          <Box 
+            sx={{ 
+              width: 24, 
+              height: 24, 
+              borderRadius: 1, 
+              bgcolor: 'primary.light',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'background.paper',
+              fontSize: '0.75rem',
+              fontWeight: 'bold',
+              mt: 0.5
+            }} 
+          >
+            5
+          </Box>
+          <Typography variant="body2">
+            <strong>Complex Data Structures:</strong> Handle linked lists, binary trees, nested arrays, and custom objects
           </Typography>
         </Box>
       </Stack>
