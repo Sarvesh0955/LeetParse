@@ -15,16 +15,8 @@ const TemplateSettings = ({ userTemplates, selectedLanguage, onUserTemplateChang
   const getDefaultTemplate = (language) => {
     const templates = {
       cpp: `// C++ Template - Add your custom code here
-#define ll long long
-#define vi vector<int>
-#define vll vector<ll>
-#define pii pair<int, int>
-#define pll pair<ll, ll>
-#define pb push_back
-#define mp make_pair
-#define F first
-#define S second
-#define all(x) x.begin(), x.end()
+const int MOD = 1e9 + 7;
+const int INF = 1e9;
 
 // Utility functions
 int gcd(int a, int b) { return b ? gcd(b, a % b) : a; }
@@ -37,10 +29,7 @@ ll power(ll a, ll b) {
     return res;
 }`,
       java: `// Java Template - Add your custom code here
-import java.math.BigInteger;
-import java.util.stream.*;
-
-public class Utility {
+class Utility {
     public static final int MOD = 1000000007;
     public static final int INF = Integer.MAX_VALUE;
     
@@ -60,12 +49,6 @@ public class Utility {
     }
 }`,
       python3: `# Python Template - Add your custom code here
-from functools import lru_cache
-from collections import defaultdict, deque, Counter
-from heapq import heappush, heappop
-import bisect
-import math
-
 # Utility functions
 def gcd(a, b):
     while b:
