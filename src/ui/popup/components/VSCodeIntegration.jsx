@@ -105,7 +105,9 @@ const VSCodeIntegration = ({
     }
   };
 
-  const isDisabled = parseLoading || extractLoading || exporting || !selectedLanguage || (!testCase && !codeSnippet);
+  // Disable button when extracting test cases only (no code snippet available)
+  const isTestCaseOnlyMode = testCase && !codeSnippet;
+  const isDisabled = parseLoading || extractLoading || exporting || !selectedLanguage || (!testCase && !codeSnippet) || isTestCaseOnlyMode;
 
   return (
     <Tooltip 
@@ -114,6 +116,8 @@ const VSCodeIntegration = ({
           ? "Select a language to enable CPH export"
           : (!testCase && !codeSnippet)
           ? "Parse the problem first to enable CPH export"
+          : isTestCaseOnlyMode
+          ? "Use 'Parse with sample tests' to enable CPH export"
           : "Export parsed problem directly to CPH"
       }
     >
