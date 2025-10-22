@@ -1,6 +1,6 @@
 /**
  * VS Code integration message handler
- * Handles exporting parsed problems to Competitive Companion format
+ * Handles exporting parsed problems to CPH format
  */
 
 import { VSCODE_EXPORT_SUCCESS, VSCODE_EXPORT_ERROR } from '../../messaging/messages.js';
@@ -39,7 +39,7 @@ function formatClassNameFromSlug(problemSlug) {
 
 /**
  * Handles VS Code export requests from popup
- * Attempts to send parsed problem data to Competitive Companion extension
+ * Attempts to send parsed problem data to CPH extension
  * 
  * @param {Object} message - The message containing problem data
  * @param {Object} sender - The sender information  
@@ -85,22 +85,22 @@ export async function handleVSCodeExport(message, sender, sendToPopup) {
       language: mapLanguageToCompetitiveCompanion(language)
     };
 
-    console.log('Competitive Companion data with outputs:', competitiveCompanionData);
+    console.log('CPH data with outputs:', competitiveCompanionData);
     
-    // Attempt to send to Competitive Companion via local HTTP server
+    // Attempt to send to CPH via local HTTP server
     const success = await sendToCompetitiveCompanion(competitiveCompanionData);
     
     if (success) {
       sendToPopup({
         action: VSCODE_EXPORT_SUCCESS,
-        message: 'Problem exported to Competitive Companion successfully!'
+        message: 'Problem exported to CPH successfully!'
       }, sender.tab?.id);
     } else {
       // Fallback: Copy formatted data to clipboard
       await copyToClipboardFallback(competitiveCompanionData);
       sendToPopup({
         action: VSCODE_EXPORT_ERROR,
-        message: 'Competitive Companion not detected. Problem data copied to clipboard for manual import.',
+        message: 'CPH not detected. Problem data copied to clipboard for manual import.',
         fallback: true
       }, sender.tab?.id);
     }
@@ -115,7 +115,7 @@ export async function handleVSCodeExport(message, sender, sendToPopup) {
 }
 
 /**
- * Attempts to send problem data to Competitive Companion extension
+ * Attempts to send problem data to CPH extension
  * via local HTTP server on port 27121
  * 
  * @param {Object} problemData - The problem data to send
@@ -132,14 +132,14 @@ async function sendToCompetitiveCompanion(problemData) {
     });
     
     if (!response.ok) {
-      console.warn('Competitive Companion server responded with error:', response.status);
+      console.warn('CPH server responded with error:', response.status);
       return false;
     }
     
     return true;
     
   } catch (error) {
-    console.warn('Competitive Companion connection failed:', error.message);
+    console.warn('CPH connection failed:', error.message);
     return false;
   }
 }
@@ -175,9 +175,9 @@ function formatTestCasesWithOutputs(testCases, sampleOutputs = []) {
 }
 
 /**
- * Map LeetParse language names to Competitive Companion format
+ * Map LeetParse language names to CPH format
  * @param {string} language - LeetParse language name
- * @returns {string} - Competitive Companion language name
+ * @returns {string} - CPH language name
  */
 function mapLanguageToCompetitiveCompanion(language) {
   const languageMap = {
@@ -201,7 +201,7 @@ function mapLanguageToCompetitiveCompanion(language) {
 
 /**
  * Fallback method to copy problem data to clipboard
- * when Competitive Companion is not available
+ * when CPH is not available
  * 
  * @param {Object} problemData - The problem data to copy
  */

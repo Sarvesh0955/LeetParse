@@ -23,7 +23,7 @@ LeetParse is a developer-oriented Chrome extension that streamlines the process 
 
 ### Advanced Features
 - **VS Code Integration**: Seamless integration with VS Code through Competitive Programming Helper (CPH):
-  - One-click export to CPH with formatted test cases
+  - One-click export to VS Code with formatted test cases
   - Automatically send both inputs and expected outputs
   - Direct integration with competitive programming workflows
 - **Sample Test Case Extraction**: Automatically extract expected outputs from problem examples:

@@ -5,8 +5,8 @@ import { useSnackbar } from 'notistack';
 import { EXPORT_TO_VSCODE, VSCODE_EXPORT_SUCCESS, VSCODE_EXPORT_ERROR } from '../../../messaging/messages.js';
 
 /**
- * Competitive Companion Integration Component
- * Provides functionality to export parsed problems directly to Competitive Companion
+ * CPH Integration Component
+ * Provides functionality to export parsed problems directly to CPH
  */
 const VSCodeIntegration = ({ 
   selectedLanguage, 
@@ -21,7 +21,7 @@ const VSCodeIntegration = ({
   const { enqueueSnackbar } = useSnackbar();
 
   /**
-   * Handles exporting the current problem to Competitive Companion
+   * Handles exporting the current problem to CPH
    */
   const handleExportToVSCode = async () => {
     if (!selectedLanguage) {
@@ -60,7 +60,7 @@ const VSCodeIntegration = ({
       setExporting(false);
 
       if (response?.received) {
-        enqueueSnackbar('Request sent to Competitive Companion', { variant: 'success' });
+        enqueueSnackbar('Request sent to CPH', { variant: 'success' });
         
         // Listen for the actual result (optional - for additional feedback)
         const handleMessage = (message) => {
@@ -81,13 +81,13 @@ const VSCodeIntegration = ({
           chrome.runtime.onMessage.removeListener(handleMessage);
         }, 10000);
       } else {
-        enqueueSnackbar('Failed to send request to Competitive Companion', { variant: 'error' });
+        enqueueSnackbar('Failed to send request to CPH', { variant: 'error' });
       }
       
     } catch (error) {
       setExporting(false);
-      console.error('Export to Competitive Companion failed:', error);
-      enqueueSnackbar('Failed to export to Competitive Companion', { variant: 'error' });
+      console.error('Export to CPH failed:', error);
+      enqueueSnackbar('Failed to export to CPH', { variant: 'error' });
     }
   };
 
@@ -111,10 +111,10 @@ const VSCodeIntegration = ({
     <Tooltip 
       title={
         !selectedLanguage 
-          ? "Select a language to enable Competitive Companion export"
+          ? "Select a language to enable CPH export"
           : (!testCase && !codeSnippet)
-          ? "Parse the problem first to enable Competitive Companion export"
-          : "Export parsed problem directly to Competitive Companion"
+          ? "Parse the problem first to enable CPH export"
+          : "Export parsed problem directly to CPH"
       }
     >
       <Box sx={{ width: '100%' }}>
@@ -138,7 +138,7 @@ const VSCodeIntegration = ({
             }
           }}
         >
-          {exporting ? 'Exporting to Competitive Companion...' : 'Export to Competitive Companion'}
+          {exporting ? 'Exporting to VS Code...' : 'Export to VS Code'}
         </Button>
       </Box>
     </Tooltip>
