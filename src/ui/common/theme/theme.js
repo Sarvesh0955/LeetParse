@@ -30,15 +30,17 @@ export const createAppTheme = (mode) => createTheme({
       dark: '#DC2626',
     },
     background: {
-      default: mode === 'light' ? '#F9FAFB' : '#111827',
-      paper: mode === 'light' ? '#FFFFFF' : '#1F2937',
-      code: mode === 'light' ? '#F3F4F6' : '#374151',
+      default: mode === 'light' ? '#FAFDD6' : '#111827',
+      paper: mode === 'light' ? '#AED6CF' : '#1F2937',
+      code: mode === 'light' ? '#91ADC8' : '#374151',
+      surface: mode === 'light' ? '#AED6CF' : '#1F2937',
+      accent: mode === 'light' ? '#647FBC' : '#1E3A8A',
     },
     text: {
       primary: mode === 'light' ? '#111827' : '#F9FAFB',
       secondary: mode === 'light' ? '#4B5563' : '#9CA3AF',
     },
-    divider: mode === 'light' ? '#E5E7EB' : '#374151',
+    divider: mode === 'light' ? '#91ADC8' : '#374151',
   },
   typography: {
     fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
@@ -72,6 +74,36 @@ export const createAppTheme = (mode) => createTheme({
       styleOverrides: {
         root: {
           backgroundImage: 'none',
+          ...(mode === 'light' && {
+            backgroundColor: '#AED6CF',
+            border: '1px solid #91ADC8',
+            boxShadow: '0 1px 3px 0 rgba(100, 127, 188, 0.1), 0 1px 2px 0 rgba(100, 127, 188, 0.06)',
+          }),
+        },
+      },
+    },
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          ...(mode === 'light' && {
+            backgroundColor: '#AED6CF',
+            '&:before': {
+              display: 'none',
+            },
+            border: '1px solid #91ADC8',
+          }),
+        },
+      },
+    },
+    MuiAccordionSummary: {
+      styleOverrides: {
+        root: {
+          ...(mode === 'light' && {
+            backgroundColor: '#91ADC8',
+            '&:hover': {
+              backgroundColor: '#647FBC',
+            },
+          }),
         },
       },
     },
@@ -79,7 +111,7 @@ export const createAppTheme = (mode) => createTheme({
       styleOverrides: {
         root: {
           '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: mode === 'light' ? '#E5E7EB' : '#374151',
+            borderColor: mode === 'light' ? '#91ADC8' : '#374151',
           },
         },
       },

@@ -29,10 +29,19 @@ const TestCaseInstructions = () => {
         bgcolor: 'background.paper',
         border: '1px solid',
         borderColor: 'divider',
-        mb: 2
+        mb: 2,
+        borderRadius: 2,
+        background: (theme) => theme.palette.mode === 'light' 
+          ? 'linear-gradient(135deg, #AED6CF 0%, #FAFDD6 100%)'
+          : theme.palette.background.paper,
       }}
     >
-      <Typography variant="subtitle1" fontWeight="medium" mb={1.5}>
+      <Typography variant="subtitle1" fontWeight="medium" mb={1.5} sx={{ 
+        color: 'primary.main',
+        borderLeft: '4px solid',
+        borderColor: 'primary.main',
+        paddingLeft: 2,
+      }}>
         How to Use LeetParse
       </Typography>
       
@@ -40,11 +49,12 @@ const TestCaseInstructions = () => {
         expanded={expanded === 'panel1'} 
         onChange={handleChange('panel1')}
         sx={{ 
-          bgcolor: 'background.default',
+          bgcolor: (theme) => theme.palette.mode === 'light' ? '#FAFDD6' : 'background.surface',
           border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 1,
-          mb: 1
+          borderColor: (theme) => theme.palette.mode === 'light' ? '#AED6CF' : 'divider',
+          borderRadius: 1.5,
+          mb: 1,
+          '&:before': { display: 'none' },
         }}
       >
         <AccordionSummary
@@ -52,9 +62,13 @@ const TestCaseInstructions = () => {
           aria-controls="panel1bh-content"
           id="panel1bh-header"
           sx={{ 
-            bgcolor: 'background.paper',
-            borderBottom: '1px solid',
-            borderColor: 'divider',
+            bgcolor: (theme) => theme.palette.mode === 'light' ? '#AED6CF' : 'background.paper',
+            borderBottom: expanded === 'panel1' ? '1px solid' : 'none',
+            borderColor: (theme) => theme.palette.mode === 'light' ? '#91ADC8' : 'divider',
+            borderRadius: expanded === 'panel1' ? '6px 6px 0 0' : '6px',
+            '&:hover': {
+              bgcolor: (theme) => theme.palette.mode === 'light' ? '#91ADC8' : undefined,
+            },
           }}
         >
           <Typography variant="body2" sx={{ width: '100%', flexShrink: 0 }}>
@@ -72,11 +86,12 @@ const TestCaseInstructions = () => {
         expanded={expanded === 'panel2'} 
         onChange={handleChange('panel2')}
         sx={{ 
-          bgcolor: 'background.default',
+          bgcolor: (theme) => theme.palette.mode === 'light' ? '#91ADC8' : 'background.surface',
           border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 1,
-          mb: 1
+          borderColor: (theme) => theme.palette.mode === 'light' ? '#647FBC' : 'divider',
+          borderRadius: 1.5,
+          mb: 1,
+          '&:before': { display: 'none' },
         }}
       >
         <AccordionSummary
@@ -84,9 +99,14 @@ const TestCaseInstructions = () => {
           aria-controls="panel2bh-content"
           id="panel2bh-header"
           sx={{ 
-            bgcolor: 'background.paper',
-            borderBottom: '1px solid',
-            borderColor: 'divider',
+            bgcolor: (theme) => theme.palette.mode === 'light' ? '#647FBC' : 'background.paper',
+            borderBottom: expanded === 'panel2' ? '1px solid' : 'none',
+            borderColor: (theme) => theme.palette.mode === 'light' ? '#647FBC' : 'divider',
+            borderRadius: expanded === 'panel2' ? '6px 6px 0 0' : '6px',
+            color: (theme) => theme.palette.mode === 'light' ? 'white' : 'inherit',
+            '&:hover': {
+              bgcolor: (theme) => theme.palette.mode === 'light' ? '#5A6BA8' : undefined,
+            },
           }}
         >
           <Typography variant="body2" sx={{ width: '100%', flexShrink: 0 }}>
@@ -104,11 +124,12 @@ const TestCaseInstructions = () => {
         expanded={expanded === 'panel3'} 
         onChange={handleChange('panel3')}
         sx={{ 
-          bgcolor: 'background.default',
+          bgcolor: (theme) => theme.palette.mode === 'light' ? '#AED6CF' : 'background.surface',
           border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 1,
-          mb: 1
+          borderColor: (theme) => theme.palette.mode === 'light' ? '#91ADC8' : 'divider',
+          borderRadius: 1.5,
+          mb: 1,
+          '&:before': { display: 'none' },
         }}
       >
         <AccordionSummary
@@ -116,9 +137,13 @@ const TestCaseInstructions = () => {
           aria-controls="panel3bh-content"
           id="panel3bh-header"
           sx={{ 
-            bgcolor: 'background.paper',
-            borderBottom: '1px solid',
-            borderColor: 'divider',
+            bgcolor: (theme) => theme.palette.mode === 'light' ? '#91ADC8' : 'background.paper',
+            borderBottom: expanded === 'panel3' ? '1px solid' : 'none',
+            borderColor: (theme) => theme.palette.mode === 'light' ? '#647FBC' : 'divider',
+            borderRadius: expanded === 'panel3' ? '6px 6px 0 0' : '6px',
+            '&:hover': {
+              bgcolor: (theme) => theme.palette.mode === 'light' ? '#647FBC' : undefined,
+            },
           }}
         >
           <Typography variant="body2" sx={{ width: '100%', flexShrink: 0 }}>
@@ -134,7 +159,16 @@ const TestCaseInstructions = () => {
               <Typography variant="body2" color="text.secondary">
                 Enter strings on a single line without quotes:
               </Typography>
-              <Box component="pre" sx={{ mt: 0.5, p: 1, bgcolor: 'background.code', borderRadius: 1, fontSize: '0.75rem' }}>
+              <Box component="pre" sx={{ 
+                mt: 0.5, 
+                p: 1.5, 
+                bgcolor: (theme) => theme.palette.mode === 'light' ? '#647FBC' : 'background.code',
+                color: (theme) => theme.palette.mode === 'light' ? '#FAFDD6' : 'inherit',
+                borderRadius: 1, 
+                fontSize: '0.75rem',
+                border: '1px solid',
+                borderColor: (theme) => theme.palette.mode === 'light' ? '#91ADC8' : 'divider',
+              }}>
                 <code>hello</code>
               </Box>
             </Box>
@@ -146,7 +180,16 @@ const TestCaseInstructions = () => {
               <Typography variant="body2" color="text.secondary">
                 For nested arrays, specify the dimension before each line:
               </Typography>
-              <Box component="pre" sx={{ mt: 0.5, p: 1, bgcolor: 'background.code', borderRadius: 1, fontSize: '0.75rem' }}>
+              <Box component="pre" sx={{ 
+                mt: 0.5, 
+                p: 1.5, 
+                bgcolor: (theme) => theme.palette.mode === 'light' ? '#647FBC' : 'background.code',
+                color: (theme) => theme.palette.mode === 'light' ? '#FAFDD6' : 'inherit',
+                borderRadius: 1, 
+                fontSize: '0.75rem',
+                border: '1px solid',
+                borderColor: (theme) => theme.palette.mode === 'light' ? '#91ADC8' : 'divider',
+              }}>
                 <code>{`2
 2
 1 2
@@ -165,7 +208,16 @@ const TestCaseInstructions = () => {
               <Typography variant="body2" color="text.secondary">
                 Enter as normal arrays, with the first number indicating the length:
               </Typography>
-              <Box component="pre" sx={{ mt: 0.5, p: 1, bgcolor: 'background.code', borderRadius: 1, fontSize: '0.75rem' }}>
+              <Box component="pre" sx={{ 
+                mt: 0.5, 
+                p: 1.5, 
+                bgcolor: (theme) => theme.palette.mode === 'light' ? '#647FBC' : 'background.code',
+                color: (theme) => theme.palette.mode === 'light' ? '#FAFDD6' : 'inherit',
+                borderRadius: 1, 
+                fontSize: '0.75rem',
+                border: '1px solid',
+                borderColor: (theme) => theme.palette.mode === 'light' ? '#91ADC8' : 'divider',
+              }}>
                 <code>{`3
 1 2 3`}</code>
               </Box>
@@ -181,7 +233,16 @@ const TestCaseInstructions = () => {
               <Typography variant="body2" color="text.secondary">
                 Enter in level-order traversal format, with the first number indicating the number of nodes:
               </Typography>
-              <Box component="pre" sx={{ mt: 0.5, p: 1, bgcolor: 'background.code', borderRadius: 1, fontSize: '0.75rem' }}>
+              <Box component="pre" sx={{ 
+                mt: 0.5, 
+                p: 1.5, 
+                bgcolor: (theme) => theme.palette.mode === 'light' ? '#647FBC' : 'background.code',
+                color: (theme) => theme.palette.mode === 'light' ? '#FAFDD6' : 'inherit',
+                borderRadius: 1, 
+                fontSize: '0.75rem',
+                border: '1px solid',
+                borderColor: (theme) => theme.palette.mode === 'light' ? '#91ADC8' : 'divider',
+              }}>
                 <code>{`7
 1 2 3 null 4 5 null`}</code>
               </Box>
