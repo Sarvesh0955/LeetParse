@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useSnackbar } from 'notistack';
-import { CONNECTION_ESTABLISHED, CODE_GENERATED, TESTS_GENERATED } from '../../../messaging/messages.js';
+import { CONNECTION_ESTABLISHED, CODE_GENERATED, TESTS_GENERATED, VSCODE_EXPORT_ERROR, VSCODE_EXPORT_SUCCESS } from '../../../messaging/messages.js';
 
 /**
  * Custom hook to manage communication with background script
@@ -44,6 +44,21 @@ export const useBackgroundConnection = ({
             console.log('Test cases generated successfully');
             setTestCase(message.testCase || '');
             enqueueSnackbar('Test cases extracted successfully!', { variant: 'success' });
+          }
+          break;
+        case VSCODE_EXPORT_SUCCESS:
+          enqueueSnackbar(message.message || 'Problem exported to CPH successfully!', { variant: 'success' });
+          break;
+        case VSCODE_EXPORT_ERROR:
+          if (message.fallback && message.copyText) {
+            navigator.clipboard.writeText(message.copyText)
+              .then(() => enqueueSnackbar(message.message || 'Problem data copied to clipboard for manual import.', { variant: 'warning' }))
+              .catch((err) => {
+                console.error('Clipboard write failed:', err);
+                enqueueSnackbar('CPH not detected and failed to copy data. Open console for details.', { variant: 'error' });
+              });
+          } else {
+            enqueueSnackbar(message.message || 'Failed to export to CPH', { variant: 'error' });
           }
           break;
           

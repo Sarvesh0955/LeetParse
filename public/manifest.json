@@ -18,8 +18,7 @@
   },
   "permissions": [
     "activeTab",
-    "storage",
-    "scripting"
+    "storage"
   ],
   "host_permissions": [
     "https://leetcode.com/*",

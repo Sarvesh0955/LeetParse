@@ -96,12 +96,12 @@ export async function handleVSCodeExport(message, sender, sendToPopup) {
         message: 'Problem exported to CPH successfully!'
       }, sender.tab?.id);
     } else {
-      // Fallback: Copy formatted data to clipboard
-      await copyToClipboardFallback(competitiveCompanionData);
+      // Fallback: Ask popup to copy formatted data to clipboard
       sendToPopup({
         action: VSCODE_EXPORT_ERROR,
         message: 'CPH not detected. Problem data copied to clipboard for manual import.',
-        fallback: true
+        fallback: true,
+        copyText: JSON.stringify(competitiveCompanionData, null, 2)
       }, sender.tab?.id);
     }
     
@@ -197,39 +197,4 @@ function mapLanguageToCompetitiveCompanion(language) {
   };
   
   return languageMap[language.toLowerCase()] || language.toLowerCase();
-}
-
-/**
- * Fallback method to copy problem data to clipboard
- * when CPH is not available
- * 
- * @param {Object} problemData - The problem data to copy
- */
-async function copyToClipboardFallback(problemData) {
-  const exportText = JSON.stringify(problemData, null, 2);
-
-  try {
-    // Use chrome.tabs API to inject clipboard copy script
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    
-    await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      func: (text) => {
-        navigator.clipboard.writeText(text).catch(() => {
-          // Fallback for older browsers
-          const textarea = document.createElement('textarea');
-          textarea.value = text;
-          document.body.appendChild(textarea);
-          textarea.select();
-          document.execCommand('copy');
-          document.body.removeChild(textarea);
-        });
-      },
-      args: [exportText]
-    });
-    
-  } catch (error) {
-    console.error('Failed to copy to clipboard:', error);
-    throw new Error('Export failed and could not copy to clipboard');
-  }
 }
