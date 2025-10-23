@@ -20,8 +20,8 @@ const int INF = 1e9;
 
 // Utility functions
 int gcd(int a, int b) { return b ? gcd(b, a % b) : a; }
-ll power(ll a, ll b) {
-    ll res = 1;
+int power(int a, int b) {
+    int res = 1;
     while (b > 0) {
         if (b & 1) res *= a;
         a *= a; b >>= 1;
