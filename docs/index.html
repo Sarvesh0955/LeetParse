@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="LeetParse - Parse LeetCode problems instantly and export to VS Code. Multi-language support for C++, Java, and Python.">
+    <meta name="keywords" content="LeetCode, Chrome Extension, VS Code, Competitive Programming, Code Parser">
+    <meta name="author" content="Sarvesh">
+    <title>LeetParse - Your LeetCode Companion</title>
+    <link rel="icon" type="image/png" href="../public/icons/icon2.png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <img src="./assets/logo.png" alt="LeetParse Logo">
+                    <span>LeetParse</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#demo">Demo</a></li>
+                    <li><a href="#download">Download</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span>🚀 Now with VS Code Integration</span>
+                </div>
+                <h1 class="hero-title">
+                    Parse LeetCode Problems<br>
+                    <span class="gradient-text">Instantly</span>
+                </h1>
+                <p class="hero-description">
+                    Your ultimate companion for competitive programming. Extract problems, generate code templates, 
+                    and export to VS Code with a single click.
+                </p>
+                <div class="hero-buttons">
+                    <a href="https://chromewebstore.google.com/detail/leetparse/lenebbdagjnijnjobankmhoagffiiial" class="btn btn-primary" target="_blank" rel="noopener">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <circle cx="12" cy="12" r="4"></circle>
+                            <line x1="21.17" y1="8" x2="12" y2="8"></line>
+                            <line x1="3.95" y1="6.06" x2="8.54" y2="14"></line>
+                            <line x1="10.88" y1="21.94" x2="15.46" y2="14"></line>
+                        </svg>
+                        Add to Chrome
+                    </a>
+                    <a href="https://marketplace.visualstudio.com/items?itemName=Sarvesh0955.cph-leetparse" class="btn btn-secondary" target="_blank" rel="noopener">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="16 3 21 8 21 16 16 21 8 21 3 16 3 8 8 3 16 3"></polygon>
+                        </svg>
+                        VS Code Extension
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-value">3</span>
+                        <span class="stat-label">Languages Supported</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">1-Click</span>
+                        <span class="stat-label">Problem Export</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">100%</span>
+                        <span class="stat-label">Free & Open Source</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-image-container">
+                    <img src="assets/hero-screenshot.png" alt="LeetParse in action" class="hero-image">
+                    <div class="floating-card card-1">
+                        <span class="card-icon">⚡</span>
+                        <span>Instant Parse</span>
+                    </div>
+                    <div class="floating-card card-2">
+                        <span class="card-icon">🎯</span>
+                        <span>Auto Templates</span>
+                    </div>
+                    <div class="floating-card card-3">
+                        <span class="card-icon">🔗</span>
+                        <span>VS Code Ready</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Powerful Features</h2>
+                <p class="section-description">Everything you need to streamline your competitive programming workflow</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>One-Click Parsing</h3>
+                    <p>Extract all necessary information from any LeetCode problem page instantly with a single click.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Multi-Language Support</h3>
+                    <p>Generate code templates for C++, Java, and Python. Extensible architecture for more languages.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>Auto Code Generation</h3>
+                    <p>Automatically detects function signatures and generates complete templates with I/O handling.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Custom Templates</h3>
+                    <p>Personalize code templates to match your exact coding style and preferences.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔗</div>
+                    <h3>VS Code Integration</h3>
+                    <p>One-click export to VS Code using CPH extension. Auto-sends test cases and expected outputs.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌳</div>
+                    <h3>Data Structure Support</h3>
+                    <p>Built-in support for LeetCode structures like ListNode, TreeNode, and complex nested types.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Test Case Extraction</h3>
+                    <p>Automatically extracts and formats test cases from problem examples for easy testing.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌓</div>
+                    <h3>Theme Support</h3>
+                    <p>Light, dark, and system preference themes to match your coding environment.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💾</div>
+                    <h3>Settings Persistence</h3>
+                    <p>All preferences saved locally and synced across browser sessions automatically.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="demo">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">See LeetParse in Action</h2>
+                <p class="section-description">Watch how LeetParse transforms your LeetCode workflow</p>
+            </div>
+            <div class="demo-content">
+                <div class="video-container">
+                    <iframe 
+                        width="100%" 
+                        height="100%" 
+                        src="https://www.youtube.com/embed/_KxWJCAEUIM?si=VvGc_odXedKSDgql" 
+                        title="LeetParse Demo Video"
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen
+                        style="border-radius: var(--radius-xl);">
+                    </iframe>
+                </div>
+                <div class="demo-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Open LeetCode Problem</h4>
+                            <p>Navigate to any LeetCode problem page in your Chrome browser.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Click LeetParse Icon</h4>
+                            <p>Click the extension icon to instantly parse the problem and generate code.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Export to VS Code</h4>
+                            <p>With one click, send the problem and test cases directly to VS Code CPH.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Start Coding</h4>
+                            <p>Focus on solving the problem with ready-to-use templates and test cases.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section id="download" class="download">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Get Started Today</h2>
+                <p class="section-description">Choose your platform and start solving problems more efficiently</p>
+            </div>
+            <div class="download-cards">
+                <div class="download-card">
+                    <div class="download-icon chrome-icon">
+                        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <circle cx="12" cy="12" r="4"></circle>
+                            <line x1="21.17" y1="8" x2="12" y2="8"></line>
+                            <line x1="3.95" y1="6.06" x2="8.54" y2="14"></line>
+                            <line x1="10.88" y1="21.94" x2="15.46" y2="14"></line>
+                        </svg>
+                    </div>
+                    <h3>Chrome Extension</h3>
+                    <div class="installation-steps">
+                        <ol>
+                            <li>Open the <a href="https://chromewebstore.google.com/detail/leetparse/lenebbdagjnijnjobankmhoagffiiial" target="_blank" rel="noopener">Chrome Web Store.</a></li>
+                            <li>Click <strong>"Add to Chrome"</strong></li>
+                            <li>Pin the extension for quick access</li>
+                            <li>Open any LeetCode problem page and click the LeetParse icon to parse the problem</li>
+                        </ol>
+                    </div>
+                    <a href="https://chromewebstore.google.com/detail/leetparse/lenebbdagjnijnjobankmhoagffiiial" class="btn btn-primary btn-block" target="_blank" rel="noopener">
+                        Add to Chrome
+                    </a>
+                    <a href="https://github.com/Sarvesh0955/leetcode-parser" class="link-secondary" target="_blank" rel="noopener">View on GitHub →</a>
+                </div>
+                <div class="download-card featured">
+                    <div class="featured-badge">CPH Integration</div>
+                    <div class="download-icon vscode-icon">
+                        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="16 3 21 8 21 16 16 21 8 21 3 16 3 8 8 3 16 3"></polygon>
+                        </svg>
+                    </div>
+                    <h3>VS Code Extension</h3>
+                    <div class="installation-note-warning">
+                        <p><strong>⚠️ Important:</strong> If you have an older version of the CPH extension installed, please <strong>uninstall it first</strong> before installing the new CPH LeetParse extension. This ensures smooth integration and avoids any compatibility issues.</p>
+                    </div>
+                    <div class="installation-steps">
+                        <ol>
+                            <li>Open VS Code and go to the Extensions Marketplace</li>
+                            <li>Search for <a href="https://marketplace.visualstudio.com/items?itemName=Sarvesh0955.cph-leetparse" target="_blank" rel="noopener">CPH LeetParse.</a></li>
+                            <li>Click <strong>Install</strong></li>
+                            <li>Export problems from LeetParse directly into VS Code with a single click</li>
+                        </ol>
+                    </div>
+                    <a href="https://marketplace.visualstudio.com/items?itemName=Sarvesh0955.cph-leetparse" class="btn btn-primary btn-block" target="_blank" rel="noopener">
+                        Install CPH LeetParse
+                    </a>
+                    <a href="https://github.com/Sarvesh0955/cph-leetparse" class="link-secondary" target="_blank" rel="noopener">View on GitHub →</a>
+                </div>
+            </div>
+            <div class="installation-note">
+                <p><strong>💡 Pro Tip:</strong> Install both extensions for the best experience. Use Chrome extension to parse and VS Code extension to code!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Level Up Your Coding?</h2>
+                <p>Join thousands of developers who are solving problems faster with LeetParse</p>
+                <div class="cta-buttons">
+                    <a href="https://chromewebstore.google.com/detail/leetparse/lenebbdagjnijnjobankmhoagffiiial" class="btn btn-primary btn-large" target="_blank" rel="noopener">
+                        Get Started Free
+                    </a>
+                    <a href="https://github.com/Sarvesh0955/leetcode-parser" class="btn btn-secondary btn-large" target="_blank" rel="noopener">
+                        View on GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Get in Touch</h2>
+                <p class="section-description">Have questions, suggestions, or feedback? We'd love to hear from you!</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-cards">
+                    <a href="https://github.com/Sarvesh0955/leetcode-parser" class="contact-card" target="_blank" rel="noopener">
+                        <div class="contact-icon">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                        </div>
+                        <h3>GitHub</h3>
+                        <p>Contribute, report issues, or star the repo</p>
+                    </a>
+                    <a href="mailto:sarvesh0955@gmail.com" class="contact-card">
+                        <div class="contact-icon">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                        </div>
+                        <h3>Email</h3>
+                        <p>sarvesh0955@gmail.com</p>
+                    </a>
+                    <a href="https://chromewebstore.google.com/detail/leetparse/lenebbdagjnijnjobankmhoagffiiial" class="contact-card" target="_blank" rel="noopener">
+                        <div class="contact-icon">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
+                        </div>
+                        <h3>Rate Us</h3>
+                        <p>Leave a review on Chrome Web Store</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="./assets/logo.png" alt="LeetParse Logo">
+                        <span>LeetParse</span>
+                    </div>
+                    <p class="footer-description">
+                        Your ultimate companion for competitive programming. Parse, generate, and export LeetCode problems with ease.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://github.com/Sarvesh0955/leetcode-parser" target="_blank" rel="noopener" aria-label="GitHub">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#demo">Demo</a></li>
+                        <li><a href="https://github.com/Sarvesh0955/leetcode-parser" target="_blank" rel="noopener">Documentation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Download</h4>
+                    <ul>
+                        <li><a href="https://chromewebstore.google.com/detail/leetparse/lenebbdagjnijnjobankmhoagffiiial" target="_blank" rel="noopener">Chrome Extension</a></li>
+                        <li><a href="https://marketplace.visualstudio.com/items?itemName=Sarvesh0955.cph-leetparse" target="_blank" rel="noopener">VS Code Extension</a></li>
+                        <li><a href="https://github.com/Sarvesh0955/leetcode-parser/releases" target="_blank" rel="noopener">Releases</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="https://github.com/Sarvesh0955/leetcode-parser" target="_blank" rel="noopener">GitHub</a></li>
+                        <li><a href="https://github.com/Sarvesh0955/leetcode-parser/issues" target="_blank" rel="noopener">Report Issues</a></li>
+                        <li><a href="https://github.com/Sarvesh0955/leetcode-parser/blob/main/LICENSE" target="_blank" rel="noopener">License</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 LeetParse. Open source under MIT License.</p>
+                <p>Made with ❤️ by <a href="https://github.com/Sarvesh0955" target="_blank" rel="noopener">Sarvesh</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

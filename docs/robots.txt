@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sarvesh0955.github.io/leetcode-parser/sitemap.xml

@@ -156,12 +156,26 @@ Contributions are welcome! Here's how you can help:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## 🌐 Website
+
+Visit our landing page: [LeetParse Website](https://sarvesh0955.github.io/leetcode-parser/)
+
+The website includes:
+- Complete feature showcase
+- Demo video and tutorials
+- Download links for Chrome & VS Code extensions
+- Product roadmap
+- Contact information
+
 ## 🔗 Links
 
+- **Website**: [leetparse.com](https://sarvesh0955.github.io/leetcode-parser/)
+- **Chrome Extension**: [Coming Soon - Chrome Web Store]
 - **CPH Extension**: [Competitive Programming Helper](https://github.com/Sarvesh0955/cph-leetparse)
+- **Issues**: [GitHub Issues](https://github.com/Sarvesh0955/leetcode-parser/issues)
 
 ---
 
-**Made with ❤️ for competitive programmers **
+**Made with ❤️ for competitive programmers**
 
 *Happy coding! 🚀*

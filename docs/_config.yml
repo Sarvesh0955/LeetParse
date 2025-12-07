@@ -1,0 +1,33 @@
+# GitHub Pages Configuration
+title: LeetParse
+description: Your ultimate companion for competitive programming. Parse, generate, and export LeetCode problems with ease.
+theme: null
+show_downloads: false
+google_analytics: # Add your GA tracking ID here (optional)
+
+# Build settings
+markdown: kramdown
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# SEO settings
+url: "https://sarvesh0955.github.io" # Update with your GitHub Pages URL
+baseurl: "/LeetParse" # Update with your repository name
+
+author:
+  name: Sarvesh
+  email: sarvesh0955@gmail.com
+
+social:
+  name: LeetParse
+  links:
+    - https://github.com/Sarvesh0955/leetcode-parser
+
+# Exclude files from build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - README.md
