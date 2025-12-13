@@ -3,6 +3,7 @@ export { default as AboutLeetParse } from './AboutLeetParse';
 export { default as ActionButtons } from './ActionButtons';
 export { default as AppHeader } from './AppHeader';
 export { default as CodeBlock } from './CodeBlock';
+export { default as FeedbackShare } from './FeedbackShare';
 export { default as LanguageSelector } from './LanguageSelector';
 export { default as LeetCodePageContent } from './LeetCodePageContent';
 export { default as LoadingIndicator } from './LoadingIndicator';

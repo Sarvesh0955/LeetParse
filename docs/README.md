@@ -4,7 +4,7 @@ This is the official landing page for LeetParse, hosted on GitHub Pages.
 
 ## 🌐 Live Site
 
-Visit: [Your GitHub Pages URL]
+Visit: [LeetParse Landing Page](https://sarvesh0955.github.io/LeetParse/)
 
 ## 📁 Structure
 
@@ -51,12 +51,12 @@ If you have a custom domain (e.g., leetparse.com):
 
 ### Update Links
 
-Replace placeholder links in `index.html`:
+Replace placeholder links in `index.html` if you fork the project:
 
-- Chrome Web Store URL
-- VS Code Marketplace URL
-- GitHub repository URL
-- Email address
+- Chrome Web Store URL: https://chromewebstore.google.com/detail/leetparse/lenebbdagjnijnjobankmhoagffiiial
+- VS Code Marketplace URL: https://marketplace.visualstudio.com/items?itemName=Sarvesh0955.cph-leetparse
+- GitHub repository URL: https://github.com/Sarvesh0955/leetcode-parser
+- Email address: sarvesh0955@gmail.com
 
 ### Add Demo Video
 

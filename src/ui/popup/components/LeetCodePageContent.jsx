@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Stack, Button } from '@mui/material';
 import { Settings as SettingsIcon } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
@@ -10,6 +10,7 @@ import TestCaseInstructions from './TestCaseInstructions';
 import CodeBlock from './CodeBlock';
 import LoadingIndicator from './LoadingIndicator';
 import VSCodeIntegration from './VSCodeIntegration';
+import FeedbackShare from './FeedbackShare';
 
 /**
  * Component rendered when user is on a LeetCode problem page
@@ -26,6 +27,25 @@ const LeetCodePageContent = ({
   sampleOutputs
 }) => {
   const { enqueueSnackbar } = useSnackbar();
+  const [showFeedbackCard, setShowFeedbackCard] = useState(false);
+  const [feedbackDismissed, setFeedbackDismissed] = useState(false);
+
+  useEffect(() => {
+    if ((testCase || codeSnippet) && !feedbackDismissed) {
+      setShowFeedbackCard(true);
+    }
+  }, [testCase, codeSnippet, feedbackDismissed]);
+
+  const handleDismissFeedback = () => {
+    setShowFeedbackCard(false);
+    setFeedbackDismissed(true);
+  };
+
+  const handleRateUs = () => {
+    chrome.tabs.create({ url: 'https://chromewebstore.google.com/detail/leetparse/lenebbdagjnijnjobankmhoagffiiial' });
+    enqueueSnackbar('Thanks for supporting LeetParse!', { variant: 'success' });
+    handleDismissFeedback();
+  };
 
   const handleOpenTemplateSettings = () => {
     chrome.tabs.create({
@@ -96,6 +116,12 @@ const LeetCodePageContent = ({
           onCopy={() => enqueueSnackbar('Code copied to clipboard', { variant: 'success' })}
         />
       )}
+
+      <FeedbackShare
+        open={showFeedbackCard && (testCase || codeSnippet)}
+        onClose={handleDismissFeedback}
+        onRate={handleRateUs}
+      />
     </>
   );
 };
