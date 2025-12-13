@@ -26,7 +26,7 @@ Before deployment, update these placeholder links in `docs/index.html`:
 ```
 
 **Find and Replace:**
-- `https://chromewebstore.google.com/detail/leetparse/lenebbdagjnijnjobankmhoagffiiial` → Your actual Chrome extension URL
+- `https://chromewebstore.google.com/detail/leetparse/lenebbdagjnijnjobankmhoagffiiial` → Chrome extension URL
 - `https://marketplace.visualstudio.com/items?itemName=Sarvesh0955.cph-leetparse` → Your actual VS Code extension URL
 - `https://github.com/Sarvesh0955/leetcode-parser` → (Keep or update if different)
 

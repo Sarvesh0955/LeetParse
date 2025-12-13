@@ -115,7 +115,7 @@ leetcode-parser/
 ## 🚀 Installation
 
 ### Method 1: From Chrome Web Store (Recommended)
-*Coming soon - Extension is currently in development*
+Install directly from the Chrome Web Store: [LeetParse](https://chromewebstore.google.com/detail/leetparse/lenebbdagjnijnjobankmhoagffiiial).
 
 ### Method 2: From Source (Development)
 
