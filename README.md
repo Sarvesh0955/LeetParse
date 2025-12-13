@@ -158,8 +158,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🔗 Links
 
-- **Website**: [leetparse.com](https://sarvesh0955.github.io/LeetParse/)
-- **Chrome Extension**: [Coming Soon - Chrome Web Store]
+- **Website**: [website](https://sarvesh0955.github.io/LeetParse/)
+- **Chrome Extension**: [LeetParse](https://chromewebstore.google.com/detail/leetparse/lenebbdagjnijnjobankmhoagffiiial)
 - **CPH Extension**: [Competitive Programming Helper](https://github.com/Sarvesh0955/cph-leetparse)
 - **Issues**: [GitHub Issues](https://github.com/Sarvesh0955/leetcode-parser/issues)
 
